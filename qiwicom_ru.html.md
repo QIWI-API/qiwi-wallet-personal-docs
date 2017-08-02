@@ -12,9 +12,9 @@ toc_footers:
  - <a href='mailto:api_help@qiwi.com'>Обратная связь</a>
 ---
 
-###### Последнее обновление: 2017-08-01 | [Редактировать на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwicom_ru.html.md)
-
 # Введение
+
+###### Последнее обновление: 2017-08-01 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwicom_ru.html.md)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе Visa QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 
@@ -909,7 +909,7 @@ user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action"
   --header "Accept: application/json" 
   --header "Content-Type: application/x-www-form-urlencoded"
   --header "User-Agent: ***"
-  -d 'phone=+79651238341'
+  -d 'phone=%2B79651238341'
 ~~~
 
 ~~~http
@@ -919,14 +919,14 @@ Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 Cache-Control: no-cache
 
-phone=79651238341
+phone=%2B79651238341
 ~~~
 
 Параметр запроса:
 
 Параметр|Тип|Описание
 --------|----|----
-phone | String |Мобильный номер в международном формате
+phone | String URL-encoded |Мобильный номер в международном формате
 
 **Формат ответа**
 
