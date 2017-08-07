@@ -3,44 +3,44 @@ title: QIWI Wallet API
 
 search: true
 
-metatitle: API QIWI Кошелька
+metatitle: QIWI Wallet API
 
-metadescription: API QIWI Кошелька позволяет автоматизировать выполнение платежей и получение отчетов о платежах, информации о счёте.
+metadescription: QIWI Wallet API  allows to access QIWI Wallet account information and make some payment operations as well as get payment reports.
 
 toc_footers:
- - <a href='/'>На главную</a>
- - <a href='mailto:api_help@qiwi.com'>Обратная связь</a>
+ - <a href='/index-en.html'>Home page</a>
+ - <a href='mailto:api_help@qiwi.com'>Feedback</a>
 ---
 
-# Введение
+# Introduction
 
-###### Последнее обновление: 2017-08-01 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwicom_ru.html.md)
+###### Last update: 2017-08-01 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwicom_ru.html.md)
 
-API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе Visa QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
+QIWI Wallet API makes it easy to automate getting info on your account's state in [Visa QIWI Wallet service](https://qiwi.com) and making financial operations.
 
-Методы API доступны после регистрации пользователя в [сервисе Visa QIWI Кошелек](https://qiwi.com). 
+API methods are accessible after the user is registered in [Visa QIWI Wallet service](https://qiwi.com). 
 
-## Служебные данные {#auth_param}
+## Service data {#auth_param}
 
 <ul class="nestedList params">
-    <li><h3>Авторизация</h3>
+    <li><h3>Authorization</h3>
     </li>
 </ul>
 
-Параметр|Описание|Тип
+Parameter|Description|Type
  ---------|--------|---
- token | [Токен](#auth_data) для авторизации запросов в API. Действие токена заканчивается через 1 месяц после [выпуска](#auth_data). | String
+ token | [Token](#auth_data) to authorize API requests. Token is valid within one month after its [issuing](#auth_data). | String
 
 
-# Авторизация {#auth_api}
+# Authorization {#auth_api}
 
-## Данные для авторизации {#auth_data}
+## Authorization data {#auth_data}
 
-API QIWI Wallet использует открытый протокол авторизации OAuth 2.0. Согласно протоколу, пользователь авторизуется или регистрируется на сайте <https://qiwi.com> и запрашивает токен с правом выполнения определённых действий. Выпуск токена подтверждается одноразовым кодом из СМС.
+QIWI Wallet API implements OAuth 2.0 open authorization protocol specification. A user registers or authenticates on <https://qiwi.com> QIWI Wallet site and requests a token with a certain scopes. Token issue is confirmed by SMS code.
 
-1. Откройте в браузере страницу <https://qiwi.com/api>. Для этого потребуется авторизоваться или зарегистрироваться в сервисе Visa QIWI Кошелек.
+1. Open <https://qiwi.com/api> page in your browser. You will need to register or authenticate on Visa QIWI Wallet service.
   ![Token Issue](/images/apiwallet_get_token.jpg)
-2. Нажмите **Выпустить новый токен**. Во всплывающем окне выберите разрешения на операции с токеном:
+2. Click on **Выпустить новый токен**. Select token scopes in the pop-up window:
     * Запрос информации о профиле кошелька - разрешает выполнение запросов [профиля пользователя](#profile)
     * Запрос баланса кошелька - разрешает выполнение запросов [баланса](#balance)
     * Просмотр истории платежей - разрешает выполнение запросов [истории платежей](#payments)

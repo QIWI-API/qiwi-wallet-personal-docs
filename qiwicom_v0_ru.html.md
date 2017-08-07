@@ -1088,28 +1088,36 @@ user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/7911222334
   --header "Authorization: ST YUu2qw048gtdsvlk3iu=="
 ~~~
 
-~~~http
+~~~text
 Пример 1. Последние 10 платежей с рублевого баланса и с привязанной карты
+~~~
 
+~~~http
 GET /payment-history/v1/persons/79112223344/payments?rows=10&operation=OUT&sources[0]=QW_RUB&sources[1]=CARD HTTP/1.1
 Accept: application/json
 Authorization: ST YUu2qw048gtdsvlk3iu==
 Content-type: application/json
 Host: edge.qiwi.com
+~~~
 
+~~~text
 Пример 2. Платежи за 10.05.2017
+~~~
 
+~~~http
 GET /payment-history/v1/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00&endDate=2017-05-10T23%3A59%3A59 HTTP/1.1
-
 Accept: application/json
 Authorization: ST YUu2qw048gtdsvlk3iu==
 Content-type: application/json
 Host: edge.qiwi.com
+~~~
 
+~~~text
 Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23)
+~~~
 
+~~~http
 GET /payment-history/v1/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12:35:23 HTTP/1.1
-
 Accept: application/json
 Authorization: ST YUu2qw048gtdsvlk3iu==
 Content-type: application/json
