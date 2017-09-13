@@ -998,7 +998,7 @@ Accept: application/json
 Content-Type: application/x-www-form-urlencoded
 Cache-Control: no-cache
 
-phone=%2B79651238341
+phone=79651238341
 ~~~
 
 Параметр запроса:
