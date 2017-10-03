@@ -21,7 +21,7 @@ toc_footers:
 
 # Введение {#intro}
 
-###### Последнее обновление: 2017-08-01 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwicom_ru.html.md)
+###### Последнее обновление: 2017-08-01 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе Visa QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 
