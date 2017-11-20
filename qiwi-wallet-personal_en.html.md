@@ -16,9 +16,9 @@ toc_footers:
 
 ###### Last update: 2017-08-01 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwicom_ru.html.md)
 
-QIWI Wallet API makes it easy to automate getting info on your account's state in [Visa QIWI Wallet service](https://qiwi.com) and making financial operations.
+QIWI Wallet API makes it easy to automate getting info on your account's state in [QIWI Wallet service](https://qiwi.com) and making financial operations.
 
-API methods are accessible after the user is registered in [Visa QIWI Wallet service](https://qiwi.com). 
+API methods are accessible after the user is registered in [QIWI Wallet service](https://qiwi.com).
 
 ## Service data {#auth_param}
 
@@ -38,7 +38,7 @@ Parameter|Description|Type
 
 QIWI Wallet API implements OAuth 2.0 open authorization protocol specification. A user registers or authenticates on <https://qiwi.com> QIWI Wallet site and requests a token with a certain scopes. Token issue is confirmed by SMS code.
 
-1. Open <https://qiwi.com/api> page in your browser. You will need to register or authenticate on Visa QIWI Wallet service.
+1. Open <https://qiwi.com/api> page in your browser. You will need to register or authenticate on QIWI Wallet service.
   ![Token Issue](/images/apiwallet_get_token.jpg)
 2. Click on **Выпустить новый токен**. Select token scopes in the pop-up window:
     * Запрос информации о профиле кошелька - allows [person's profile requests](#profile)
@@ -66,7 +66,7 @@ user@server:~$ curl "адрес сервера"
 </aside>
 
 
-* В результате авторизации на сайте Visa QIWI Кошелек и выпуска токена [получен](#auth_data) токен, представляющий собой строку:
+* В результате авторизации на сайте QIWI Кошелек и выпуска токена [получен](#auth_data) токен, представляющий собой строку:
 
 `U1QtOTkwMTAyLWNud3FpdWhmbzg3M`
 
@@ -528,7 +528,7 @@ URL запроса:
             "title": "WALLET",
             "type": {
                 "id": "WALLET",
-                "title": "Visa QIWI Wallet"
+                "title": "QIWI Wallet"
             },
             "hasBalance": true,
             "balance": {
@@ -543,7 +543,7 @@ URL запроса:
             "title": "WALLET",
             "type": {
                 "id": "WALLET",
-                "title": "Visa QIWI Wallet"
+                "title": "QIWI Wallet"
             },
             "hasBalance": true,
             "balance": {
@@ -558,7 +558,7 @@ URL запроса:
             "title": "WALLET",
             "type": {
                 "id": "WALLET",
-                "title": "Visa QIWI Wallet"
+                "title": "QIWI Wallet"
             },
             "hasBalance": true,
             "balance": {
@@ -623,7 +623,7 @@ User-Agent: ****
 Параметр URL запроса:
 
 * `{id}` - идентификатор провайдера. Возможные значения:
-    * 99 - Перевод на Visa QIWI Wallet
+    * 99 - Перевод на QIWI Wallet
     * 1963 - Перевод на карту Visa (карты российских банков)
     * 21013 - Перевод на карту MasterCard (карты российских банков)
     * Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:
