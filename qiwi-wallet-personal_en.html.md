@@ -57,22 +57,22 @@ Token is valid one month from this issuing. You can block the token before its l
 ## Authorization example {#auth_ex}
 
 ~~~shell
-user@server:~$ curl "адрес сервера"
+user@server:~$ curl "server address"
   --header "Authorization: Bearer jMyN22DQxMjM6NDUzRmRnZDQ0Mw11212e"
 ~~~
 
 <aside class="notice">
-Для авторизации в запрос добавляется заголовок Authorization, значение которого представлено как: "Bearer <a href="#auth_data">token</a>"
+Add "Authorization" header to the request with its value as "Bearer <a href="#auth_data">token</a>"
 </aside>
 
 
-* В результате авторизации на сайте QIWI Кошелек и выпуска токена [получен](#auth_data) токен, представляющий собой строку:
+* As a result of authentication in [QIWI Wallet site](https://qiwi.com/api), you [got](#auth_data) the token:
 
 `U1QtOTkwMTAyLWNud3FpdWhmbzg3M`
 
-* Токен добавляется в заголовок `Authorization: Bearer `
+* Add the token to `Authorization: Bearer ` HTTP header.
 
-* Итоговый заголовок, добавляемый в каждый запрос к API QIWI Кошелька: 
+* The header has to be added to each API request:
 
 `Authorization: Bearer U1QtOTkwMTAyLWNud3FpdWhmbzg3M`
 
@@ -80,7 +80,7 @@ user@server:~$ curl "адрес сервера"
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
 ~~~

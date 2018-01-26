@@ -8,6 +8,7 @@ metatitle: API QIWI Кошелька
 metadescription: API QIWI Кошелька позволяет автоматизировать выполнение платежей и получение отчетов о платежах, информации о счёте, идентификации.
 
 toc_footers:
+ - <a href='/ru/qiwi-wallet-api-release-notes/index.html'>Список изменений</a>
  - <a href='/'>На главную</a>
  - <a href='mailto:api_help@qiwi.com'>Обратная связь</a>
 ---
@@ -21,7 +22,7 @@ toc_footers:
 
 # Введение {#intro}
 
-###### Последнее обновление: 2017-11-15 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
+###### Последнее обновление: 2018-01-15 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 
@@ -366,26 +367,28 @@ oms| String | Номер полиса ОМС пользователя
 
 # История платежей {#payments_history}
 
-Запрос выгружает историю платежей и пополнений вашего кошелька.
+## Список платежей
+
+Запрос выгружает список платежей и пополнений вашего кошелька.
 
 ~~~shell
 Пример 1. Последние 10 платежей
 
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=10"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=10"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 
 Пример 2. Платежи за 10.05.2017
 
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 
 Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
@@ -396,7 +399,7 @@ user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/7911222334
 ~~~
 
 ~~~http
-GET /payment-history/v1/persons/79112223344/payments?rows=10&operation=OUT&sources[0]=QW_RUB&sources[1]=CARD HTTP/1.1
+GET /payment-history/v2/persons/79112223344/payments?rows=10&operation=OUT&sources[0]=QW_RUB&sources[1]=CARD HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Content-type: application/json
@@ -408,7 +411,7 @@ Host: edge.qiwi.com
 ~~~
 
 ~~~http
-GET /payment-history/v1/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Content-type: application/json
@@ -422,7 +425,7 @@ Host: edge.qiwi.com
 ~~~
 
 ~~~http
-GET /payment-history/v1/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Content-type: application/json
@@ -432,7 +435,7 @@ Host: edge.qiwi.com
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
              <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом, но без <i>+</i>)</li>
@@ -567,19 +570,19 @@ data[].regularPaymentEnabled|Boolean|Специальное поле
 nextTxnId|Number(Integer)|ID следующей транзакции в полном списке
 nextTxnDate|DateTime|Дата/время следующей транзакции в полном списке, время московское (в формате `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`)
 
-# Статистика платежей {#stat}
+## Статистика платежей {#stat}
 
 Данный запрос используется для получения сводной статистики по суммам платежей за заданный период.
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
 ~~~http
-GET /payment-history/v1/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00 HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Content-type: application/json
@@ -589,7 +592,7 @@ Host: edge.qiwi.com
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
              <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом, но без <i>+</i>)</li>
@@ -654,19 +657,19 @@ outgoingTotal|Array[Object]|Данные об исходящих платежа�
 outgoingTotal[].amount | Number(Decimal) |Сумма платежей за период
 outgoingTotal[].currency|String|Валюта платежей
 
-# Информация о транзакции {#txn_info}
+## Информация о транзакции {#txn_info}
 
 Данный запрос используется для получения информации по определенной транзакции из вашей истории платежей.
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344?type=IN"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
 ~~~http
-GET /payment-history/v1/transactions/9112223344?type=IN HTTP/1.1
+GET /payment-history/v2/transactions/9112223344 HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Content-type: application/json
@@ -676,11 +679,11 @@ Host: edge.qiwi.com
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/transactions/<a>transactionId</a>?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3></li>
         <ul>
         <strong>В pathname GET-запроса используются два параметра:</strong>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
-             <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе)</li>
+             <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе). Данный параметр является необязательным и может не указываться</li>
         </ul>
 </ul>
 
@@ -797,6 +800,124 @@ bankDocumentAvailable|Boolean|Специальное поле
 repeatPaymentEnabled|Boolean|Специальное поле
 favoritePaymentEnabled|Boolean|Специальное поле
 regularPaymentEnabled|Boolean|Специальное поле
+
+## Квитанция платежа
+
+Данный запрос используется для получения электронной квитанции (чека) по определенной транзакции из вашей истории платежей в формате PDF/JPEG в виде файла или почтовым сообщением на заданный e-mail.
+
+### Файл квитанции
+
+~~~shell
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF"
+  --header "Accept: application/json"
+  --header "Content-Type: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+~~~
+
+~~~http
+GET /payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Content-type: application/json
+Host: edge.qiwi.com
+~~~
+
+<h3 class="request method">Запрос → GET</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3></li>
+        <ul>
+        <strong>В pathname GET-запроса используются три параметра:</strong>
+             <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
+             <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе)</li>
+             <li><strong>format</strong> - тип файла, в который сохраняется квитанция. Допустимые значения: <i>JPEG</i>, <i>PDF</i></li>
+        </ul>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+~~~
+
+~~~json
+[
+  ""
+]
+~~~
+
+Успешный JSON-ответ содержит файл выбранного формата в бинарном виде.
+
+### Отправка квитанции
+
+~~~shell
+user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN"
+  --header "Accept: application/json"
+  --header "Content-Type: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  -d '{"email": "my@example.com"}'
+~~~
+
+~~~http
+POST /payment-history/v1/transactions/9112223344/cheque/send?type=IN HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Content-type: application/json
+Host: edge.qiwi.com
+
+{"email": "my@example.com"}
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value</a></span></h3></li>
+        <ul>
+        <strong>В pathname POST-запроса используются два параметра:</strong>
+             <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
+             <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе)</li>
+        </ul>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметр</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    </li>
+</ul>
+
+
+Параметр|Тип|Описание
+--------|----|----
+email|String| Адрес для отправки электронной квитанции
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 201 Created
+Content-Type: application/json
+~~~
+
+Успешный JSON-ответ содержит HTTP-код отправки файла.
 
 # Баланс QIWI Кошелька {#balance}
 
@@ -2146,8 +2267,9 @@ state.code | String| Текущий статус транзакции, толь�
 HTTP Код | Секция API | Описание
 ---|-----|---------
 400 | Все | Ошибка синтаксиса запроса (неправильный формат данных)
-401 | Все | Неверный токен или истек срок действия токена.
-404 | История платежей | Не найдена транзакция или отсутствуют платежи с указанными признаками
+401 | Все | Неверный токен или истек срок действия токена
+403 | Все | Нет прав на данный запрос (недостаточно разрешений у токена)
+404 | История платежей, Информация о транзакции, Отправка квитанции | Не найдена транзакция или отсутствуют платежи с указанными признаками
 404 | Балансы, Профиль пользователя, Идентификация пользователя | Не найден кошелек
 423 | История платежей | Слишком много запросов, сервис временно недоступен
 
