@@ -1607,6 +1607,34 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payme
       }'
 ~~~
 
+~~~shell
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payments"
+  --header "Content-Type: application/json"
+  --header "Accept: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  -d '{
+        "id":"21131343",
+        "sum":{
+          "amount":1000,
+          "currency":"643"
+        },
+        "paymentMethod":{
+          "type":"Account",
+          "accountId":"643"
+        },
+        "fields": {
+          "account": "402865XXXXXXXXXX",
+          "rec_address": "Ленинский проспект 131, 56",
+          "rec_city": "Москва",
+          "rec_country": "Россия",
+          "reg_name": "Виктор",
+          "reg_name_f": "Петров",
+          "rem_name": "Сергей",
+          "rem_name_f": "Иванов"
+        }
+      }'
+~~~
+
 ~~~http
 POST /sinap/api/v2/terms/1963/payments HTTP/1.1
 Content-Type: application/json
@@ -1626,6 +1654,36 @@ Host: edge.qiwi.com
   },
   "fields": {
         "account":"4256XXXXXXXX1231"
+  }
+}
+~~~
+
+~~~http
+POST /sinap/api/v2/terms/1960/payments HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+
+{
+  "id":"21131343",
+  "sum": {
+        "amount":1000,
+        "currency":"643"
+  },
+  "paymentMethod": {
+      "type":"Account",
+      "accountId":"643"
+  },
+  "fields": {
+      "account": "402865XXXXXXXXXX",
+      "rec_address": "Ленинский проспект 131, 56",
+      "rec_city": "Москва",
+      "rec_country": "Россия",
+      "reg_name": "Виктор",
+      "reg_name_f": "Петров",
+      "rem_name": "Сергей",
+      "rem_name_f": "Иванов"
   }
 }
 ~~~
@@ -1672,8 +1730,15 @@ sum.currency|String|Валюта (только `643`, рубли)
 paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
 paymentMethod.type|String |Константа, `Account`
 paymentMethod.accountId|String| Константа, `643`.
-fields|Object| Реквизиты платежа. Содержит параметр:
+fields|Object| Реквизиты платежа. Содержит параметры:
 fields.account| String|Номер банковской карты получателя
+fields.rem_name|String|Имя отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
+fields.rem_name_f|String|Фамилия отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
+fields.rec_address|String|Адрес отправителя (без почтового индекса, в произвольной форме). Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
+fields.rec_city|String|Город отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
+fields.rec_country|String|Страна отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
+fields.reg_name|String|Имя **получателя**. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
+fields.reg_name_f|String|Фамилия **получателя**. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
 
 <h3 class="request">Ответ ←</h3>
 
@@ -2290,6 +2355,7 @@ errorCode | Описание
 319 |Платеж невозможен
 500 |По техническим причинам этот платеж не может быть выполнен. Для совершения платежа обратитесь, пожалуйста, в свой обслуживающий банк
 522 |Неверный номер или срок действия карты получателя
+547 | Ошибка в сроке действия карты получателя
 548 |Истек срок действия карты получателя
 561 |Платеж отвергнут оператором банка получателя
 702 |Платеж не проведен из-за ограничений у получателя. Подробности по телефону: 8-800-707-77-59
@@ -2297,4 +2363,7 @@ errorCode | Описание
 746 |Превышен лимит по платежам в пользу провайдера
 852 |Превышен лимит по платежам в пользу провайдера
 893 |Срок действия перевода истек
-1050 | Превышен лимит на операции
+1050 | Превышен лимит на операции, либо превышен дневной лимит на переводы на карты Visa/MasterCard
+ |
+ |
+ |
