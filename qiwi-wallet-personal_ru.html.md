@@ -882,7 +882,7 @@ Host: edge.qiwi.com
 <h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используются два параметра:</strong>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
