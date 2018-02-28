@@ -22,7 +22,7 @@ toc_footers:
 
 # Введение {#intro}
 
-###### Последнее обновление: 2018-01-15 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
+###### Последнее обновление: 2018-02-28 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 
@@ -1005,7 +1005,7 @@ accounts[].hasBalance|Boolean|Логический признак реально
 accounts[].currency | Number| Код валюты баланса (number-3 ISO-4217). Возвращаются балансы в следующих валютах: 643 - российский рубль, 840 - американский доллар, 978 - евро
 accounts[].type|Object|Сведения о счете
 type.id, type.title| String| Описание счета
-accounts[].balance|Object |Сведения о балансе данного счета. Если вернулся `null` и при этом параметр `hasBalance` равен `true`, повторите запрос с дополнительными параметрами: `GET /funding-sources/v1/accounts/current?timeout=1000&alias=qw_wallet_rub`
+accounts[].balance|Object |Сведения о балансе данного счета.<br>Если вернулся `null` и при этом параметр `accounts[].hasBalance` равен `true`, повторите запрос с дополнительными параметрами: `timeout=1000` и `alias=accounts[].alias` (псевдоним этого баланса).<br>Например, `GET /funding-sources/v1/accounts/current?timeout=1000&alias=qw_wallet_rub`
 balance.amount|Number|Текущий баланс данного счета
 balance.currency | Number| Код валюты баланса (number-3 ISO-4217)
 
