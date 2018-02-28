@@ -1005,7 +1005,7 @@ accounts[].hasBalance|Boolean|Логический признак реально
 accounts[].currency | Number| Код валюты баланса (number-3 ISO-4217). Возвращаются балансы в следующих валютах: 643 - российский рубль, 840 - американский доллар, 978 - евро
 accounts[].type|Object|Сведения о счете
 type.id, type.title| String| Описание счета
-accounts[].balance|Object |Сведения о балансе данного счета
+accounts[].balance|Object |Сведения о балансе данного счета. Если вернулся `null` и при этом параметр `hasBalance` равен `true`, повторите запрос с дополнительными параметрами: `GET /funding-sources/v1/accounts/current?timeout=1000&alias=qw_wallet_rub`
 balance.amount|Number|Текущий баланс данного счета
 balance.currency | Number| Код валюты баланса (number-3 ISO-4217)
 
