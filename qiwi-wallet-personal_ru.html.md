@@ -11,6 +11,7 @@ toc_footers:
  - <a href='/ru/qiwi-wallet-api-release-notes/index.html'>Список изменений</a>
  - <a href='/'>На главную</a>
  - <a href='mailto:api_help@qiwi.com'>Обратная связь</a>
+ - <a href='/sandbox/index.html'>Попробовать API</a>
 ---
 
  *[Токен]: Символьная строка для аутентификации пользователя в API.
@@ -570,6 +571,8 @@ data[].regularPaymentEnabled|Boolean|Специальное поле
 nextTxnId|Number(Integer)|ID следующей транзакции в полном списке
 nextTxnDate|DateTime|Дата/время следующей транзакции в полном списке, время московское (в формате `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`)
 
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByUserUsingGET_1)
+
 ## Статистика платежей {#stat}
 
 Данный запрос используется для получения сводной статистики по суммам платежей за заданный период.
@@ -656,6 +659,8 @@ incomingTotal[].currency|String|Валюта пополнений
 outgoingTotal|Array[Object]|Данные об исходящих платежах, отдельно по каждой валюте
 outgoingTotal[].amount | Number(Decimal) |Сумма платежей за период
 outgoingTotal[].currency|String|Валюта платежей
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryTotalByUserUsingGET_1)
 
 ## Информация о транзакции {#txn_info}
 
@@ -801,6 +806,9 @@ repeatPaymentEnabled|Boolean|Специальное поле
 favoritePaymentEnabled|Boolean|Специальное поле
 regularPaymentEnabled|Boolean|Специальное поле
 
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByTransactionUsingGET_1)
+
+
 ## Квитанция платежа
 
 Данный запрос используется для получения электронной квитанции (чека) по определенной транзакции из вашей истории платежей в формате PDF/JPEG в виде файла или почтовым сообщением на заданный e-mail.
@@ -858,6 +866,8 @@ Content-Type: application/json
 ~~~
 
 Успешный JSON-ответ содержит файл выбранного формата в бинарном виде.
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/getChequeBytesUsingGET)
 
 ### Отправка квитанции
 
@@ -918,6 +928,8 @@ Content-Type: application/json
 ~~~
 
 Успешный JSON-ответ содержит HTTP-код отправки файла.
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/sendChequeUsingPOST)
 
 # Баланс QIWI Кошелька {#balance}
 
