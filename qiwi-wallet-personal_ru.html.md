@@ -372,6 +372,8 @@ oms| String | Номер полиса ОМС пользователя
 
 Запрос выгружает список платежей и пополнений вашего кошелька.
 
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByUserUsingGET_1)
+
 ~~~shell
 Пример 1. Последние 10 платежей
 
@@ -571,11 +573,11 @@ data[].regularPaymentEnabled|Boolean|Специальное поле
 nextTxnId|Number(Integer)|ID следующей транзакции в полном списке
 nextTxnDate|DateTime|Дата/время следующей транзакции в полном списке, время московское (в формате `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`)
 
-[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByUserUsingGET_1)
-
 ## Статистика платежей {#stat}
 
 Данный запрос используется для получения сводной статистики по суммам платежей за заданный период.
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryTotalByUserUsingGET_1)
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00"
@@ -660,11 +662,11 @@ outgoingTotal|Array[Object]|Данные об исходящих платежа�
 outgoingTotal[].amount | Number(Decimal) |Сумма платежей за период
 outgoingTotal[].currency|String|Валюта платежей
 
-[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryTotalByUserUsingGET_1)
-
 ## Информация о транзакции {#txn_info}
 
 Данный запрос используется для получения информации по определенной транзакции из вашей истории платежей.
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByTransactionUsingGET_1)
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344"
@@ -806,14 +808,13 @@ repeatPaymentEnabled|Boolean|Специальное поле
 favoritePaymentEnabled|Boolean|Специальное поле
 regularPaymentEnabled|Boolean|Специальное поле
 
-[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByTransactionUsingGET_1)
-
-
 ## Квитанция платежа
 
 Данный запрос используется для получения электронной квитанции (чека) по определенной транзакции из вашей истории платежей в формате PDF/JPEG в виде файла или почтовым сообщением на заданный e-mail.
 
 ### Файл квитанции
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/getChequeBytesUsingGET)
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF"
@@ -867,9 +868,9 @@ Content-Type: application/json
 
 Успешный JSON-ответ содержит файл выбранного формата в бинарном виде.
 
-[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/getChequeBytesUsingGET)
-
 ### Отправка квитанции
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/sendChequeUsingPOST)
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN"
@@ -928,8 +929,6 @@ Content-Type: application/json
 ~~~
 
 Успешный JSON-ответ содержит HTTP-код отправки файла.
-
-[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/sendChequeUsingPOST)
 
 # Баланс QIWI Кошелька {#balance}
 
