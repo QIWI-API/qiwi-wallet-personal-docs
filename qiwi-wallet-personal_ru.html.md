@@ -932,6 +932,8 @@ Content-Type: application/json
 
 # Баланс QIWI Кошелька {#balance}
 
+Запрос выгружает текущие балансы ваших счетов QIWI Кошелька.
+
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-1/getByAliasUsingGET)
 
 ~~~shell
