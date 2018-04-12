@@ -298,7 +298,7 @@ Host: edge.qiwi.com
     <li><h3>URL <span>https://edge.qiwi.com/identification/v1/persons/<a>wallet</a>/identification</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом, но без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
         </ul>
 </ul>
 
@@ -441,7 +441,7 @@ Host: edge.qiwi.com
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом, но без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
         </ul>
 </ul>
 
@@ -543,14 +543,14 @@ data[].type | String| Тип платежа. Возможные значения
 data[].status|String|Статус платежа. Возможные значения:<br>`WAITING` - платеж проводится, <br>`SUCCESS` - успешный платеж, <br>`ERROR` - ошибка платежа.
 data[].statusText|String |Текстовое описание статуса платежа
 data[].trmTxnId|String|Клиентский ID транзакции
-data[].account| String|Номер счета получателя
-data[].sum|Object| Данные о сумме платежа. Параметры:
+data[].account| String|Для платежей - номер счета получателя. Для пополнений - номер отправителя, терминала или название агента пополнения кошелька
+data[].sum|Object| Данные о сумме платежа или пополнения. Параметры:
 sum.amount|Number(Decimal)|сумма,
 sum.currency|String|валюта
 data[].commission|Object| Данные о комиссии платежа. Параметры:
 commission.amount|Number(Decimal)|сумма,
 commission.currency|String|валюта
-data[].total|Object| Данные об общей сумме платежа. Параметры:
+data[].total|Object| Данные об общей сумме платежа или пополнения. Параметры:
 total.amount|Number(Decimal)|сумма,
 total.currency|String|валюта
 data[].provider|Object| Данные о провайдере. Параметры:
@@ -600,7 +600,7 @@ Host: edge.qiwi.com
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом, но без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
         </ul>
 </ul>
 
@@ -780,14 +780,14 @@ type | String| Копия параметра `type` из запроса
 status|String|Статус платежа. Возможные значения:<br>`WAITING` - платеж проводится, <br>`SUCCESS` - успешный платеж, <br>`ERROR` - ошибка платежа.
 statusText|String |Текстовое описание статуса платежа
 trmTxnId|String|Клиентский ID транзакции
-account| String|Номер счета получателя
-sum|Object| Данные о сумме платежа. Параметры:
+account| String|Для платежей - номер счета получателя. Для пополнений - номер отправителя, терминала или название агента пополнения кошелька
+sum|Object| Данные о сумме платежа или пополнения. Параметры:
 sum.amount|Number(Decimal)|сумма,
 sum.currency|String|валюта
 commission|Object| Данные о комиссии платежа. Параметры:
 commission.amount|Number(Decimal)|сумма,
 commission.currency|String|валюта
-total|Object| Данные об общей сумме платежа. Параметры:
+total|Object| Данные об общей сумме платежа или пополнения. Параметры:
 total.amount|Number(Decimal)|сумма,
 total.currency|String|валюта
 provider|Object| Данные о провайдере. Параметры:
@@ -932,19 +932,21 @@ Content-Type: application/json
 
 # Баланс QIWI Кошелька {#balance}
 
+## Список балансов {#balances_list}
+
 Запрос выгружает текущие балансы ваших счетов QIWI Кошелька.
 
-[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-1/getByAliasUsingGET)
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/getByAliasUsingGET_1)
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/funding-sources/v1/accounts/current"
+user@server:~$ curl "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
 ~~~http
-GET /funding-sources/v1/accounts/current HTTP/1.1
+GET /funding-sources/v2/persons/79115221133/accounts HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Content-type: application/json
@@ -954,7 +956,11 @@ Host: edge.qiwi.com
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v1/accounts/current</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+        <ul>
+        <strong>В pathname запроса используется параметр:</strong>
+             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+        </ul>
 </ul>
 
 <ul class="nestedList header">
@@ -980,6 +986,7 @@ Content-Type: application/json
         {
             "alias": "mc_beeline_rub",
             "fsAlias": "qb_mc_beeline",
+            "bankAlias": "QIWI",
             "title": "MC",
             "type": {
                 "id": "MC",
@@ -992,6 +999,7 @@ Content-Type: application/json
         {
             "alias": "qw_wallet_rub",
             "fsAlias": "qb_wallet",
+            "bankAlias": "QIWI",
             "title": "WALLET",
             "type": {
                 "id": "WALLET",
@@ -1008,21 +1016,221 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный ответ содержит JSON-массив ваших счетов QIWI Кошелька для фондирования платежей и их текущие балансы:
+Успешный ответ содержит JSON-массив ваших счетов QIWI Кошелька для фондирования платежей и текущие балансы счетов:
 
 Параметр|Тип|Описание
 --------|----|----
 accounts|Array[Object]|Массив балансов
 accounts[].alias | String |Псевдоним пользовательского баланса
 accounts[].fsAlias | String |Псевдоним банковского баланса
+accounts[].bankAlias | String |Псевдоним банка
 accounts[].title|String|Название соответствующего счета кошелька
 accounts[].hasBalance|Boolean|Логический признак реального баланса в системе QIWI Кошелек (не привязанная карта, не счет мобильного телефона и т.д.)
 accounts[].currency | Number| Код валюты баланса (number-3 ISO-4217). Возвращаются балансы в следующих валютах: 643 - российский рубль, 840 - американский доллар, 978 - евро
 accounts[].type|Object|Сведения о счете
 type.id, type.title| String| Описание счета
-accounts[].balance|Object |Сведения о балансе данного счета.<br>Если вернулся `null` и при этом параметр `accounts[].hasBalance` равен `true`, повторите запрос с дополнительными параметрами: `timeout=1000` и `alias=accounts[].alias` (псевдоним этого баланса).<br>Например, `GET /funding-sources/v1/accounts/current?timeout=1000&alias=qw_wallet_rub`
+accounts[].balance|Object |Сведения о балансе данного счета.<br>Если вернулся `null` и при этом параметр `accounts[].hasBalance` равен `true`, повторите запрос с дополнительными параметрами:<br>`timeout=1000` и `alias=accounts[].alias` (псевдоним этого баланса).<br>Например<br>`GET /funding-sources/v1/accounts/current?timeout=1000&alias=qw_wallet_rub`
 balance.amount|Number|Текущий баланс данного счета
 balance.currency | Number| Код валюты баланса (number-3 ISO-4217)
+
+## Создание баланса
+
+Запрос создает новый счет и баланс в вашем QIWI Кошельке. Список доступных для создания счетов можно получить [другим запросом](#funding_offer).
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/createAccountUsingPOST)
+
+~~~shell
+user@server:~$ curl -X POST "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts"
+  --header "Accept: application/json"
+  --header "Content-Type: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  -d '{  "accountAlias": "qw_wallet_eur"}'
+~~~
+
+~~~http
+POST /funding-sources/v2/persons/79115221133/accounts HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Content-type: application/json
+Host: edge.qiwi.com
+~~~
+~~~json
+{
+  "accountAlias": "qw_wallet_eur"
+}
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+        <ul>
+        <strong>В теле запроса используется параметр:</strong>
+             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+        </ul>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметр</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    </li>
+</ul>
+
+
+Параметр|Тип|Описание
+--------|----|----
+accountAlias|String| Псевдоним нового счета (см. [запрос доступных счетов](#funding_offer))
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 201 Created
+Content-Type: application/json
+~~~
+
+Успешный ответ содержит HTTP-код запроса 201.
+
+## Запрос доступных счетов {#funding_offer}
+
+Запрос отображает псевдонимы счетов, доступных для создания в вашем QIWI Кошельке.
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/getAccountsOfferUsingGET)
+
+~~~shell
+user@server:~$ curl -X GET "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/offer"
+  --header "Accept: application/json"
+  --header "Content-Type: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+~~~
+
+~~~http
+GET /funding-sources/v2/persons/79115221133/accounts/offer HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Content-type: application/json
+Host: edge.qiwi.com
+~~~
+
+<h3 class="request method">Запрос → GET</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
+        <ul>
+        <strong>В теле запроса используется параметр:</strong>
+             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+        </ul>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+~~~
+
+~~~json
+{
+  {
+    "alias": "qw_wallet_eur",
+    "currency": 978
+  },
+  {}
+}
+~~~
+
+Успешный JSON-ответ содержит данные о счетах, которые можно создать:
+
+Параметр|Тип|Описание
+--------|----|----
+{} | Object |Коллекция описаний счетов
+Object.alias|String|Псевдоним счета
+Object.currency|Integer|ID валюты счета
+
+## Установка баланса по умолчанию
+
+Запрос устанавливает для вашего QIWI Кошелька счет, баланс которого будет использоваться для фондирования всех платежей по умолчанию. Счет должен содержаться в [списке счетов](#balances_list)
+
+[Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/saveAccountAttributesUsingPATCH)
+
+~~~shell
+user@server:~$ curl -X PATCH "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd"
+  --header "Accept: application/json"
+  --header "Content-Type: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  -d '{ "defaultAccount": true }'
+~~~
+
+~~~http
+PATCH /funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Content-type: application/json
+Host: edge.qiwi.com
+~~~
+~~~jsontsp-
+{
+  "defaultAccount": true
+}
+~~~
+
+<h3 class="request method">Запрос → PATCH</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
+        <ul>
+        <strong>В теле запроса используются обязательные параметры:</strong>
+             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>accountAlias</strong> - псевдоним счета в кошельке из <a href="#balances_list">списка счетов</a> (параметр <i>accounts[].alias</i> в ответе)</li>
+        </ul>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметр</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    </li>
+</ul>
+
+
+Параметр|Тип|Описание
+--------|----|----
+defaultAccount|Boolean| Признак установки счета по умолчанию
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+~~~
+
+Успешный ответ содержит HTTP-код запроса 200.
 
 # Платежи {#payments}
 
