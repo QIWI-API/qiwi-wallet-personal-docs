@@ -23,7 +23,7 @@ toc_footers:
 
 # Введение {#intro}
 
-###### Последнее обновление: 2018-02-28 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
+###### Последнее обновление: 2018-05-22 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 
@@ -2229,6 +2229,161 @@ transaction.id|String|ID транзакции в процессинге QIWI Wal
 transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
 state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
 
+
+## Перевод по банковским реквизитам {#banks_wire}
+
+Запрос выполняет перевод на счета российских банков по полным реквизитам счета. Возможен обычный перевод или перевод через систему БЭСП (ускоренная обработка платежа, не более 1 операционного дня).
+
+~~~shell
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/382/payments"
+  --header "Content-Type: application/json"
+  --header "Accept: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  -d '{
+        "id":"21131343",
+        "sum": {
+          "amount":1000,
+          "currency":"643"
+        },
+        "paymentMethod": {
+          "type":"Account",
+          "accountId":"643"
+        },
+        "fields": {
+          "account_type": "2",
+          "urgent": "0",
+          "lname": "Иванов",
+          "fname": "Иван",
+          "mname": "Иванович",
+          "mfo": "046577795",
+          "account":"40817***"
+        }
+      }'
+~~~
+
+~~~http
+POST /sinap/api/v2/terms/466/payments HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+
+{
+  "id":"21131343",
+  "sum": {
+        "amount":1000,
+        "currency":"643"
+  },
+  "paymentMethod": {
+      "type":"Account",
+      "accountId":"643"
+  },
+  "fields": {
+          "account_type": "2",
+          "urgent": "0",
+          "lname": "Иванов",
+          "fname": "Иван",
+          "mname": "Иванович",
+          "mfo": "046577795",
+          "account":"40817***"
+  }
+}
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+        <ul>
+        <strong>В pathname POST-запроса используется параметр:</strong>
+             <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
+             <ul><li>466 - Тинькофф Банк</li>
+             <li>464 - Альфа-Банк</li>
+             <li>821 - Промсвязьбанк</li>
+             <li>804 - АО "ОТП БАНК"</li>
+             <li>810 - АО "РОССЕЛЬХОЗБАНК"</li>
+             <li>816 - ВТБ 24 (ПАО)</li>
+             <li>819 - АО ЮНИКРЕДИТ БАНК</li>
+             <li>868 - КИВИ БАНК (АО)</li>
+             <li>870 - ПАО Сбербанк</li>
+             <li>1134 - ПАО "МОСКОВСКИЙ КРЕДИТНЫЙ БАНК"</li>
+             <li>27324 - АО "РАЙФФАЙЗЕНБАНК"</li>
+             </ul></li>
+        </ul>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
+    </li>
+</ul>
+
+Параметр|Тип|Описание
+--------|----|----
+id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
+sum|Object| Данные о сумме платежа:
+sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
+sum.currency|String|Валюта (только `643`, рубли)
+paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
+paymentMethod.type|String |Константа, `Account`
+paymentMethod.accountId|String| Константа, `643`.
+fields|Object| Реквизиты платежа. Содержит параметры:
+fields.account| String| Номер банковского счета получателя
+fields.mfo| String|БИК соответствующего банка/территориального отделения банка
+fields.urgent| String|Признак ускоренного перевода по системе БЭСП. Значение `0` - не использовать; значение `1` - выполнить перевод через систему БЭСП (в течение операционного дня). **Внимание! Взимается дополнительная комиссия за перевод в системе БЭСП**
+fields.account_type| String|Тип банковского идентификатора. Для каждого банка применяется собственное значение:<br>Тинькофф Банк - `3`<br>Альфа-Банк - `2`<br>ОТП банк - `2`<br>Россельхозбанк - `2`<br>ВТБ 24 - `2`<br>Промсвязьбанк - `9`<br>ЮНИКРЕДИТ БАНК - `2`<br>КИВИ БАНК - `2`<br>Сбербанк - `2`<br>МОСКОВСКИЙ КРЕДИТНЫЙ БАНК - `2`<br>РАЙФФАЙЗЕНБАНК -`2`.
+fields.lname|String|Фамилия получателя
+fields.fname|String|Имя получателя
+fields.mname|String|Отчество получателя
+
+<h3 class="request">Ответ ←</h3>
+
+~~~json
+{
+  "id": "21131343",
+  "terms": "466",
+  "fields": {
+          "account": "407121010910909011",
+          "account_type": "1",
+          "exp_date": "MMYY"
+  },
+  "sum": {
+         "amount": 1000,
+         "currency": "643"
+  },
+  "source": "account_643",
+  "transaction": {
+         "id": "4969142201",
+         "state": {
+            "code": "Accepted"
+          }
+  }
+}
+~~~
+
+Успешный JSON-ответ содержит данные о принятом платеже:
+
+Параметр | Тип | Описание
+-----|----|-----
+id | Number | Копия параметра `id` из исходного запроса
+terms | String | Параметр **ID** из URL запроса
+fields|Object|Копия объекта `fields` из исходного запроса
+sum|Object|Копия объекта `sum` из исходного запроса.
+source| String| Константа, `account_643`
+transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
+transaction.id|String|ID транзакции в процессинге QIWI Wallet
+transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
+state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
+
 ## Оплата других услуг {#charity}
 
 Оплата услуги по идентификатору пользователя. Данный запрос применяется для провайдеров, использующих в реквизитах единственный пользовательский идентификатор, без проверки номера аккаунта.
@@ -2548,6 +2703,243 @@ transaction.id|String|ID транзакции в процессинге QIWI Wal
 transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
 state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments).
 
+# Оплата счетов
+
+## Список счетов
+
+Получение списка неоплаченных счетов кошелька пользователя.
+
+~~~shell
+user@server:~$ curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer ***' 'https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50'
+~~~
+
+~~~http
+GET /checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50 HTTP/1.1
+Accept: application/json
+Authorization: Bearer ***
+Host: edge.qiwi.com
+User-Agent: ****
+~~~
+
+<h3 class="request method">Запрос → GET</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50</span></h3></li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Данные параметры передаются в строке запроса:</span>
+    </li>
+</ul>
+
+Параметр|Тип|Описание
+--------|----|----
+rows | Integer |Максимальное число счетов в ответе, для разбивки списка на части. Целое число от 1 до 50. По умолчанию возвращается не более 50 счетов.
+statuses|String| Статус неоплаченного счета. Строка `READY_FOR_PAY`
+min_creation_datetime|Long|Нижняя временная граница для поиска счетов, Unix-time
+max_creation_datetime|Long|Верхняя временная граница для поиска счетов, Unix-time
+next_id|Number|Начальный идентификатор для поиска, чтобы возврат списка выполнялся начиная с этого значения
+next_creation_datetime|Long|Начальное время для поиска (возвращаются только счета, выставленные ранее этого времени), Unix-time.
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+~~~
+
+~~~json
+{
+  "bills": [
+    {
+      "id": 1063702405,
+      "external_id": "154140605",
+      "creation_datetime": 1523025585000,
+      "expiration_datetime": 1523026003808,
+      "sum": {
+        "currency": 643,
+        "amount": 100
+      },
+      "status": "READY_FOR_PAY",
+      "type": "MERCHANT",
+      "repetitive": false,
+      "provider": {
+        "id": 480706,
+        "short_name": "Букмекерская контора ФОНБЕТ",
+        "long_name": "ООО «Ф.О.Н.»",
+        "logo_url":"https://static.qiwi.com/img/providers/logoBig/480706_l.png"
+      },
+      "comment": "Deposit to FON 13515573",
+      "pay_url":"https://bill.qiwi.com/order/external/form.action?from=480706&to=79262468447&order=1063702405&billref=site"
+    }
+  ]
+}
+~~~
+
+Успешный JSON-ответ содержит список неоплаченных счетов кошелька, соответствующих заданному фильтру:
+
+<a name="invoice_data"></a>
+
+Параметр|Тип|Описание
+--------|----|----
+bills|Array[Object]|Массив платежей. <br>Число платежей равно параметру `rows` из запроса, или максимально 50, если параметр не указан
+bills[].id|Integer|Идентификатор счета в QIWI Кошельке
+bills[].external_id|String| Идентификатор счета у мерчанта
+bills[].creation_datetime|Long|Дата/время создания счета, Unix-time
+bills[].expiration_datetime|Long|Дата/время окончания срока действия счета, Unix-time
+bills[].sum|Object|Сведения о сумме счета
+sum.currency|Integer|Валюта суммы счета
+sum.amount|Number|Сумма счета
+bills[].status|String | Константа, READY_FOR_PAY
+bills[].type|String|Константа, MERCHANT
+bills[].repetitive|Boolean|Служебное поле
+bills[].provider|Object|Информация о мерчанте
+provider.id|Integer|Идентификатор мерчанта в QIWI
+provider.short_name|String|Сокращенное название мерчанта
+provider.long_name|String|Полное название мерчанта
+provider.logo_url|String|Ссылка на логотип мерчанта
+bills[].comment|String|Комментарий к счету
+bills[].pay_url|String|Ссылка для оплаты счета в интерфейсе QIWI
+
+## Оплата счета
+
+Выполнение оплаты счета без подтверждения.
+
+~~~shell
+user@server:~$ curl -X POST --header 'Content-Type: application/json;charset=UTF-8' --header 'Accept: application/json' --header 'Authorization: Bearer 68ec21fd52e4244838946dd07ed225a1' -d '{ \
+   "invoice_uid": "1063702405", \
+   "currency": "643" \
+ }' 'https://edge.qiwi.com/checkout/invoice/pay/wallet'
+~~~
+
+~~~http
+POST /checkout/invoice/pay/wallet HTTP/1.1
+Accept: application/json
+Content-type: application/json
+Authorization: Bearer ***
+Host: edge.qiwi.com
+User-Agent: ****
+
+{
+   "invoice_uid": "1063702405",
+   "currency": "643"
+}
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/checkout/invoice/pay/wallet</span></h3></li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
+    </li>
+</ul>
+
+Параметр|Тип|Описание
+--------|----|----
+invoice_uid | String |ID счета в QIWI (параметр bills[].id в [данных о счете](#invoice_data)
+currency|String| Валюта суммы счета (параметр bills[].sum.currency в [данных о счете](#invoice_data))
+
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+~~~
+
+~~~json
+{
+  "invoice_status": "PAID_STATUS",
+  "is_sms_confirm": false,
+  "WALLET_ACCEPT_PAY_RESULT": {}
+}
+~~~
+
+Успешный JSON-ответ содержит статус оплаченного счета:
+
+Параметр|Тип|Описание
+--------|----|----
+invoice_status|String|Строка кода статуса оплаты счета, PAID_STATUS. Любой другой статус означает неуспех платежной транзакции.
+is_sms_confirm|String|Признак подтверждения по SMS
+
+## Отмена неоплаченного счета
+
+Метод позволяет отклонить неоплаченный счет. При этом счет становится недоступным для оплаты.
+
+
+~~~shell
+user@server:~$ curl -X POST --header 'Accept: application/json' --header 'Authorization: Bearer ***' 'https://edge.qiwi.com/checkout/api/bill/reject' -d '{ "id": 1034353453 }'
+~~~
+
+~~~http
+POST /checkout/api/bill/reject HTTP/1.1
+Accept: application/json
+Authorization: Bearer ***
+Host: edge.qiwi.com
+User-Agent: ****
+
+{
+  "id": 1034353453
+}
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/checkout/api/bill/reject</span></h3></li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer ***</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Данный обязательный параметр передается в теле запроса в формате JSON:</span>
+    </li>
+</ul>
+
+Параметр|Тип|Описание
+--------|----|----
+id | Integer |ID счета для отмены
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+~~~
+
+Успешный ответ содержит HTTP-код 200.
+
+
 # Коды ошибок {#errors}
 
 В случае ошибки API возвращается HTTP-код ошибки.
@@ -2559,6 +2951,7 @@ HTTP Код | Секция API | Описание
 403 | Все | Нет прав на данный запрос (недостаточно разрешений у токена)
 404 | История платежей, Информация о транзакции, Отправка квитанции | Не найдена транзакция или отсутствуют платежи с указанными признаками
 404 | Балансы, Профиль пользователя, Идентификация пользователя | Не найден кошелек
+404 | Оплата/Отмена счета | Не найден счет
 423 | История платежей | Слишком много запросов, сервис временно недоступен
 
 Следующие ошибки возвращаются в запросах [истории платежей](#payments_history) и [транзакции](#txn_info) в параметре `errorCode`:
