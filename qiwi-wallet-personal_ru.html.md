@@ -1580,7 +1580,7 @@ paymentMethod.type|String |Константа, `Account`|+
 paymentMethod.accountId|String| Константа, `643`|+
 fields|Object| Реквизиты платежа. Содержит параметр:
 fields.account| String|Номер телефона получателя (с международным префиксом)|+
-comment|String|Комментарий к платежу. Необязательный параметр.|-
+comment|String|Комментарий к платежу|-
 
 <h3 class="request">Ответ ←</h3>
 
