@@ -252,7 +252,7 @@ userInfo.promoEnabled|String|Служебная информация
 
 Данный запрос позволяет отправить данные для упрощенной идентификации своего QIWI кошелька.
 
-<aside class="warning">Допускается <b>не</b> идентифицировать не более 5 кошельков на одного владельца. См. п. 3.1.1 ч. III <a href="https://static.qiwi.com/ru/doc/oferta_lk.pdf">Оферты сервиса "QIWI Wallet"</a></aside>
+<aside class="warning">Допускается идентифицировать не более 5 кошельков на одного владельца. См. п. 3.1.1 ч. III <a href="https://static.qiwi.com/ru/doc/oferta_lk.pdf">Оферты сервиса "QIWI Wallet"</a></aside>
 
 Для получения статуса упрощенно идентифицированного кошелька необходимо предоставить следующие данные о пользователе-владельце кошелька:
 
@@ -1476,7 +1476,7 @@ Content-Type: application/json
 
 ## Автозаполнение платежных форм
 
-[Пример ссылки (нажмите для перехода на форму)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&extra%5B%27comment%27%5D=test123&currency=643)
+[Пример ссылки (нажмите для перехода на форму)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&extra%5B%27comment%27%5D=test123&currency=643&blocked[0]=account)
 
 Данный запрос отображает в браузере заполненную форму на сайте qiwi.com для совершения платежа.
 
@@ -1488,14 +1488,15 @@ https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInte
     <li><h3>Параметры</h3><span>В пути ссылки и в строке запроса указываются параметры платежной формы.</span></li>
 </ul>
 
-Параметр|Описание|Тип|Обяз.
+Параметр|Тип|Описание|Обяз.
 ---------|--------|---|----
-ID | Идентификатор провайдера (указывается в пути ссылки).<br>Возможные значения:<br>`99` - [Перевод на QIWI Wallet](#p2p)<br>`1963` - [Перевод на карту Visa](#cards) (карты российских банков)<br>`21013` - [Перевод на карту MasterCard](#cards) (карты российских банков)<br>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<br>`1960` – [Перевод на карту Visa](#cards)<br>`21012` – [Перевод на карту MasterCard](#cards)<br>[Идентификаторы операторов мобильной связи](#mnp)<br>[Идентификаторы других провайдеров](#charity) | Integer | +
-amountInteger | Целая часть суммы платежа (рубли). Указывается в строке запроса. Если параметр не указан, соответствующее поле на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)**|Integer| -
-amountFraction | Дробная часть суммы платежа (копейки). Указывается в строке запроса. Если параметр не указан, соответствующее поле на форме будет пустым.|Integer| -
-currency | Код валюты платежа. Указывается в строке запроса. **Обязательный параметр, если вы передаете в ссылке сумму платежа**|Константа, `643`|+
-extra['comment'] | Комментарий (только для `ID`=99). Указывается в строке запроса. Имя параметра должно быть URL-закодировано.|URL-encoded string |-
-extra['account'] |Номер телефона/счета/карты пользователя. Формат совпадает с форматом параметра `fields.account` в соответствующем платежном запросе. Имя параметра должно быть URL-закодировано.|URL-encoded string |-
+ID | Integer | Идентификатор провайдера (указывается в пути ссылки).<br>Возможные значения:<br>`99` - [Перевод на QIWI Wallet](#p2p)<br>`1963` - [Перевод на карту Visa](#cards) (карты российских банков)<br>`21013` - [Перевод на карту MasterCard](#cards) (карты российских банков)<br>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<br>`1960` – [Перевод на карту Visa](#cards)<br>`21012` – [Перевод на карту MasterCard](#cards)<br>[Идентификаторы операторов мобильной связи](#mnp)<br>[Идентификаторы других провайдеров](#charity) | +
+amountInteger|Integer | Целая часть суммы платежа (рубли). Указывается в строке запроса. Если параметр не указан, соответствующее поле на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)**| -
+amountFraction|Integer | Дробная часть суммы платежа (копейки). Указывается в строке запроса. Если параметр не указан, соответствующее поле на форме будет пустым.| -
+currency|Константа, `643` | Код валюты платежа. Указывается в строке запроса. **Обязательный параметр, если вы передаете в ссылке сумму платежа**|+
+extra['comment'] |URL-encoded string | Комментарий. Указывается в строке запроса. Имя параметра должно быть URL-закодировано. **Параметр используется только для ID=99**|-
+extra['account'] |URL-encoded string |Номер телефона/счета/карты пользователя. Формат совпадает с форматом параметра `fields.account` в соответствующем платежном запросе. Имя параметра должно быть URL-закодировано.|-
+blocked|Array[String]|Признак неактивного поля формы. Пользователь не сможет менять значение данного поля. Каждое поле задается соответствующим именем параметра и нумеруется элементом массива, начиная с нуля (`blocked[0]`, `blocked[1]` и т.д.). Если параметр не указан, пользователь сможет изменить все поля формы. Допустимые значения:<br>`sum` - поле "сумма платежа", <br>`account` - поле "номер счета/телефона/карты",<br>`comment` - поле "комментарий". Пример (неактивное поле суммы платежа): `blocked[0]=sum` |-
 
 
 ## Перевод на QIWI Кошелек {#p2p}
@@ -1564,22 +1565,22 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
+    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON.</span>
     </li>
 </ul>
 
-Параметр|Тип|Описание
---------|----|----
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
+Параметр|Тип|Описание|Обяз.
+--------|----|----|------
+id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).|+
 sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-sum.currency|String|Валюта (только `643`, рубли)
+sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
+sum.currency|String|Валюта (только `643`, рубли)|+
 paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`
-paymentMethod.accountId|String| Константа, `643`.
+paymentMethod.type|String |Константа, `Account`|+
+paymentMethod.accountId|String| Константа, `643`|+
 fields|Object| Реквизиты платежа. Содержит параметр:
-fields.account| String|Номер телефона получателя (с международным префиксом)
-comment|String|Комментарий к платежу. Необязательный параметр.
+fields.account| String|Номер телефона получателя (с международным префиксом)|+
+comment|String|Комментарий к платежу. Необязательный параметр.|-
 
 <h3 class="request">Ответ ←</h3>
 
@@ -1945,6 +1946,7 @@ Host: edge.qiwi.com
              <ul>
              <li>1963 - Перевод на карту Visa (карты российских банков)</li>
              <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
+             <li>22351 - Перевод на <a href="https://qiwi.com/qvc/help.action">Виртуальную карту QIWI</a></li>
              <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:
              <ul><li>1960 – Перевод на карту Visa</li>
              <li>21012 – Перевод на карту MasterCard</li></ul></li>
@@ -2887,12 +2889,6 @@ function getReqParams(){
         throw new Exception('Request method must be POST!');
     }
 
-    //Make sure that the content type of the POST request has been set to application/json
-    $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
-    if(strcasecmp($contentType, 'application/json') != 0){
-        throw new Exception('Content type must be: application/json');
-    }
-
     //Receive the RAW post data.
     $content = trim(file_get_contents("php://input"));
 
@@ -2910,7 +2906,7 @@ function getReqParams(){
     }
 
     // Строка параметров
-    $reqparams = $decoded['payment']['sum']['currency'] . '|' $decoded['payment']['sum']['amount'] . '|'. $decoded['payment']['type'] . '|' . $decoded['payment']['account'] . '|' . $decoded['payment']['txnId'];
+    $reqparams = $decoded['payment']['sum']['currency'] . '|' . $decoded['payment']['sum']['amount'] . '|'. $decoded['payment']['type'] . '|' . $decoded['payment']['account'] . '|' . $decoded['payment']['txnId'];
     // Подпись из запроса
     foreach ($decoded as $name=>$value) {
        if ($name == 'hash') {
@@ -2925,11 +2921,11 @@ function getReqParams(){
 
 $Request = getReqParams();
 
-// Base64 encoded ключ для уведомлений webhook (/hook/{hookId}/key)
+// Base64 encoded ключ для уведомлений webhook (метод /hook/{hookId}/key)
 
 $NOTIFY_PWD = "JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=";
 
-// Вычисляем подпись по ключу и строке параметров
+// Вычисляем хэш SHA-256 строки параметров и шифруем с ключом для уведомлений
 
 $reqres = hash_hmac("sha256", $Request[0], base64_decode($NOTIFY_PWD));
 
@@ -2991,14 +2987,14 @@ total.amount|Number(Decimal)|Сумма
 total.currency|Integer|Код валюты
 test|Boolean|Признак тестового сообщения
 version|String|Версия API
-hash|String| Хэш цифровой подписи веб-хука. Как проверить хэш: берутся значения полей из списка payment.signFields в формате String, конкатенируются с разделителем `|`, подписываются расшифрованным из Base64 [личным ключом](#hook_key), и полученное значение сравнивается с тем, что пришло в поле `hash`.
+hash|String| Хэш цифровой подписи веб-хука. Как проверить хэш: берутся значения полей из списка payment.signFields (**в том же порядке**) в формате String, конкатенируются с разделителем `|` и шифруются алгоритмом SHA-256 с [ключом проверки подписи](#hook_key). Полученное значение сравнивается с тем, что пришло в поле `hash`.
 
 Пример расшифровки подписи:
 
 1. По запросу пользователь получает свой ключ, закодированный в Base64: `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
 2. Приходит веб-хук `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79165238345","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
 3. Конкатенируются требуемые поля платежных данных: `643|1|IN|+79165238345|13353941550`
-4. Поля подписываются расшифрованным ключом. Результат `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0` совпадает с параметром `hash` из запроса.
+4. Поля шифруются методом SHA-256 с раскодированным ключом из п.1. Результат `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0` совпадает с параметром `hash` из запроса.
 
 ## Зарегистрировать обработчик webhook
 
@@ -3011,7 +3007,7 @@ curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=ht
 <h3 class="request method">Запрос → PUT</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL</h3><span>https://edge.qiwi.com//payment-notifier/v1/hooks</span></li>
+    <li><h3>URL</h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks</span></li>
 </ul>
 
 <ul class="nestedList header">
@@ -3067,7 +3063,7 @@ Content-Type: application/json
 <h3 class="request method">Запрос → DELETE</h3>
 
 <ul class="nestedList url">
-        <li><h3>URL </h3><span>https://edge.qiwi.com//payment-notifier/v1/hooks/{hookId}</span></li>
+        <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/{hookId}</span></li>
         <ul>
         <strong>В pathname запроса используется параметр:</strong>
              <li><strong>hookId</strong> - UUID веб-хука</li>
@@ -3110,7 +3106,7 @@ Content-Type: application/json
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL </h3><span>https://edge.qiwi.com//payment-notifier/v1/hooks/{hookId}/key</span></li>
+    <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/{hookId}/key</span></li>
 </ul>
 
 <ul class="nestedList header">
@@ -3156,7 +3152,7 @@ Content-Type: application/json
 <h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL </h3><span>https://edge.qiwi.com//payment-notifier/v1/hooks/{hookId}/newkey</span></li>
+    <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/{hookId}/newkey</span></li>
 </ul>
 
 <ul class="nestedList header">
@@ -3203,7 +3199,7 @@ Content-Type: application/json
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL </h3><span>https://edge.qiwi.com//payment-notifier/v1/hooks/active</span></li>
+    <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/active</span></li>
 </ul>
 
 <ul class="nestedList header">
@@ -3248,7 +3244,7 @@ Content-Type: application/json
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
-    <li><h3>URL </h3><span>https://edge.qiwi.com//payment-notifier/v1/hooks/test</span></li>
+    <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/test</span></li>
 </ul>
 
 <ul class="nestedList header">
