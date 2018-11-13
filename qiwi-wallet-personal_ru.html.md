@@ -137,7 +137,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -314,7 +314,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -405,7 +405,7 @@ Host: edge.qiwi.com
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -523,7 +523,7 @@ Host: edge.qiwi.com
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -677,7 +677,7 @@ Host: edge.qiwi.com
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -762,7 +762,7 @@ Host: edge.qiwi.com
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -906,7 +906,7 @@ Host: edge.qiwi.com
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -962,7 +962,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1021,7 +1021,7 @@ Host: edge.qiwi.com
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1133,7 +1133,7 @@ alias|String| Псевдоним нового счета (см. [запрос д
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1180,7 +1180,7 @@ Host: edge.qiwi.com
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1252,7 +1252,7 @@ defaultAccount|Boolean| Признак установки счета по умо
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1420,7 +1420,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1491,10 +1491,10 @@ https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInte
 Параметр|Тип|Описание|Обяз.
 ---------|--------|---|----
 ID | Integer | Идентификатор провайдера (указывается в пути ссылки).<br>Возможные значения:<br>`99` - [Перевод на QIWI Wallet](#p2p)<br>`1963` - [Перевод на карту Visa](#cards) (карты российских банков)<br>`21013` - [Перевод на карту MasterCard](#cards) (карты российских банков)<br>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<br>`1960` – [Перевод на карту Visa](#cards)<br>`21012` – [Перевод на карту MasterCard](#cards)<br>`31652` - [Перевод на карту МИР](#cards)<br>[Идентификаторы операторов мобильной связи](#mnp)<br>[Идентификаторы других провайдеров](#charity) | +
-amountInteger|Integer | Целая часть суммы платежа (рубли). Указывается в строке запроса. Если параметр не указан, соответствующее поле на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)**| -
+amountInteger|Integer | Целая часть суммы платежа (рубли). Указывается в строке запроса. Если параметр не указан, соответствующее поле на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)** | -
 amountFraction|Integer | Дробная часть суммы платежа (копейки). Указывается в строке запроса. Если параметр не указан, соответствующее поле на форме будет пустым.| -
-currency|Константа, `643` | Код валюты платежа. Указывается в строке запроса. **Обязательный параметр, если вы передаете в ссылке сумму платежа**|+
-extra['comment'] |URL-encoded string | Комментарий. Указывается в строке запроса. Имя параметра должно быть URL-закодировано. **Параметр используется только для ID=99**|-
+currency|Константа, `643` | Код валюты платежа. Указывается в строке запроса. **Обязательный параметр, если вы передаете в ссылке сумму платежа** |+
+extra['comment'] |URL-encoded string | Комментарий. Указывается в строке запроса. Имя параметра должно быть URL-закодировано. **Параметр используется только для ID=99** |-
 extra['account'] |URL-encoded string |Номер телефона/счета/карты пользователя. Формат совпадает с форматом параметра `fields.account` в соответствующем платежном запросе. Имя параметра должно быть URL-закодировано.|-
 blocked|Array[String]|Признак неактивного поля формы. Пользователь не сможет менять значение данного поля. Каждое поле задается соответствующим именем параметра и нумеруется элементом массива, начиная с нуля (`blocked[0]`, `blocked[1]` и т.д.). Если параметр не указан, пользователь сможет изменить все поля формы. Допустимые значения:<br>`sum` - поле "сумма платежа", <br>`account` - поле "номер счета/телефона/карты",<br>`comment` - поле "комментарий". Пример (неактивное поле суммы платежа): `blocked[0]=sum` |-
 
@@ -1559,7 +1559,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1685,7 +1685,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -1960,7 +1960,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -2187,7 +2187,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -2341,7 +2341,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -2479,7 +2479,7 @@ Host: edge.qiwi.com
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
@@ -2640,7 +2640,7 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer ***</li>
+             <li>Authorization: Bearer *** </li>
         </ul>
     </li>
 </ul>
