@@ -3285,6 +3285,36 @@ Content-Type: application/json
 -----|------|------
 response|String|Результат запроса
 
+
+# Выставления счетов {#invoice}
+
+Для выставления счетов используется протокол [API QIWI Кассы](https://developer.qiwi.com/ru/bill-payments/), для получения ключений для авторизации запросов вы можете зайти на [p2p.qiwi.com](https://p2p.qiwi.com) в личный кабинет, или использовать запрос:
+
+Данный запрос позволяет создать пару ключей (PublicKey и SecretKey) и настроить url  уведомлений (если нужно).
+
+
+~~~shell
+curl -X POST \
+  https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create \
+  -H 'Authorization: Bearer ec74********' \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d '{"keysPairName":"Name","serverNotificationsUrl":"https://test.com"}'
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+Для Authorization используется токен open api.
+
+<h3>URL <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></h3>
+       
+Параметр|Тип|Описание
+--------|----|----
+keysPairName| String| Название пары ключей
+serverNotificationsUrl|String |URL для нотификаций об оплате счетов
+
+
+
 # Оплата счетов {#pay_invoice}
 
 ## Список счетов  {#list_invoice}
