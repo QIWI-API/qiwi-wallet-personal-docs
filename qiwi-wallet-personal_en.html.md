@@ -206,6 +206,36 @@ operator|String|Название мобильного оператора ном�
 phoneHash|String|Служебная информация
 promoEnabled|String|Служебная информация
 
+# Checkout  {#invoice}
+
+For use Checkout  [API QIWI Кассы](https://developer.qiwi.com/en/bill-payments/), you can create authorization key in   [p2p.qiwi.com](https://p2p.qiwi.com) or POST request:
+
+This request create keys (PublicKey и SecretKey) and add  Server Notifications in settings.
+
+
+~~~shell
+curl -X POST \
+  https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create \
+  -H 'Authorization: Bearer ec74********' \
+  -H 'Content-Type: application/json' \
+  -H 'cache-control: no-cache' \
+  -d '{"keysPairName":"Name","serverNotificationsUrl":"https://test.com"}'
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+Для Authorization используется токен open api.
+
+<h3>URL <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></h3>
+       
+Параметр|Тип|Описание
+--------|----|----
+keysPairName| String| Names Keys
+serverNotificationsUrl|String |URL for Server Notifications
+
+
+
+
 
 # Payments History {#payments}
 
