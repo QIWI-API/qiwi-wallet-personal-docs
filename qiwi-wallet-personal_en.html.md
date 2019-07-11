@@ -208,7 +208,7 @@ promoEnabled|String|Служебная информация
 
 # Checkout  {#invoice}
 
-For use Checkout  [API QIWI Кассы](https://developer.qiwi.com/en/bill-payments/), you can create authorization key in   [p2p.qiwi.com](https://p2p.qiwi.com) or POST request:
+To use Checkout in  [API QIWI Kassa](https://developer.qiwi.com/en/bill-payments/), you can create authorization key in   [p2p.qiwi.com](https://p2p.qiwi.com) or use this POST request.
 
 This request create keys (PublicKey и SecretKey) and add  Server Notifications in settings.
 
@@ -224,11 +224,11 @@ curl -X POST \
 
 <h3 class="request method">Запрос → POST</h3>
 
-Для Authorization используется токен open api.
+In `Authorization` header use open api token.
 
 <h3>URL <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></h3>
        
-Параметр|Тип|Описание
+Parameter|Type|Description
 --------|----|----
 keysPairName| String| Names Keys
 serverNotificationsUrl|String |URL for Server Notifications
