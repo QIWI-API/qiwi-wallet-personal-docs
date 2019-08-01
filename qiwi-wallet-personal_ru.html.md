@@ -126,6 +126,38 @@ Content-type: application/json
 Host: edge.qiwi.com
 ~~~
 
+~~~python
+import requests
+import json
+
+# Профиль пользователя
+def get_profile(api_access_token):
+    s7 = requests.Session()
+    s7.headers['Accept']= 'application/json'
+    s7.headers['authorization'] = 'Bearer ' + api_access_token
+    p = s7.get('https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=true&contractInfoEnabled=true&userInfoEnabled=true')
+    print(p)
+    return json.loads(p.text)
+~~~
+
+~~~python
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# Полная информация о профиле пользователя
+get_profile(api_access_token)
+
+# Профиль пользователя
+# статус блокировки
+get_profile(api_access_token)['contractInfo']['blocked']
+
+# Профиль пользователя
+# уровень идентификации в Киви Банке
+get_profile(api_access_token)['contractInfo']['identificationInfo'][0]['identificationLevel']
+
+# привязанный email
+get_profile(api_access_token)['authInfo']['boundEmail']
+~~~
+
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
@@ -299,6 +331,19 @@ Host: edge.qiwi.com
 }
 ~~~
 
+~~~python
+import requests
+import json
+
+# идентификация
+def get_identification(api_access_token,my_login):
+    s = requests.Session()
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    res = s.get('https://edge.qiwi.com/identification/v1/persons/'+my_login+'/identification')
+    print(res)
+    return json.loads(res.text)
+~~~
+
 <h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
@@ -354,6 +399,25 @@ Content-Type: application/json
   "snils": "",
   "type": "VERIFIED"
 }
+~~~
+
+~~~python
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+get_identification(api_access_token,mylogin)
+
+<Response [200]>
+
+{'birthDate': '1984-01-09',
+ 'firstName': 'Иванов',
+ 'id': 79262111317,
+ 'inn': 'xxxxxxx',
+ 'lastName': 'Иванов',
+ 'middleName': 'Иванович',
+ 'oms': None,
+ 'passport': 'xxxx xxxxxx',
+ 'snils': None,
+ 'type': 'FULL'}
 ~~~
 
 Успешный ответ в формате JSON содержит подтверждение идентификации кошелька:
@@ -509,6 +573,20 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
+~~~python
+import requests
+import json
+
+# История платежей - последние и следующие n платежей
+def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_TxnDate):
+    s = requests.Session()
+    s.headers['authorization'] = 'Bearer ' + api_access_token  
+    parameters = {'rows': rows_num, 'nextTxnId': next_TxnId, 'nextTxnDate': next_TxnDate}
+    h = s.get('https://edge.qiwi.com/payment-history/v2/persons/' + my_login + '/payments', params = parameters)
+    print(h)
+    return json.loads(h.text)
+~~~
+
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
@@ -598,6 +676,23 @@ Content-Type: application/json
 }
 ~~~
 
+~~~python
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# последние 20 платежей
+payment_history_last(mylogin, api_access_token, '20','','')
+
+# дата и время следующего платежа
+nextTxnDate = payment_history_last(mylogin, api_access_token, '3','','')['nextTxnDate']
+
+# id транзакции следующего платежа
+nextTxnId = payment_history_last(mylogin, api_access_token, '3','','')['nextTxnId']
+
+# История платежей - последние и следующие n платежей
+payment_history_last(mylogin, api_access_token, '3', nextTxnId, nextTxnDate)
+~~~
+
 Успешный JSON-ответ содержит список платежей из истории кошелька, соответствующих заданному фильтру:
 
 <a name="history_data"></a>
@@ -663,6 +758,20 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
+~~~python
+import requests
+import json
+
+# История платежей - сумма за диапазон дат
+def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date):
+    s = requests.Session()
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    parameters = {'startDate': start_Date,'endDate': end_Date}
+    h = s.get('https://edge.qiwi.com/payment-history/v2/persons/' + my_login + '/payments/total', params = parameters)
+    print(h)
+    return json.loads(h.text)
+~~~
+
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
@@ -717,6 +826,20 @@ Content-Type: application/json
 }
 ~~~
 
+~~~python
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# История платежей - сумма за диапазон
+# не более 90 дней с 12 апреля по 11 июля 2019 года
+payment_history_summ_dates(mylogin, api_access_token, '2019-04-12T00:00:00Z','2019-07-11T23:59:59Z')
+
+{'incomingTotal': [{'amount': 3.33, 'currency': 840},
+  {'amount': 3481, 'currency': 643}],
+ 'outgoingTotal': [{'amount': 3989.98, 'currency': 643},
+  {'amount': 3.33, 'currency': 840}]}
+~~
+
 Успешный JSON-ответ содержит статистику платежей за выбранный период:
 
 Параметр|Тип|Описание
@@ -745,6 +868,20 @@ GET /payment-history/v2/transactions/9112223344 HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
+~~~
+
+~~~python
+import requests
+import json
+
+# История платежей - информация по транзакции
+def payment_history_transaction(api_access_token, transaction_id, transaction_type):
+    s = requests.Session()
+    s.headers['authorization'] = 'Bearer ' + api_access_token  
+    parameters = {'type': transaction_type} # transaction_type 'IN' 'OUT'
+    h = s.get('https://edge.qiwi.com/payment-history/v1/transactions/'+transaction_id, params = parameters)
+    print(h)
+    return json.loads(h.text)
 ~~~
 
 <h3 class="request method">Запрос → GET</h3>
@@ -828,6 +965,21 @@ Content-Type: application/json
 }
 ~~~
 
+~~~python
+# номер кошелька в формате 79992223344
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# История платежей - информация по транзакции
+payment_history_transaction(api_access_token, '11181101215', 'OUT')
+
+# История платежей - информация по транзакции из истории платежей
+last_txn_id = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['txnId']
+last_txn_type = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['type']
+
+payment_history_transaction(api_access_token, str(last_txn_id), last_txn_type)
+~~~
+
 Успешный JSON-ответ содержит данные о транзакции:
 
 Параметр|Тип|Описание
@@ -890,6 +1042,22 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
+~~~python
+import requests
+import json
+
+# История платежей - получение текста чека в файле
+def payment_history_cheque_file(transaction_id, transaction_type, filename, api_access_token):
+    s = requests.Session()
+    s.headers['Accept'] ='application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    parameters = {'type': transaction_type,'format': 'PDF'}
+    h = s.get('https://edge.qiwi.com/payment-history/v1/transactions/'+transaction_id+'/cheque/file', params=parameters)
+    print(h)
+    with open(filename + '.pdf', 'wb') as f:
+        f.write(h.content)
+~~~
+
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
@@ -946,6 +1114,21 @@ Host: edge.qiwi.com
 {"email": "my@example.com"}
 ~~~
 
+~~~python
+import requests
+import json
+
+# История платежей - отправить чек на email
+def payment_history_cheque_send(transaction_id, transaction_type, email, api_access_token):
+    s = requests.Session()
+    s.headers['content-type'] ='application/json'
+    s.headers['Accept'] ='application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    postjson = {'email':email}
+    h = s.post('https://edge.qiwi.com/payment-history/v1/transactions/' + transaction_id + '/cheque/send?type=' + transaction_type, json=postjson)
+    print(h)
+~~~
+
 <h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
@@ -984,6 +1167,18 @@ HTTP/1.1 201 Created
 Content-Type: application/json
 ~~~
 
+~~~python
+# номер кошелька в формате 79992223344
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+last_txn_id = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['txnId']
+last_txn_type = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['type']
+
+# История платежей - оптравить чек на email
+payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', api_access_token)
+~~~
+
 Успешный JSON-ответ содержит HTTP-код отправки файла.
 
 # Баланс QIWI Кошелька {#balance}
@@ -1005,6 +1200,20 @@ GET /funding-sources/v2/persons/79115221133/accounts HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
+~~~
+
+~~~python
+import requests
+import json
+
+# Баланс QIWI Кошелька
+def balance(login, api_access_token):
+    s = requests.Session()
+    s.headers['Accept']= 'application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token  
+    b = s.get('https://edge.qiwi.com/funding-sources/v2/persons/' + login + '/accounts')
+    print(b)
+    return json.loads(b.text)
 ~~~
 
 <h3 class="request method">Запрос → GET</h3>
@@ -1065,6 +1274,20 @@ Content-Type: application/json
         }
     ]
 }
+~~~
+
+~~~python
+# номер кошелька в формате 79992223344
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# все балансы
+balance(mylogin,api_access_token)
+
+# рублевый баланс
+balances = balance(mylogin,api_access_token)['accounts']
+rubAlias = [x for x in balances if x.alias =='qw_wallet_rub']
+rubAlias['balance']['amount']
 ~~~
 
 Успешный ответ содержит JSON-массив ваших счетов QIWI Кошелька для фондирования платежей и текущие балансы счетов:
@@ -1285,6 +1508,19 @@ Accept: application/json
 Host: edge.qiwi.com
 ~~~
 
+~~~python
+import requests
+import json
+
+# Стандартные комиссии
+def get_prv_commission(prv_id):
+    s = requests.Session()
+    s.headers['Accept']='application/vnd.qiwi.sso-v1+json'
+    s.headers['content-type'] = 'application/json'
+    с = s.get('https://qiwi.com/sinap/providers/'+prv_id+'/form/proxy.action')
+    return json.loads(с.text)['data']['body']['content']['terms']['commission']
+~~~
+
 <h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
@@ -1340,6 +1576,11 @@ Content-Type: application/json
          }
      }
 }     
+~~~
+
+~~~python
+get_prv_commission('466') # Альфа-Банк
+get_prv_commission('1') # МТС
 ~~~
 
 Успешный ответ содержит JSON-фрагмент с данными о ставках комиссии и ограничениях на сумму платежа (с учетом комиссии) для провайдера:
@@ -1401,6 +1642,22 @@ Host: edge.qiwi.com
     }
   }
 }
+~~~
+
+~~~python
+import requests
+import json
+
+# Сложные комиссии
+def get_online_comission(api_access_token,to_qw,prv_id,sum_pay):
+    s = requests.Session()
+    s.headers = {'content-type': 'application/json'}
+    s.headers['authorization'] = 'Bearer ' + api_access_token  
+    postjson = json.loads('{"account":"","paymentMethod":{"type":"Account","accountId":"643"},"purchaseTotals":{"total":{"amount":"","currency":"643"}}}')
+    postjson['account']=to_qw
+    postjson['purchaseTotals']['total']['amount']=sum_pay
+    c_online = s.post('https://edge.qiwi.com/sinap/providers/'+prv_id+'/onlineCommission',json=postjson)
+    return json.loads(c_online.text)
 ~~~
 
 <h3 class="request method">Запрос → POST</h3>
@@ -1477,6 +1734,14 @@ Content-Type: application/json
 }
 ~~~
 
+~~~python
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# Сложные комиссии
+get_online_comission(api_access_token,'+380000000000','99',5000)
+get_online_comission(api_access_token,'4890xxxxxxxx1698','22351',1000)
+get_online_comission(api_access_token,'42767xxxxxxxx268','1963',200)
+~~~
 
 <h3 class="request">Ответ ←</h3>
 
@@ -1557,6 +1822,27 @@ Host: edge.qiwi.com
 }
 ~~~
 
+~~~python
+import requests
+import json
+import time
+
+# Перевод на QIWI Кошелек
+def send_p2p(my_login,api_access_token,to_qw,comment,sum_p2p):
+    s = requests.Session()
+    s.headers = {'content-type': 'application/json'}
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    s.headers['User-Agent'] = 'Android v3.2.0 MKT'
+    s.headers['Accept']= 'application/json'
+    postjson = json.loads('{"id":"","sum":{"amount":"","currency":""},"paymentMethod":{"type":"Account","accountId":"643"},"comment":"'+comment+'","fields":{"account":""}}')
+    postjson['id']=str(int(time.time() * 1000))
+    postjson['sum']['amount']=sum_p2p
+    postjson['sum']['currency']='643'
+    postjson['fields']['account']=to_qw
+    res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/99/payments',json=postjson)
+    print(res)
+    return json.loads(res.text)
+~~~
 
 <h3 class="request method">Запрос → POST</h3>
 
@@ -1619,6 +1905,19 @@ Content-Type: application/json
 }
 ~~~
 
+~~~python
+send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01)
+
+<Response [200]>
+{'comment': 'comment',
+ 'fields': {'account': '+79261112233'},
+ 'id': '1514296828893',
+ 'source': 'account_643',
+ 'sum': {'amount': 99.01, 'currency': '643'},
+ 'terms': '99',
+ 'transaction': {'id': '11982501857', 'state': {'code': 'Accepted'}}}
+~~~
+
 Успешный JSON-ответ содержит данные о принятом платеже:
 
 Параметр | Тип | Описание
@@ -1678,6 +1977,26 @@ Host: edge.qiwi.com
         "account":"9161112233"
   }
 }
+~~~
+
+~~~python
+import requests
+import json
+
+# Оплата мобильного телефона
+def send_mobile(api_access_token,prv_id,to_account,comment,sum_pay):
+    s = requests.Session()
+    s.headers['Accept']= 'application/json'
+    s.headers['Content-Type']= 'application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    postjson = {"id":"","sum": {"amount":"","currency":"643"},"paymentMethod": {"type":"Account","accountId":"643"},"comment":"","fields": {"account":""}}
+    postjson['id']=str(int(time.time() * 1000))
+    postjson['sum']['amount']=sum_pay
+    postjson['fields']['account']=to_account
+    postjson['comment']=comment
+    res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/'+prv_id+'/payments', json=postjson)
+    print(res)
+    return json.loads(res.text)
 ~~~
 
 <h3 class="request method">Запрос → POST</h3>
@@ -1743,6 +2062,10 @@ Content-Type: application/json
 }
 ~~~
 
+~~~python
+send_mobile(api_access_token,'2','9670058909','123','1')
+~~~
+
 Успешный JSON-ответ содержит данные о принятом платеже:
 
 Параметр | Тип | Описание
@@ -1776,6 +2099,18 @@ Cache-Control: no-cache
 phone=79651238341
 ~~~
 
+~~~python
+import requests
+import json
+
+def mobile_operator(phone_number):
+    s = requests.Session()
+    res = s.post('https://qiwi.com/mobile/detect.action', data = {'phone': phone_number })
+    s.headers['Accept'] = 'application/json'
+    s.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    print(res)
+    return json.loads(res.text)['message']
+~~~
 <h3 class="request method" id="mnp">Запрос → POST</h3>
 
 <ul class="nestedList url">
@@ -1832,6 +2167,10 @@ Content-Type: application/json
  "message": "По указанному номеру невозможно определить оператора сотовой связи. Воспользуйтесь поиском.",
  "messages": {}
 }
+~~~
+
+~~~python
+mobile_operator(79652468447)
 ~~~
 
 <h3 class="request">Ответ ←</h3>
@@ -2061,6 +2400,18 @@ Cache-Control: no-cache
 cardNumber=4256********1231
 ~~~
 
+~~~python
+import requests
+import json
+
+def card_system(card_number):
+    s = requests.Session()
+    res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
+    print(res)
+    print(res.text)
+    return json.loads(res.text)['message']
+~~~
+
 <h3 class="request method" id="card_check">Запрос → POST</h3>
 
 <ul class="nestedList url">
@@ -2098,6 +2449,10 @@ Content-Type: application/json
   "message": "1963",
   "messages": null
 }
+~~~
+
+~~~python
+card_system(4890xxxxxxxx1698)
 ~~~
 
 ~~~text
@@ -2469,6 +2824,27 @@ Host: edge.qiwi.com
 }
 ~~~
 
+~~~python
+import requests
+import json
+import time
+
+# оплата простого провайдера
+
+def pay_simple_prv(api_access_token,prv_id,to_account,sum_pay):
+    s = requests.Session()
+    s.headers['Accept']= 'application/json'
+    s.headers['Content-Type']= 'application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    postjson = {"id":"","sum": {"amount":"","currency":"643"},"paymentMethod": {"type":"Account","accountId":"643"},"fields": {"account":""}}
+    postjson['id']=str(int(time.time() * 1000))
+    postjson['sum']['amount']=sum_pay
+    postjson['fields']['account']=to_account
+    res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/'+prv_id+'/payments', json=postjson)
+    print(res)
+    return json.loads(res.text)
+~~~
+
 <h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
@@ -2502,6 +2878,20 @@ Host: edge.qiwi.com
 <aside class="notice">Поиск идентификатора выполняется на сайте qiwi.com в поисковой строке. Идентификатор находится в URL ссылки на платежную форму провайдера вида <a>https://qiwi.com/payment/form.action?provider=ID</a> или <a>https://qiwi.com/payment/form/ID</a></aside>
 
 ![Поиск провайдера](/images/provider_id.jpg)
+
+~~~python
+import requests
+import json
+
+# поиск на qiwi.com - опредление id провайдера по названию
+def qiwi_com_search(search_phrase):
+    s = requests.Session()
+    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
+    print(search)
+    return json.loads(search.text)['data']['items']
+
+qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
+~~~
 
 Параметр|Тип|Описание
 --------|----|----
@@ -2539,6 +2929,19 @@ Content-Type: application/json
           }
   }
 }
+~~~
+
+~~~python
+# zenit
+pay_simple_prv(api_access_token,'26386','2166191','10')
+
+<Response [200]>
+{'fields': {'account': '2166191'},
+ 'id': '1509031806148',
+ 'source': 'account_643',
+ 'sum': {'amount': 10, 'currency': '643'},
+ 'terms': '26386',
+ 'transaction': {'id': '11585129951', 'state': {'code': 'Accepted'}}}
 ~~~
 
 Успешный JSON-ответ содержит данные о принятом платеже:
@@ -3307,7 +3710,7 @@ curl -X POST \
 Для Authorization используется токен open api.
 
 <h3>URL <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></h3>
-       
+
 Параметр|Тип|Описание
 --------|----|----
 keysPairName| String| Название пары ключей
