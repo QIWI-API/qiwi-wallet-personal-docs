@@ -5,7 +5,7 @@ search: true
 
 metatitle: QIWI Wallet API
 
-metadescription: QIWI Wallet API  allows to access QIWI Wallet account information and make some payment operations as well as get payment reports.
+metadescription: QIWI Wallet API  allows you to access QIWI Wallet account information and make some payment operations as well as get payment reports.
 
 toc_footers:
  - <a href='/index-en.html'>Home page</a>
@@ -227,7 +227,7 @@ curl -X POST \
 In `Authorization` header use open api token.
 
 <h3>URL <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></h3>
-       
+
 Parameter|Type|Description
 --------|----|----
 keysPairName| String| Names Keys
@@ -247,21 +247,21 @@ serverNotificationsUrl|String |URL for Server Notifications
 Пример 1. Последние 10 платежей
 
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=10"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 
 Пример 2. Платежи за 10.05.2017
 
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00Z&endDate=2017-05-10T23%3A59%3A59Z"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 
 Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12:35:23Z"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
@@ -291,7 +291,7 @@ Host: edge.qiwi.com
 ~~~
 
 ~~~text
-Пример 3. Продолжение списка платежей 
+Пример 3. Продолжение списка платежей
 
 (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23)
 ~~~
@@ -321,7 +321,7 @@ URL запроса:
 
 В заголовке `Authorization` указываются [параметры авторизации](#auth_api).
 
-Параметры запроса: 
+Параметры запроса:
 
 Параметр|Тип|Описание
 --------|----|----
@@ -403,14 +403,14 @@ statusText|String |Описание статуса платежа
 trmTxnId|String|Клиентский ID транзакции
 account| String|Номер счета получателя
 sum|Object| Объект с суммой платежа. Параметры:
-amount|Decimal|сумма, 
-currency|String|валюта 
+amount|Decimal|сумма,
+currency|String|валюта
 commission|Object| Объект с комиссией платежа. Параметры:
-amount|Decimal|сумма, 
-currency|String|валюта 
+amount|Decimal|сумма,
+currency|String|валюта
 total|Object| Объект с общей суммой платежа. Параметры:
-amount|Decimal|сумма, 
-currency|String|валюта 
+amount|Decimal|сумма,
+currency|String|валюта
 provider|Object| Объект с описанием провайдера. Параметры:
 id|Integer|ID провайдера в процессинге,
 shortName|String|краткое наименование провайдера,
@@ -435,7 +435,7 @@ nextTxnDate|DateTime|Дата/время следующей транзакции
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00Z&endDate=2017-03-31T11%3A44%3A15Z"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
@@ -508,7 +508,7 @@ currency|String|Валюта платежей
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/funding-sources/v1/accounts/current"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
@@ -711,7 +711,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/terms/99/payments"
   --header "Accept: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
   --header "User-Agent: ***"
-  -d '{"id":"11111111111111", "sum": {"amount":100, "currency":"643"}, "source": "account_643", 
+  -d '{"id":"11111111111111", "sum": {"amount":100, "currency":"643"}, "source": "account_643",
        "paymentMethod": {"type":"Account", "accountId":"643"},
        "comment":"test", "fields": {"account":"+79121112233"}}'
 ~~~
@@ -723,14 +723,14 @@ Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 User-Agent: ****
- 
+
 {
 	"id":"11111111111111",
 	"sum": {
 				"amount":100,
 				"currency":"643"
 			},
-	"source": "account_643", 
+	"source": "account_643",
 	"paymentMethod": {
 			"type":"Account",
 			"accountId":"643"
@@ -749,13 +749,13 @@ User-Agent: ****
 * `Authorization: Bearer ***`
 
 В заголовке `Authorization` указываются [параметры авторизации](#auth_api).
- 
+
 Тело запроса - JSON. Параметры запроса:
 
 Параметр|Тип|Описание
 --------|----|----
 id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Объект, содержащий данные о сумме платежа: 
+sum|Object| Объект, содержащий данные о сумме платежа:
 amount|Decimal|Сумма
 currency|String|Валюта (только `643`, рубли)
 source| String| Источник фондирования платежа. Допускается только следующее значение:<br>`account_643` - рублевый счет QIWI Кошелька отправителя
@@ -799,7 +799,7 @@ fields|Копия объекта `fields` из исходного запроса
 source| Копия параметра `source` из исходного запроса.
 transaction|Объект с данными о транзакции в процессинге. Параметры:
 id|ID транзакции в процессинге
-state|Объект содержит текущее состояние транзакции в процессинге. Содержит только параметр `code` со значением `Accepted` (платеж принят) 
+state|Объект содержит текущее состояние транзакции в процессинге. Содержит только параметр `code` со значением `Accepted` (платеж принят)
 
 ## Cell phone top-up {#cell}
 
@@ -815,7 +815,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/terms/1/payments"
   --header "Accept: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
   --header "User-Agent: ***"
-  -d '{"id":"11111111111111", "sum": {"amount":100, "currency":"643"}, "source": "account_643", 
+  -d '{"id":"11111111111111", "sum": {"amount":100, "currency":"643"}, "source": "account_643",
        "paymentMethod": {"type":"Account", "accountId":"643"}, "fields": {"account":"9161112233"}}'
 ~~~
 
@@ -826,14 +826,14 @@ Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 User-Agent: ****
- 
+
 {
   "id":"21131343",
   "sum": {
         "amount":1000,
         "currency":"643"
       },
-  "source": "account_643", 
+  "source": "account_643",
   "paymentMethod": {
       "type":"Account",
       "accountId":"643"
@@ -855,13 +855,13 @@ User-Agent: ****
 Параметр URL запроса:
 
 * `{id}` - идентификатор провайдера. Определяется с помощью [проверки мобильного оператора](#mnp).
- 
-Тело запроса - JSON. Все перечисленные параметры обязательны: 
+
+Тело запроса - JSON. Все перечисленные параметры обязательны:
 
 Параметр|Тип|Описание
 --------|----|----
 id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Объект, содержащий данные о сумме платежа: 
+sum|Object| Объект, содержащий данные о сумме платежа:
 amount|Decimal|Сумма
 currency|String|Валюта (только `643`, рубли)
 source| String| Источник фондирования платежа. Допускается только следующее значение:<br>`account_643` - рублевый счет QIWI Кошелька отправителя
@@ -918,7 +918,7 @@ state|Объект, содержит текущее состояние тран�
 
 ~~~shell
 user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/x-www-form-urlencoded"
   --header "User-Agent: ***"
   -d 'phone=%2B79651238341'
@@ -942,7 +942,7 @@ phone | String URL-encoded |Мобильный номер в междунаро�
 
 **Формат ответа**
 
-Успешная проверка - Ответ с HTTP Status 200, параметр `code.value` = 0. 
+Успешная проверка - Ответ с HTTP Status 200, параметр `code.value` = 0.
 
 Идентификатор оператора находится в параметре `message`.
 
@@ -989,7 +989,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/terms/1963/payments"
   --header "Accept: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
   --header "User-Agent: ***"
-  -d '{"id":"21131343", "sum": {"amount":1000, "currency":"643"}, "source": "account_643", 
+  -d '{"id":"21131343", "sum": {"amount":1000, "currency":"643"}, "source": "account_643",
        "paymentMethod": {"type":"Account", "accountId":"643"}, "fields": {"account":"4256********1231"}}'
 ~~~
 
@@ -1000,14 +1000,14 @@ Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 User-Agent: ****
- 
+
 {
   "id":"21131343",
   "sum": {
         "amount":1000,
         "currency":"643"
       },
-  "source": "account_643", 
+  "source": "account_643",
   "paymentMethod": {
       "type":"Account",
       "accountId":"643"
@@ -1036,12 +1036,12 @@ User-Agent: ****
         * 21012 – MasterCard
     * 31652 - национальная платежная система МИР
 
-Тело запроса - JSON. Параметры запроса: 
+Тело запроса - JSON. Параметры запроса:
 
 Параметр|Тип|Описание
 --------|----|----
 id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Объект, содержащий данные о сумме платежа: 
+sum|Object| Объект, содержащий данные о сумме платежа:
 amount|Decimal|Сумма
 currency|String|Валюта (только `643`, рубли)
 source| String| Источник фондирования платежа. Допускается только следующее значение:<br>`account_643` - рублевый счет QIWI Кошелька отправителя
@@ -1098,7 +1098,7 @@ state|Объект, содержит текущее состояние тран�
 
 ~~~shell
 user@server:~$ curl -X POST "https://qiwi.com/card/detect.action"
-  --header "Accept: application/json" 
+  --header "Accept: application/json"
   --header "Content-Type: application/x-www-form-urlencoded"
   --header "User-Agent: ***"
   -d 'cardNumber=4256********1231'
@@ -1122,7 +1122,7 @@ cardNumber | String |Немаскированный номер карты
 
 **Формат ответа**
 
-Успешная проверка - Ответ с HTTP Status 200, параметр `code.value` = 0. 
+Успешная проверка - Ответ с HTTP Status 200, параметр `code.value` = 0.
 
 Идентификатор платежной системы находится в параметре `message`.
 
@@ -1168,8 +1168,8 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/terms/466/payments"
   --header "Accept: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
   --header "User-Agent: ***"
-  -d '{"id":"21131343", "sum": {"amount":1000,"currency":"643"}, "source": "account_643", 
-       "paymentMethod": {"type":"Account","accountId":"643"}, 
+  -d '{"id":"21131343", "sum": {"amount":1000,"currency":"643"}, "source": "account_643",
+       "paymentMethod": {"type":"Account","accountId":"643"},
        "fields": {"account_type": "1","account":"4256********1231","exp_date": "MMYY"}}'
 ~~~
 
@@ -1180,14 +1180,14 @@ Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 User-Agent: ****
- 
+
 {
   "id":"21131343",
   "sum": {
         "amount":1000,
         "currency":"643"
       },
-  "source": "account_643", 
+  "source": "account_643",
   "paymentMethod": {
       "type":"Account",
       "accountId":"643"
@@ -1216,12 +1216,12 @@ User-Agent: ****
     * 821 - Промсвязьбанк
     * 815 - Русский Стандарт
 
-Тело запроса - JSON. Параметры запроса: 
+Тело запроса - JSON. Параметры запроса:
 
 Параметр|Тип|Описание
 --------|----|----
 id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Объект, содержащий данные о сумме платежа: 
+sum|Object| Объект, содержащий данные о сумме платежа:
 amount|Decimal|Сумма
 currency|String|Валюта (только `643`, рубли)
 source| String| Источник фондирования платежа. Допускается только следующее значение:<br>`account_643` - рублевый счет QIWI Кошелька отправителя
