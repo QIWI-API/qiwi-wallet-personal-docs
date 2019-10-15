@@ -1933,6 +1933,189 @@ transaction.id|String|ID транзакции в процессинге QIWI Wal
 transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
 state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
 
+## Конвертация {#CCY}
+
+~~~shell
+user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments'
+  --header "Content-Type: application/json"
+  --header "Accept: application/json"
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  -d '{
+        "id":"11111111111111",
+        "sum": {
+          "amount":100,
+          "currency":"398"
+        },
+        "paymentMethod": {
+          "type":"Account",
+          "accountId":"643"
+        },
+        "comment":"test",
+        "fields": {
+          "account":"+79121112233"
+        }
+      }'
+~~~
+
+~~~http
+POST /sinap/api/v2/terms/99/payments HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+
+{
+	"id":"11111111111111",
+	"sum": {
+				"amount":100.00,
+				"currency":"398"
+	},
+	"paymentMethod": {
+			"type":"Account",
+			"accountId":"643"
+	},
+	"comment":"test",
+	"fields": {
+	 			"account":"+79121112233"
+	}
+}
+~~~
+
+<h3 class="request method">Запрос → POST</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/99/payments</span></h3></li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON.</span>
+    </li>
+</ul>
+
+Параметр|Тип|Описание|Обяз.
+--------|----|----|------
+id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).|+
+sum|Object| Данные о сумме платежа:
+sum.amount|Number|Сумма . Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
+sum.currency|String|Код валюты (number-3 ISO-4217)|+
+paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
+paymentMethod.type|String |Константа, `Account`|+
+paymentMethod.accountId|String| Константа, `643`|+
+fields|Object| Реквизиты платежа. Содержит параметр:
+fields.account| String|Номер кошелька на котором происходит конвертация|+
+comment|String|Комментарий к платежу|-
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id": "150217833198900",
+    "terms": "99",
+    "fields": {
+        "account": "79121238345"
+    },
+    "sum": {
+        "amount": 100,
+        "currency": "398"
+    },
+    "transaction": {
+        "id": "11155897070",
+        "state": {
+            "code": "Accepted"
+        }
+    },
+    "source": "account_643",
+    "comment": "test"
+}
+~~~
+
+## Курс валют 
+~~~shell
+user@server:~$ curl "https://edge.qiwi.com/sinap/crossRates"
+  --header "Accept: application/json"
+  --header "Content-Type: application/json"
+  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+~~~
+
+~~~http
+GET /sinap/crossRates HTTP/1.1
+Accept: application/json
+Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Content-type: application/json
+Host: edge.qiwi.com
+~~~
+
+
+
+<h3 class="request method">Запрос → GET</h3>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/sinap/crossRates<a>parameter=value</a></span></h3></li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "result": [
+        {
+            "set": "General",
+            "from": "398",
+            "to": "643",
+            "rate": 6.22665
+        },
+        {
+            "set": "General",
+            "from": "398",
+            "to": "756",
+            "rate": 412.0174305
+        },
+.................................................
+{
+            "set": "General",
+            "from": "980",
+            "to": "978",
+            "rate": 31.4680914
+        }
+    ]
+}
+~~~
+
+Успешный JSON-ответ содержит данные о профиле пользователя:
+
+Параметр|Тип|Описание
+--------|----|----
+from|String|Валюта покупки
+to|String|Валюта продажи
+rate|Number|Курс
+
+
 ## Оплата сотовой связи {#cell}
 
 ~~~shell
