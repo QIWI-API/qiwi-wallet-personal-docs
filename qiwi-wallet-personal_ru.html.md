@@ -30,7 +30,7 @@ toc_footers:
 
 # Введение {#intro}
 
-###### Последнее обновление: 2018-12-05 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
+###### Последнее обновление: 2019-10-17 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 
@@ -111,6 +111,8 @@ user@server:~$ curl "адрес сервера"
 
 # Профиль пользователя {#profile}
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false"
   --header "Accept: application/json"
@@ -157,8 +159,6 @@ get_profile(api_access_token)['contractInfo']['identificationInfo'][0]['identifi
 # привязанный email
 get_profile(api_access_token)['authInfo']['boundEmail']
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/person-profile/v1/profile/current?<a>parameter=value</a></span></h3></li>
@@ -295,6 +295,8 @@ userInfo.promoEnabled|String|Служебная информация
 
 Для идентификации кошелька вы обязательно должны отправить ФИО, серию/номер паспорта и дату рождения. Если данные прошли проверку, то в ответе будет отображен ваш ИНН и упрощенная идентификация кошелька будет установлена. В случае если данные не прошли проверку, кошелек остается в статусе "Без идентификации".
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/identification/v1/persons/79111234567/identification"
   --header "Accept: application/json"
@@ -344,14 +346,13 @@ def get_identification(api_access_token,my_login):
     return json.loads(res.text)
 ~~~
 
-<h3 class="request method">Запрос → POST</h3>
-
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/identification/v1/persons/<a>wallet</a>/identification</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/identification/v1/persons/<a>wallet</a>/identification</span></h3>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
         </ul>
+    </li>    
 </ul>
 
 <ul class="nestedList header">
@@ -442,6 +443,8 @@ oms| String | Номер полиса ОМС пользователя
 
 [Подробнее об идентификации](https://qiwi.com/settings/account/identification.action)
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl -X GET "https://edge.qiwi.com/identification/v1/persons/79111234567/identification"
   --header "Accept: application/json"
@@ -455,14 +458,13 @@ Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
 Host: edge.qiwi.com
 ~~~
 
-<h3 class="request method">Запрос → GET</h3>
-
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/identification/v1/persons/<a>wallet</a>/identification</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/identification/v1/persons/<a>wallet</a>/identification</span></h3>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
              <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом, но без <i>+</i>)</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -517,23 +519,29 @@ oms| String | Номер полиса ОМС пользователя (перв�
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByUserUsingGET_1)
 
-~~~shell
-Пример 1. Последние 10 платежей
+<h3 class="request method">Запрос → GET</h3>
 
+>Пример 1. Последние 10 платежей
+
+~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=10"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+~~~
 
-Пример 2. Платежи за 10.05.2017
+> Пример 2. Платежи за 10.05.2017
 
+~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+~~~
 
-Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
+> Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
+~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00"
   --header "Accept: application/json"
   --header "Content-Type: application/json"
@@ -549,9 +557,7 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
-~~~text
-Пример 2. Платежи за 10.05.2017
-~~~
+> Пример 2. Платежи за 10.05.2017
 
 ~~~http
 GET /payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
@@ -560,11 +566,7 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
-~~~text
-Пример 3. Продолжение списка платежей
-
-(в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
-~~~
+> Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
 ~~~http
 GET /payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
@@ -586,8 +588,6 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
     print(h)
     return json.loads(h.text)
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
@@ -745,6 +745,8 @@ nextTxnDate|DateTime|Дата/время следующей транзакции
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryTotalByUserUsingGET_1)
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00"
   --header "Accept: application/json"
@@ -771,8 +773,6 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
     print(h)
     return json.loads(h.text)
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
@@ -857,6 +857,8 @@ outgoingTotal[].currency|String|Валюта платежей
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByTransactionUsingGET_1)
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344"
   --header "Accept: application/json"
@@ -883,8 +885,6 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
     print(h)
     return json.loads(h.text)
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3></li>
@@ -1029,6 +1029,8 @@ regularPaymentEnabled|Boolean|Специальное поле
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/getChequeBytesUsingGET)
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF"
   --header "Accept: application/json"
@@ -1057,8 +1059,6 @@ def payment_history_cheque_file(transaction_id, transaction_type, filename, api_
     with open(filename + '.pdf', 'wb') as f:
         f.write(h.content)
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3></li>
@@ -1096,6 +1096,8 @@ Content-Type: application/json
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/cheque-controller-v-1/sendChequeUsingPOST)
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN"
   --header "Accept: application/json"
@@ -1128,8 +1130,6 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
     h = s.post('https://edge.qiwi.com/payment-history/v1/transactions/' + transaction_id + '/cheque/send?type=' + transaction_type, json=postjson)
     print(h)
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3></li>
@@ -1189,6 +1189,8 @@ payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', ap
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/getByAliasUsingGET_1)
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts"
   --header "Accept: application/json"
@@ -1215,8 +1217,6 @@ def balance(login, api_access_token):
     print(b)
     return json.loads(b.text)
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
@@ -1313,6 +1313,8 @@ balance.currency | Number| Код валюты баланса (number-3 ISO-4217
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/createAccountUsingPOST)
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts"
   --header "Accept: application/json"
@@ -1331,13 +1333,11 @@ Host: edge.qiwi.com
 { "alias": "qw_wallet_eur" }
 ~~~
 
-<h3 class="request method">Запрос → POST</h3>
-
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
         <ul>
         <strong>В теле запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li  >
         </ul>
 </ul>
 
@@ -1376,6 +1376,8 @@ Content-Type: application/json
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/getAccountsOfferUsingGET)
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl -X GET "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/offer"
   --header "Accept: application/json"
@@ -1388,8 +1390,6 @@ Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
@@ -1431,6 +1431,8 @@ Object.currency|Integer|ID валюты счета
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/saveAccountAttributesUsingPATCH)
 
+<h3 class="request method">Запрос → PATCH</h3>
+
 ~~~shell
 user@server:~$ curl -X PATCH "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd"
   --header "Accept: application/json"
@@ -1448,8 +1450,6 @@ Host: edge.qiwi.com
 
 { "defaultAccount": true }
 ~~~
-
-<h3 class="request method">Запрос → PATCH</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
@@ -1495,6 +1495,8 @@ Content-Type: application/json
 
 Для провайдеров, оплата которых доступна через API, можно запросить комиссионные условия (стандартные тарифы).
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/sinap/providers/99/form"
   --header "Content-Type: application/json"
@@ -1520,8 +1522,6 @@ def get_prv_commission(prv_id):
     с = s.get('https://qiwi.com/sinap/providers/'+prv_id+'/form/proxy.action')
     return json.loads(с.text)['data']['body']['content']['terms']['commission']
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/providers/<a>id</a>/form</span></h3></li>
@@ -1776,6 +1776,8 @@ blocked|Array[String]|Признак неактивного поля формы.
 
 ## Перевод на QIWI Кошелек {#p2p}
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments'
   --header "Content-Type: application/json"
@@ -1843,8 +1845,6 @@ def send_p2p(my_login,api_access_token,to_qw,comment,sum_p2p):
     print(res)
     return json.loads(res.text)
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/99/payments</span></h3></li>
@@ -1935,6 +1935,10 @@ state.code | String| Текущий статус транзакции, толь�
 
 ## Конвертация {#CCY}
 
+Метод выполняет перевод средств на валютный счет QIWI Кошелька с конвертацией с рублевого счета.
+
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments'
   --header "Content-Type: application/json"
@@ -1981,8 +1985,6 @@ Host: edge.qiwi.com
 }
 ~~~
 
-<h3 class="request method">Запрос → POST</h3>
-
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/99/payments</span></h3></li>
 </ul>
@@ -2006,7 +2008,7 @@ Host: edge.qiwi.com
 --------|----|----|------
 id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).|+
 sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма . Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
+sum.amount|Number|Сумма в валюте. Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
 sum.currency|String|Код валюты (number-3 ISO-4217)|+
 paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
 paymentMethod.type|String |Константа, `Account`|+
@@ -2042,7 +2044,27 @@ Content-Type: application/json
 }
 ~~~
 
-## Курс валют 
+Успешный JSON-ответ содержит данные о принятом платеже:
+
+Параметр | Тип | Описание
+-----|----|-----
+id | String | Копия параметра `id` из исходного запроса
+terms | String | Константа, `99`
+fields|Object|Копия объекта `fields` из исходного запроса.
+sum|Object|Копия объекта `sum` из исходного запроса.
+source| String| Константа, `account_643`
+comment|String|Копия параметра `comment` из исходного запроса (если присутствует в запросе)
+transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
+transaction.id|String|ID транзакции в процессинге QIWI Wallet
+transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
+state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
+
+## Курс валют
+
+Метод возвращает текущие курсы и кросс-курсы валют КИВИ Банка.
+
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/sinap/crossRates"
   --header "Accept: application/json"
@@ -2058,12 +2080,8 @@ Content-type: application/json
 Host: edge.qiwi.com
 ~~~
 
-
-
-<h3 class="request method">Запрос → GET</h3>
-
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/crossRates<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/sinap/crossRates</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -2096,8 +2114,8 @@ Content-Type: application/json
             "to": "756",
             "rate": 412.0174305
         },
-.................................................
-{
+        ...,
+        {
             "set": "General",
             "from": "980",
             "to": "978",
@@ -2107,7 +2125,7 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный JSON-ответ содержит данные о профиле пользователя:
+Успешный JSON-ответ содержит массив данных о курсах валют:
 
 Параметр|Тип|Описание
 --------|----|----
@@ -2117,6 +2135,8 @@ rate|Number|Курс
 
 
 ## Оплата сотовой связи {#cell}
+
+<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1/payments"
@@ -2181,8 +2201,6 @@ def send_mobile(api_access_token,prv_id,to_account,comment,sum_pay):
     print(res)
     return json.loads(res.text)
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
@@ -2265,6 +2283,8 @@ state.code | String| Текущий статус транзакции, толь�
 
 Предварительное определение оператора мобильного номера выполняется вспомогательным запросом. В ответе возвращается идентификатор оператора для [запроса пополнения телефона](#cell).
 
+<h3 class="request method" id="mnp">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action"
   --header "Accept: application/json"
@@ -2294,7 +2314,6 @@ def mobile_operator(phone_number):
     print(res)
     return json.loads(res.text)['message']
 ~~~
-<h3 class="request method" id="mnp">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://qiwi.com/mobile/detect.action</span></h3></li>
@@ -2318,6 +2337,8 @@ def mobile_operator(phone_number):
 --------|----|----
 phone | String URL-encoded |Мобильный номер в международном формате без знака `+`. Обязательный параметр.
 
+<h3 class="request">Ответ ←</h3>
+
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2333,9 +2354,7 @@ Content-Type: application/json
 }
 ~~~
 
-~~~text
-Не удалось определить мобильного оператора
-~~~
+> Не удалось определить мобильного оператора
 
 ~~~http
 HTTP/1.1 200 OK
@@ -2356,8 +2375,6 @@ Content-Type: application/json
 mobile_operator(79652468447)
 ~~~
 
-<h3 class="request">Ответ ←</h3>
-
 Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор оператора находится в параметре `message`.
 
 Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что невозможно определить оператора.
@@ -2365,6 +2382,8 @@ mobile_operator(79652468447)
 ## Перевод на карту {#cards}
 
 Запрос выполняет перевод на карты платежных систем Visa или MasterCard. Предварительно можно [проверить тип платежной системы](#card_check).
+
+<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payments"
@@ -2468,8 +2487,6 @@ Host: edge.qiwi.com
 }
 ~~~
 
-<h3 class="request method">Запрос → POST</h3>
-
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
@@ -2566,6 +2583,8 @@ state.code | String| Текущий статус транзакции, толь�
 
 Запрос не требует  [токена доступа](#auth_param).
 
+<h3 class="request method" id="card_check">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://qiwi.com/card/detect.action"
   --header "Accept: application/json"
@@ -2595,8 +2614,6 @@ def card_system(card_number):
     return json.loads(res.text)['message']
 ~~~
 
-<h3 class="request method" id="card_check">Запрос → POST</h3>
-
 <ul class="nestedList url">
     <li><h3>URL <span>https://qiwi.com/card/detect.action</span></h3></li>
 </ul>
@@ -2619,6 +2636,8 @@ def card_system(card_number):
 --------|----|----
 cardNumber | String |Немаскированный номер карты. Обязательный параметр
 
+<h3 class="request">Ответ ←</h3>
+
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -2638,9 +2657,7 @@ Content-Type: application/json
 card_system(4890xxxxxxxx1698)
 ~~~
 
-~~~text
-Не удалось определить платежную систему карты
-~~~
+> Не удалось определить платежную систему карты
 
 ~~~http
 HTTP/1.1 200 OK
@@ -2657,8 +2674,6 @@ Content-Type: application/json
 }
 ~~~
 
-<h3 class="request">Ответ ←</h3>
-
 Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор платежной системы находится в параметре `message`.
 
 Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка.
@@ -2666,6 +2681,8 @@ Content-Type: application/json
 ## Банковский перевод {#banks}
 
 Запрос выполняет перевод на банковские карты/счета российских банков.
+
+<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/466/payments"
@@ -2714,8 +2731,6 @@ Host: edge.qiwi.com
   }
 }
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
@@ -2806,6 +2821,8 @@ state.code | String| Текущий статус транзакции, толь�
 
 Запрос выполняет перевод на счета российских банков по полным реквизитам счета. Возможен обычный перевод или перевод через систему БЭСП (ускоренная обработка платежа, не более 1 операционного дня).
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/382/payments"
   --header "Content-Type: application/json"
@@ -2861,8 +2878,6 @@ Host: edge.qiwi.com
   }
 }
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
@@ -2963,6 +2978,8 @@ state.code | String| Текущий статус транзакции, толь�
 
 Оплата услуги по идентификатору пользователя. Данный запрос применяется для провайдеров, использующих в реквизитах единственный пользовательский идентификатор, без проверки номера аккаунта.
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/674/payments"
   --header "Content-Type: application/json"
@@ -3027,8 +3044,6 @@ def pay_simple_prv(api_access_token,prv_id,to_account,sum_pay):
     print(res)
     return json.loads(res.text)
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
@@ -3145,6 +3160,8 @@ state.code | String| Текущий статус транзакции, толь�
 
 Оплата услуг коммерческих организаций по их банковским реквизитам.
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1717/payments"
   --header "Content-Type: application/json"
@@ -3224,8 +3241,6 @@ User-Agent: ****
   }
 }
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/1717/payments</span></h3></li>
@@ -3334,9 +3349,7 @@ state.code | String| Текущий статус транзакции, толь�
 
 # Уведомления (хуки) {#webhook}
 
-~~~text
-Исходящие платежи - платеж в проведении
-~~~
+> Исходящие платежи - платеж в проведении
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -3364,9 +3377,7 @@ Host: falcon.com
  "version": "1.0.0"}
 ~~~
 
-~~~text
-Исходящие платежи - успешный платеж
-~~~
+> Исходящие платежи - успешный платеж
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -3394,9 +3405,7 @@ Host: falcon.com
  "version": "1.0.0"}
 ~~~
 
-~~~text
-Исходящие платежи - неуспешный платеж
-~~~
+> Исходящие платежи - неуспешный платеж
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -3424,9 +3433,7 @@ Host: falcon.com
  "version": "1.0.0"}
 ~~~
 
-~~~text
-Входящие платежи - успешный платеж
-~~~
+> Входящие платежи - успешный платеж
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -3481,6 +3488,37 @@ Host: falcon.com
 ## Формат webhook {#hook_format}
 
 Каждый веб-хук - POST-запрос с JSON-объектом, содержащий данные об одном платеже. Схема объекта:
+
+
+~~~http
+POST /some-hook.php HTTP/1.1
+Accept: application/json
+Content-type: application/json
+Host: falcon.com
+
+{"hash": "a56ed0090fa3fd2fd0b002ed80f85a120037a6a85f840938888275e1631da96f",
+ "hookId": "8c79f60d-0272-476b-b120-6e7629467328",
+ "messageId": "bba24947-ab5f-4b33-881b-738fc3a4c9e1",
+ "payment": {"account": "79042426915",
+             "comment": "Order i_4769798 Счет №65361451. Пополнение аккаунта "
+                        "P11689160 (garik3315@gmail.com) в платежной системе "
+                        "Payeer. Внимание! Не меняйте сумму, валюту и "
+                        "комментарий к переводу, не делайте повторный перевод, "
+                        "в ином случае Ваш платеж зачислен НЕ будет!",
+             "commission": {"amount": 0.0, "currency": 643},
+             "date": "2018-03-25T13:16:48+03:00",
+             "errorCode": "0",
+             "personId": 79645265240,
+             "provider": 7,
+             "signFields": "sum.currency,sum.amount,type,account,txnId",
+             "status": "SUCCESS",
+             "sum": {"amount": 1.09, "currency": 643},
+             "total": {"amount": 1.09, "currency": 643},
+             "txnId": "12565018935",
+             "type": "IN"},
+ "test": false,
+ "version": "1.0.0"}
+~~~
 
 ~~~php
 <?php
@@ -3593,7 +3631,7 @@ test|Boolean|Признак тестового сообщения
 version|String|Версия API
 hash|String| Хэш цифровой подписи веб-хука. Как проверить хэш: берутся значения полей из списка payment.signFields (**в том же порядке**) в формате String, конкатенируются с разделителем `|` и шифруются алгоритмом SHA-256 с [ключом проверки подписи](#hook_key). Полученное значение сравнивается с тем, что пришло в поле `hash`.
 
-Пример расшифровки подписи:
+Пример расшифровки подписи (см. также функцию PHP на вкладке справа):
 
 1. По запросу пользователь получает свой ключ, закодированный в Base64: `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
 2. Приходит веб-хук `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79165238345","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
@@ -3602,13 +3640,20 @@ hash|String| Хэш цифровой подписи веб-хука. Как пр
 
 ## Регистрация обработчика webhook {#hook_reg}
 
+<h3 class="request method">Запрос → PUT</h3>
+
 ~~~shell
 curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fecho.fjfalcon.ru%2F&txnType=2"
      -H "accept: */*"
      -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
-<h3 class="request method">Запрос → PUT</h3>
+~~~http
+PUT /payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fecho.fjfalcon.ru%2F&txnType=2 HTTP/1.1
+Host: edge.qiwi.com
+Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+User-Agent: ****
+~~~
 
 <ul class="nestedList url">
     <li><h3>URL</h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks</span></li>
@@ -3653,18 +3698,18 @@ txnType|String|Тип транзакций, по которым отсылают
 
 ## Удаление webhook  {#hook_remove}
 
+<h3 class="request method">Запрос → DELETE</h3>
+
 ~~~shell
 curl -X DELETE "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"response":"Hook deleted"}
+DELETE /payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc HTTP/1.1
+Host: edge.qiwi.com
+Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+User-Agent: ****
 ~~~
-
-<h3 class="request method">Запрос → DELETE</h3>
 
 <ul class="nestedList url">
         <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/{hookId}</span></li>
@@ -3685,7 +3730,14 @@ Content-Type: application/json
 
 <h3 class="request">Ответ ←</h3>
 
-Формат JSON
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"response":"Hook deleted"}
+~~~
+
+Формат ответа JSON.
 
 Название|Тип|Описание
 -----|------|------
@@ -3695,19 +3747,20 @@ response|String|Описание результата операции
 
 Каждый веб-хук содержит цифровую подпись сообщения, зашифрованную ключом. Для получения ключа проверки подписи используйте данный запрос.
 
+<h3 class="request method">Запрос → GET</h3>
+
 
 ~~~shell
 curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" -H "accept: */*" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
-HTTP/1.1 201 Created
-Content-Type: application/json
-
-{"key":"L8UVF3JkLVUr6r70LiE0A9/5WoGGwWKG2pI/e+l/9fs="}
+GET /payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key HTTP/1.1
+Host: edge.qiwi.com
+Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+User-Agent: ****
 ~~~
 
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/{hookId}/key</span></li>
@@ -3731,7 +3784,14 @@ Content-Type: application/json
 
 <h3 class="request">Ответ ←</h3>
 
-Формат JSON
+~~~http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{"key":"L8UVF3JkLVUr6r70LiE0A9/5WoGGwWKG2pI/e+l/9fs="}
+~~~
+
+Формат ответа JSON.
 
 Название|Тип|Описание
 -----|------|------
@@ -3741,19 +3801,20 @@ key|String|Base64-закодированный ключ
 
 Для смены ключа шифрования сообщений веб-хука используйте данный запрос.
 
+<h3 class="request method">Запрос → POST</h3>
+
 
 ~~~shell
 curl -X POST "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
-HTTP/1.1 201 Created
-Content-Type: application/json
-
-{"key":"OikS4/CcIbSf+yYGnLbnOige8RGoYmGxs/LNMwkJy7Q="}
+POST /payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey HTTP/1.1
+Host: edge.qiwi.com
+Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+User-Agent: ****
 ~~~
 
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/{hookId}/newkey</span></li>
@@ -3777,7 +3838,14 @@ Content-Type: application/json
 
 <h3 class="request">Ответ ←</h3>
 
-Формат JSON
+~~~http
+HTTP/1.1 201 Created
+Content-Type: application/json
+
+{"key":"OikS4/CcIbSf+yYGnLbnOige8RGoYmGxs/LNMwkJy7Q="}
+~~~
+
+Формат ответа JSON.
 
 Название|Тип|Описание
 -----|------|------
@@ -3789,18 +3857,18 @@ key|String|Base64-закодированный новый ключ
 
 Так как сейчас используется только один тип хуков - веб-хуки, то в ответе содержится только один объект данных.
 
+<h3 class="request method">Запрос → GET</h3>
+
 ~~~shell
 curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/active" -H "accept: */*" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"hookId":"d63a8729-f5c8-486f-907d-9fb8758afcfc","hookParameters":{"url":"http://echo.fjfalcon.ru/"},"hookType":"WEB","txnType":"BOTH"}
+POST /payment-notifier/v1/hooks/active HTTP/1.1
+Host: edge.qiwi.com
+Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+User-Agent: ****
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/active</span></li>
@@ -3820,7 +3888,14 @@ Content-Type: application/json
 
 <h3 class="request">Ответ ←</h3>
 
-Формат JSON
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"hookId":"d63a8729-f5c8-486f-907d-9fb8758afcfc","hookParameters":{"url":"http://echo.fjfalcon.ru/"},"hookType":"WEB","txnType":"BOTH"}
+~~~
+
+Формат ответа JSON.
 
 Название|Тип|Описание
 -----|------|------
@@ -3833,19 +3908,19 @@ txnType|String|Тип транзакций, по которым отсылают
 
 Для проверки вашего обработчика сообщений веб-хуков используйте данный запрос. Запрос отправляется на адрес, указанный в активном веб-хуке.
 
+<h3 class="request method">Запрос → GET</h3>
+
 
 ~~~shell
 curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"response":"Webhook sent"}
+POST /payment-notifier/v1/hooks/test HTTP/1.1
+Host: edge.qiwi.com
+Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+User-Agent: ****
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL </h3><span>https://edge.qiwi.com/payment-notifier/v1/hooks/test</span></li>
@@ -3865,19 +3940,28 @@ Content-Type: application/json
 
 <h3 class="request">Ответ ←</h3>
 
-Формат JSON
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"response":"Webhook sent"}
+~~~
+
+Формат ответа JSON.
 
 Название|Тип|Описание
 -----|------|------
 response|String|Результат запроса
 
 
-# Выставление счетов {#invoice}
+# Выставление счета {#invoice}
 
-Для выставления счетов используется протокол [API QIWI Кассы](https://developer.qiwi.com/ru/bill-payments/). Для получения ключей авторизации запросов вы можете зайти на [p2p.qiwi.com](https://p2p.qiwi.com) в личный кабинет, или использовать представленный запрос.
+Для выставления счета на QIWI Кошелек используется протокол [API QIWI Кассы](https://developer.qiwi.com/ru/bill-payments/). Для получения ключей авторизации запросов вы можете зайти на [p2p.qiwi.com](https://p2p.qiwi.com) в личный кабинет, или использовать представленный запрос.
 
-Данный запрос позволяет создать пару ключей (PublicKey и SecretKey) и настроить url  уведомлений (если нужно).
+Данный запрос возвращает пару ключей (PublicKey и SecretKey) и настраивает URL уведомлений (если нужно).
 
+
+<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 curl -X POST \
@@ -3888,24 +3972,35 @@ curl -X POST \
   -d '{"keysPairName":"Name","serverNotificationsUrl":"https://test.com"}'
 ~~~
 
-<h3 class="request method">Запрос → POST</h3>
+~~~http
+POST /widgets-api/api/p2p/protected/keys/create HTTP/1.1
+Host: edge.qiwi.com
+Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+Content-Type: application/json
+User-Agent: ****
 
-Для Authorization используется токен open api.
+{"keysPairName":"Name", "serverNotificationsUrl":"https://test.com"}
+~~~
 
-<h3>URL <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></h3>
+Для заголовка Authorization используется токен Open API.
+
+<ul class="nestedList url">
+<li><h3>URL</h3> <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></li>
+</ul>
 
 Параметр|Тип|Описание
 --------|----|----
 keysPairName| String| Название пары ключей
-serverNotificationsUrl|String |URL для нотификаций об оплате счетов
+serverNotificationsUrl|String |URL для уведомлений об оплате счетов
 
 
-
-# Оплата счетов {#pay_invoice}
+# Оплата счета {#pay_invoice}
 
 ## Список счетов  {#list_invoice}
 
 Получение списка неоплаченных счетов кошелька пользователя.
+
+<h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
 user@server:~$ curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer ***' 'https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50'
@@ -3918,8 +4013,6 @@ Authorization: Bearer ***
 Host: edge.qiwi.com
 User-Agent: ****
 ~~~
-
-<h3 class="request method">Запрос → GET</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50</span></h3></li>
@@ -4010,6 +4103,8 @@ bills[].pay_url|String|Ссылка для оплаты счета в интер
 
 Выполнение оплаты счета без подтверждения.
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST --header 'Content-Type: application/json;charset=UTF-8' --header 'Accept: application/json' --header 'Authorization: Bearer 68ec21fd52e4244838946dd07ed225a1' -d '{ \
    "invoice_uid": "1063702405", \
@@ -4030,8 +4125,6 @@ User-Agent: ****
    "currency": "643"
 }
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/checkout/invoice/pay/wallet</span></h3></li>
@@ -4083,6 +4176,8 @@ is_sms_confirm|String|Признак подтверждения по SMS
 Метод позволяет отклонить неоплаченный счет. При этом счет становится недоступным для оплаты.
 
 
+<h3 class="request method">Запрос → POST</h3>
+
 ~~~shell
 user@server:~$ curl -X POST --header 'Accept: application/json' --header 'Authorization: Bearer ***' 'https://edge.qiwi.com/checkout/api/bill/reject' -d '{ "id": 1034353453 }'
 ~~~
@@ -4099,8 +4194,6 @@ User-Agent: ****
   "id": 1034353453
 }
 ~~~
-
-<h3 class="request method">Запрос → POST</h3>
 
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/checkout/api/bill/reject</span></h3></li>
@@ -4152,7 +4245,7 @@ HTTP Код | Секция API | Описание
 423 | История платежей | Слишком много запросов, сервис временно недоступен
 500 | Веб-хуки | Внутренняя ошибка сервиса (превышена длина URL)
 
-Следующие ошибки возвращаются в запросах [истории платежей](#payments_history) и [транзакции](#txn_info) в параметре `errorCode`:
+Следующие ошибки возвращаются на запросы [истории платежей](#payments_history) и [информации о транзакции](#txn_info) в параметре `errorCode` ответа:
 
 errorCode | Описание
 ----|------
