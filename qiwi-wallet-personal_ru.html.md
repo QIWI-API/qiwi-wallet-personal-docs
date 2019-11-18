@@ -3864,7 +3864,7 @@ curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/active" -H "accept:
 ~~~
 
 ~~~http
-POST /payment-notifier/v1/hooks/active HTTP/1.1
+GET /payment-notifier/v1/hooks/active HTTP/1.1
 Host: edge.qiwi.com
 Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
 User-Agent: ****
