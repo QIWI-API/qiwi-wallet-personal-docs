@@ -297,10 +297,10 @@ userInfo.promoEnabled|String|Служебная информация
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/identification/v1/persons/79111234567/identification"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+user@server:~$ curl -X POST "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9" \
   -d '{
   "birthDate": "1998-02-11",
   "firstName": "Иван",
@@ -444,8 +444,8 @@ oms| String | Номер полиса ОМС пользователя
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET "https://edge.qiwi.com/identification/v1/persons/79111234567/identification"
-  --header "Accept: application/json"
+user@server:~$ curl -X GET "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
+  --header "Accept: application/json" \
   --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
 ~~~
 
@@ -522,27 +522,27 @@ oms| String | Номер полиса ОМС пользователя (перв�
 >Пример 1. Последние 10 платежей
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=10"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=10" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
 > Пример 2. Платежи за 10.05.2017
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
 > Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -745,8 +745,8 @@ nextTxnDate|DateTime|Дата/время следующей транзакции
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00"
-  --header "Accept: application/json"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00" \
+  --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -856,8 +856,8 @@ outgoingTotal[].currency|String|Валюта платежей
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344"
-  --header "Accept: application/json"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344" \
+  --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -1027,8 +1027,8 @@ regularPaymentEnabled|Boolean|Специальное поле
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF"
-  --header "Accept: application/json"
+user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF" \
+  --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -1093,11 +1093,11 @@ Content-Type: application/json
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
-  -d '{"email": "my@example.com"}'
+user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  -d '{ "email": "my@example.com" }'
 ~~~
 
 ~~~http
@@ -1107,7 +1107,7 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Content-type: application/json
 Host: edge.qiwi.com
 
-{"email": "my@example.com"}
+{ "email": "my@example.com" }
 ~~~
 
 ~~~python
@@ -1185,8 +1185,8 @@ payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', ap
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts"
-  --header "Accept: application/json"
+user@server:~$ curl "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts" \
+  --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -1308,11 +1308,11 @@ balance.currency | Number| Код валюты баланса (number-3 ISO-4217
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
-  -d '{  "alias": "qw_wallet_eur"}'
+user@server:~$ curl -X POST "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  -d '{ "alias": "qw_wallet_eur" }'
 ~~~
 
 ~~~http
@@ -1371,8 +1371,8 @@ Content-Type: application/json
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/offer"
-  --header "Accept: application/json"
+user@server:~$ curl -X GET "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/offer" \
+  --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -1426,10 +1426,10 @@ Object.currency|Integer|ID валюты счета
 <h3 class="request method">Запрос → PATCH</h3>
 
 ~~~shell
-user@server:~$ curl -X PATCH "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X PATCH "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{ "defaultAccount": true }'
 ~~~
 
@@ -1490,8 +1490,8 @@ Content-Type: application/json
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/sinap/providers/99/form"
-  --header "Content-Type: application/json"
+user@server:~$ curl "https://edge.qiwi.com/sinap/providers/99/form" \
+  --header "Content-Type: application/json" \
   --header "Accept: application/json"
 ~~~
 
@@ -1594,10 +1594,10 @@ limits[].max | Number | максимальная сумма платежа
 Для расчета полной комиссии за платеж (с учетом всех тарифов) по заданному набору платежных реквизитов используйте другой запрос (требует [авторизации](#auth_api)).
 
 ~~~shell
-user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineCommission'
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineCommission' \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
         "account":"380995238345",
         "paymentMethod":{
@@ -1608,9 +1608,9 @@ user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineComm
           "total":{
             "amount":10,
             "currency":"643"
-            }
           }
-        }'
+        }
+      }'
 ~~~
 
 ~~~http
@@ -1769,23 +1769,23 @@ blocked|Array[String]|Признак неактивного поля формы.
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments'
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments' \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
-        "id":"11111111111111",
+        "id": "11111111111111",
         "sum": {
-          "amount":100,
-          "currency":"643"
+          "amount":  100,
+          "currency": "643"
         },
         "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
+          "type": "Account",
+          "accountId": "643"
         },
-        "comment":"test",
+        "comment": "test",
         "fields": {
-          "account":"+79121112233"
+          "account": "+79121112233"
         }
       }'
 ~~~
@@ -1798,18 +1798,18 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 
 {
-	"id":"11111111111111",
+	"id": "11111111111111",
 	"sum": {
-				"amount":100.50,
-				"currency":"643"
+		"amount": 100.50,
+		"currency": "643"
 	},
 	"paymentMethod": {
-			"type":"Account",
-			"accountId":"643"
+		"type": "Account",
+		"accountId": "643"
 	},
-	"comment":"test",
+	"comment": "test",
 	"fields": {
-	 			"account":"+79121112233"
+		"account": "+79121112233"
 	}
 }
 ~~~
@@ -1929,10 +1929,10 @@ state.code | String| Текущий статус транзакции, толь�
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments'
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments' \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
         "id":"11111111111111",
         "sum": {
@@ -1960,16 +1960,16 @@ Host: edge.qiwi.com
 {
 	"id":"11111111111111",
 	"sum": {
-				"amount":100.00,
-				"currency":"398"
+		"amount": 100.00,
+		"currency": "398"
 	},
 	"paymentMethod": {
-			"type":"Account",
-			"accountId":"643"
+		"type":"Account",
+		"accountId":"643"
 	},
-	"comment":"test",
+	"comment": "test",
 	"fields": {
-	 			"account":"+79121112233"
+	 	"account": "+79121112233"
 	}
 }
 ~~~
@@ -2055,9 +2055,9 @@ state.code | String| Текущий статус транзакции, толь�
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/sinap/crossRates"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
+user@server:~$ curl "https://edge.qiwi.com/sinap/crossRates" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
   --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
 ~~~
 
@@ -2128,22 +2128,22 @@ rate|Number|Курс
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1/payments"
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1/payments" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
         "id":"11111111111111",
         "sum": {
-          "amount":100,
-          "currency":"643"
+          "amount": 100,
+          "currency": "643"
         },
         "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
+          "type": "Account",
+          "accountId": "643"
         },
         "fields": {
-          "account":"9161112233"
+          "account": "9161112233"
         }
       }'
 ~~~
@@ -2274,9 +2274,9 @@ state.code | String| Текущий статус транзакции, толь�
 <h3 class="request method" id="mnp">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action"
-  --header "Accept: application/json"
-  --header "Content-Type: application/x-www-form-urlencoded"
+user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/x-www-form-urlencoded" \
   -d "phone=79651238341"
 ~~~
 
@@ -2373,10 +2373,10 @@ mobile_operator(79652468447)
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payments"
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payments" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
         "id":"21131343",
         "sum":{
@@ -2394,10 +2394,10 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payme
 ~~~
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payments"
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payments" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
         "id":"21131343",
         "sum":{
@@ -2573,9 +2573,9 @@ state.code | String| Текущий статус транзакции, толь�
 <h3 class="request method" id="card_check">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/card/detect.action"
-  --header "Accept: application/json"
-  --header "Content-Type: application/x-www-form-urlencoded"
+user@server:~$ curl -X POST "https://qiwi.com/card/detect.action" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/x-www-form-urlencoded" \
   -d "cardNumber=4256********1231"
 ~~~
 
@@ -2671,23 +2671,23 @@ Content-Type: application/json
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/466/payments"
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/466/payments" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
-        "id":"21131343",
+        "id": "21131343",
         "sum": {
-          "amount":1000,
-          "currency":"643"
+          "amount": 1000,
+          "currency": "643"
         },
         "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
+          "type": "Account",
+          "accountId": "643"
         },
         "fields": {
           "account_type": "1",
-          "account":"4256********1231",
+          "account": "4256********1231",
           "exp_date": "MMYY"
         }
       }'
@@ -2703,15 +2703,15 @@ Host: edge.qiwi.com
 {
   "id":"21131343",
   "sum": {
-        "amount":1000,
-        "currency":"643"
+        "amount": 1000,
+        "currency": "643"
   },
   "paymentMethod": {
-      "type":"Account",
-      "accountId":"643"
+      "type": "Account",
+      "accountId": "643"
   },
   "fields": {
-        "account":"4256********1231",
+        "account": "4256********1231",
         "account_type": "1",
         "exp_date": "MMYY"
   }
@@ -2810,10 +2810,10 @@ state.code | String| Текущий статус транзакции, толь�
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/382/payments"
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/382/payments" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
         "id":"21131343",
         "sum": {
@@ -2967,10 +2967,10 @@ state.code | String| Текущий статус транзакции, толь�
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/674/payments"
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/674/payments" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   -d '{
         "id":"21131343",
         "sum": {
@@ -3147,40 +3147,40 @@ state.code | String| Текущий статус транзакции, толь�
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1717/payments"
-  --header "Content-Type: application/json"
-  --header "Accept: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
-  --header "User-Agent: ***"
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1717/payments" \
+  --header "Content-Type: application/json" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  --header "User-Agent: ***" \
   -d '{
-  "id":"21131343",
+  "id": "21131343",
   "sum": {
-        "amount":1000,
-        "currency":"643"
+        "amount": 1000,
+        "currency": "643"
   },
   "paymentMethod": {
-      "type":"Account",
-      "accountId":"643"
+      "type": "Account",
+      "accountId": "643"
   },
   "fields": {
-         "extra_to_bik":"044525201",
-         "requestProtocol":"qw1",
-         "city":"МОСКВА",
-         "name":"ПАО АКБ \"АВАНГАРД\"",
-         "to_bik":"044525201",
-         "urgent":"0",
-         "to_kpp":"772111001",
-         "is_commercial":"1",
-         "nds":"НДС не облагается",
-         "goal":" Оплата товара по заказу №090738231",
-         "from_name_p":"Николаевич",
-         "from_name":"Иван",
-         "from_name_f":"Михайлов",
-         "info":"Коммерческие организации",
-         "to_name":"ООО \"Технический Центр ДЕЛЬТА\"",
-         "to_inn":"7726111111",
-         "account":"40711100000012321",
-         "toServiceId":"1717"
+         "extra_to_bik": "044525201",
+         "requestProtocol": "qw1",
+         "city": "МОСКВА",
+         "name": "ПАО АКБ \"АВАНГАРД\"",
+         "to_bik": "044525201",
+         "urgent": "0",
+         "to_kpp": "772111001",
+         "is_commercial": "1",
+         "nds": "НДС не облагается",
+         "goal": " Оплата товара по заказу №090738231",
+         "from_name_p": "Николаевич",
+         "from_name": "Иван",
+         "from_name_f": "Михайлов",
+         "info": "Коммерческие организации",
+         "to_name": "ООО \"Технический Центр ДЕЛЬТА\"",
+         "to_inn": "7726111111",
+         "account": "40711100000012321",
+         "toServiceId": "1717"
   }
 }'
 ~~~
@@ -3194,34 +3194,34 @@ Host: edge.qiwi.com
 User-Agent: ****
 
 {
-  "id":"21131343",
+  "id": "21131343",
   "sum": {
-        "amount":1000,
-        "currency":"643"
+        "amount": 1000,
+        "currency": "643"
   },
   "paymentMethod": {
-      "type":"Account",
-      "accountId":"643"
+      "type": "Account",
+      "accountId": "643"
   },
   "fields": {
-         "extra_to_bik":"044525201",
-         "requestProtocol":"qw1",
-         "city":"МОСКВА",
-         "name":"ПАО АКБ \"АВАНГАРД\"",
-         "to_bik":"044525201",
-         "urgent":"0",
-         "to_kpp":"772111001",
-         "is_commercial":"1",
-         "nds":"НДС не облагается",
-         "goal":" Оплата товара по заказу №090738231",
-         "from_name_p":"Николаевич",
-         "from_name":"Иван",
-         "from_name_f":"Михайлов",
-         "info":"Коммерческие организации",
-         "to_name":"ООО \"Технический Центр ДЕЛЬТА\"",
-         "to_inn":"7726111111",
-         "account":"40711100000012321",
-         "toServiceId":"1717"
+         "extra_to_bik": "044525201",
+         "requestProtocol": "qw1",
+         "city": "МОСКВА",
+         "name": "ПАО АКБ \"АВАНГАРД\"",
+         "to_bik": "044525201",
+         "urgent": "0",
+         "to_kpp": "772111001",
+         "is_commercial": "1",
+         "nds": "НДС не облагается",
+         "goal": " Оплата товара по заказу №090738231",
+         "from_name_p": "Николаевич",
+         "from_name": "Иван",
+         "from_name_f": "Михайлов",
+         "info": "Коммерческие организации",
+         "to_name": "ООО \"Технический Центр ДЕЛЬТА\"",
+         "to_inn": "7726111111",
+         "account": "40711100000012321",
+         "toServiceId": "1717"
   }
 }
 ~~~
@@ -3284,24 +3284,24 @@ Content-Type: application/json
   "id": "21131343",
   "terms": "1717",
   "fields": {
-         "extra_to_bik":"044525201",
-         "requestProtocol":"qw1",
-         "city":"МОСКВА",
-         "name":"ПАО АКБ \"АВАНГАРД\"",
-         "to_bik":"044525201",
-         "urgent":"0",
-         "to_kpp":"772111001",
-         "is_commercial":"1",
-         "nds":"НДС не облагается",
-         "goal":" Оплата товара по заказу №090738231",
-         "from_name_p":"Николаевич",
-         "from_name":"Иван",
-         "from_name_f":"Михайлов",
-         "info":"Коммерческие организации",
-         "to_name":"ООО \"Технический Центр ДЕЛЬТА\"",
-         "to_inn":"7726111111",
-         "account":"40711100000012321",
-         "toServiceId":"1717"
+         "extra_to_bik": "044525201",
+         "requestProtocol": "qw1",
+         "city": "МОСКВА",
+         "name": "ПАО АКБ \"АВАНГАРД\"",
+         "to_bik": "044525201",
+         "urgent": "0",
+         "to_kpp": "772111001",
+         "is_commercial": "1",
+         "nds" :"НДС не облагается",
+         "goal": " Оплата товара по заказу №090738231",
+         "from_name_p": "Николаевич",
+         "from_name": "Иван",
+         "from_name_f": "Михайлов",
+         "info": "Коммерческие организации",
+         "to_name": "ООО \"Технический Центр ДЕЛЬТА\"",
+         "to_inn": "7726111111",
+         "account": "40711100000012321",
+         "toServiceId": "1717"
   },
   "sum": {
          "amount": 1000,
@@ -3627,8 +3627,8 @@ hash|String| Хэш цифровой подписи веб-хука. Как пр
 <h3 class="request method">Запрос → PUT</h3>
 
 ~~~shell
-curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fecho.fjfalcon.ru%2F&txnType=2"
-     -H "accept: */*"
+curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fecho.fjfalcon.ru%2F&txnType=2" \
+     -H "accept: */*" \
      -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
