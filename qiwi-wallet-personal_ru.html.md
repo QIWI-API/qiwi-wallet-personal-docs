@@ -130,7 +130,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # Профиль пользователя
 def get_profile(api_access_token):
@@ -139,7 +138,7 @@ def get_profile(api_access_token):
     s7.headers['authorization'] = 'Bearer ' + api_access_token
     p = s7.get('https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=true&contractInfoEnabled=true&userInfoEnabled=true')
     print(p)
-    return json.loads(p.text)
+    return p.json()
 ~~~
 
 ~~~python
@@ -335,7 +334,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # идентификация
 def get_identification(api_access_token,my_login):
@@ -343,7 +341,7 @@ def get_identification(api_access_token,my_login):
     s.headers['authorization'] = 'Bearer ' + api_access_token
     res = s.get('https://edge.qiwi.com/identification/v1/persons/'+my_login+'/identification')
     print(res)
-    return json.loads(res.text)
+    return res.json()
 ~~~
 
 <ul class="nestedList url">
@@ -577,7 +575,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # История платежей - последние и следующие n платежей
 def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_TxnDate):
@@ -586,7 +583,7 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
     parameters = {'rows': rows_num, 'nextTxnId': next_TxnId, 'nextTxnDate': next_TxnDate}
     h = s.get('https://edge.qiwi.com/payment-history/v2/persons/' + my_login + '/payments', params = parameters)
     print(h)
-    return json.loads(h.text)
+    return h.json()
 ~~~
 
 <ul class="nestedList url">
@@ -762,7 +759,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # История платежей - сумма за диапазон дат
 def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date):
@@ -771,7 +767,7 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
     parameters = {'startDate': start_Date,'endDate': end_Date}
     h = s.get('https://edge.qiwi.com/payment-history/v2/persons/' + my_login + '/payments/total', params = parameters)
     print(h)
-    return json.loads(h.text)
+    return h.json()
 ~~~
 
 <ul class="nestedList url">
@@ -874,7 +870,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # История платежей - информация по транзакции
 def payment_history_transaction(api_access_token, transaction_id, transaction_type):
@@ -883,7 +878,7 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
     parameters = {'type': transaction_type} # transaction_type 'IN' 'OUT'
     h = s.get('https://edge.qiwi.com/payment-history/v1/transactions/'+transaction_id, params = parameters)
     print(h)
-    return json.loads(h.text)
+    return h.json()
 ~~~
 
 <ul class="nestedList url">
@@ -1046,7 +1041,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # История платежей - получение текста чека в файле
 def payment_history_cheque_file(transaction_id, transaction_type, filename, api_access_token):
@@ -1118,7 +1112,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # История платежей - отправить чек на email
 def payment_history_cheque_send(transaction_id, transaction_type, email, api_access_token):
@@ -1206,7 +1199,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # Баланс QIWI Кошелька
 def balance(login, api_access_token):
@@ -1215,7 +1207,7 @@ def balance(login, api_access_token):
     s.headers['authorization'] = 'Bearer ' + api_access_token  
     b = s.get('https://edge.qiwi.com/funding-sources/v2/persons/' + login + '/accounts')
     print(b)
-    return json.loads(b.text)
+    return b.json()
 ~~~
 
 <ul class="nestedList url">
@@ -1512,7 +1504,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # Стандартные комиссии
 def get_prv_commission(prv_id):
@@ -1520,7 +1511,7 @@ def get_prv_commission(prv_id):
     s.headers['Accept']='application/vnd.qiwi.sso-v1+json'
     s.headers['content-type'] = 'application/json'
     с = s.get('https://qiwi.com/sinap/providers/'+prv_id+'/form/proxy.action')
-    return json.loads(с.text)['data']['body']['content']['terms']['commission']
+    return c.json()['data']['body']['content']['terms']['commission']
 ~~~
 
 <ul class="nestedList url">
@@ -1646,7 +1637,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # Сложные комиссии
 def get_online_comission(api_access_token,to_qw,prv_id,sum_pay):
@@ -1657,7 +1647,7 @@ def get_online_comission(api_access_token,to_qw,prv_id,sum_pay):
     postjson['account']=to_qw
     postjson['purchaseTotals']['total']['amount']=sum_pay
     c_online = s.post('https://edge.qiwi.com/sinap/providers/'+prv_id+'/onlineCommission',json=postjson)
-    return json.loads(c_online.text)
+    return c_online.json()
 ~~~
 
 <h3 class="request method">Запрос → POST</h3>
@@ -1826,7 +1816,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 import time
 
 # Перевод на QIWI Кошелек
@@ -1843,7 +1832,7 @@ def send_p2p(my_login,api_access_token,to_qw,comment,sum_p2p):
     postjson['fields']['account']=to_qw
     res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/99/payments',json=postjson)
     print(res)
-    return json.loads(res.text)
+    return res.json()
 ~~~
 
 <ul class="nestedList url">
@@ -2184,7 +2173,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 
 # Оплата мобильного телефона
 def send_mobile(api_access_token,prv_id,to_account,comment,sum_pay):
@@ -2199,7 +2187,7 @@ def send_mobile(api_access_token,prv_id,to_account,comment,sum_pay):
     postjson['comment']=comment
     res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/'+prv_id+'/payments', json=postjson)
     print(res)
-    return json.loads(res.text)
+    return res.json()
 ~~~
 
 <ul class="nestedList url">
@@ -2304,7 +2292,6 @@ phone=79651238341
 
 ~~~python
 import requests
-import json
 
 def mobile_operator(phone_number):
     s = requests.Session()
@@ -2312,7 +2299,7 @@ def mobile_operator(phone_number):
     s.headers['Accept'] = 'application/json'
     s.headers['Content-Type'] = 'application/x-www-form-urlencoded'
     print(res)
-    return json.loads(res.text)['message']
+    return res.json()['message']
 ~~~
 
 <ul class="nestedList url">
@@ -2604,14 +2591,13 @@ cardNumber=4256********1231
 
 ~~~python
 import requests
-import json
 
 def card_system(card_number):
     s = requests.Session()
     res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
     print(res)
     print(res.text)
-    return json.loads(res.text)['message']
+    return res.json()['message']
 ~~~
 
 <ul class="nestedList url">
@@ -3026,7 +3012,6 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
-import json
 import time
 
 # оплата простого провайдера
@@ -3042,7 +3027,7 @@ def pay_simple_prv(api_access_token,prv_id,to_account,sum_pay):
     postjson['fields']['account']=to_account
     res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/'+prv_id+'/payments', json=postjson)
     print(res)
-    return json.loads(res.text)
+    return res.json()
 ~~~
 
 <ul class="nestedList url">
@@ -3079,14 +3064,13 @@ def pay_simple_prv(api_access_token,prv_id,to_account,sum_pay):
 
 ~~~python
 import requests
-import json
 
 # поиск на qiwi.com - опредление id провайдера по названию
 def qiwi_com_search(search_phrase):
     s = requests.Session()
     search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
     print(search)
-    return json.loads(search.text)['data']['items']
+    return search.json()['data']['items']
 
 qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
 ~~~
