@@ -30,7 +30,7 @@ toc_footers:
 
 # Введение {#intro}
 
-###### Последнее обновление: 2019-10-17 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
+###### Последнее обновление: 2019-12-24 | [Предложить свои правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_ru.html.md)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 
@@ -80,7 +80,7 @@ API QIWI Кошелька использует открытый протокол
 
 ![Token Scopes](/images/apiwallet_token_scopes.jpg)
 
-* Нажмите **Продолжить** и подтвердите выпуск токена кодом из SMS-сообщения.
+* Нажмите **Продолжить**, подтвердите согласие на выпуск токена и укажите проверочный код из SMS-сообщения.
 
 ![Token Accept](/images/apiwallet_token_sms.jpg)
 
@@ -114,9 +114,9 @@ user@server:~$ curl "адрес сервера"
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
+user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
   --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
 ~~~
 
@@ -137,7 +137,6 @@ def get_profile(api_access_token):
     s7.headers['Accept']= 'application/json'
     s7.headers['authorization'] = 'Bearer ' + api_access_token
     p = s7.get('https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=true&contractInfoEnabled=true&userInfoEnabled=true')
-    print(p)
     return p.json()
 ~~~
 
@@ -145,18 +144,18 @@ def get_profile(api_access_token):
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
 # Полная информация о профиле пользователя
-get_profile(api_access_token)
+profile = get_profile(api_access_token)
 
 # Профиль пользователя
 # статус блокировки
-get_profile(api_access_token)['contractInfo']['blocked']
+profile['contractInfo']['blocked']
 
 # Профиль пользователя
 # уровень идентификации в Киви Банке
-get_profile(api_access_token)['contractInfo']['identificationInfo'][0]['identificationLevel']
+profile['contractInfo']['identificationInfo'][0]['identificationLevel']
 
 # привязанный email
-get_profile(api_access_token)['authInfo']['boundEmail']
+profile['authInfo']['boundEmail']
 ~~~
 
 <ul class="nestedList url">
@@ -263,7 +262,7 @@ contractInfo.blocked|Boolean|Логический признак блокиро�
 contractInfo.contractId|Number|Номер кошелька пользователя
 contractInfo.creationDate|String|Дата/время создания QIWI Кошелька пользователя (через сайт/мобильное приложение, либо при первом пополнении, либо другим способом)
 contractInfo.features|Array[Object]|Служебная информация
-contractInfo.identificationInfo|Array[Object]|Данные об [идентификации](https://qiwi.com/settings/account/identification.action) пользователя.
+contractInfo.identificationInfo|Array[Object]|Данные об [идентификации](https://qiwi.com/settings/identification#ru) пользователя.
 identificationInfo[].bankAlias|String|Акроним системы, в которой пользователь получил идентификацию:<br> `QIWI` - QIWI Кошелек.
 identificationInfo[].identificationLevel|String|Текущий уровень идентификации кошелька. Возможные значения:<br>`ANONYMOUS` - без идентификации;<br> `SIMPLE`, `VERIFIED` - упрощенная идентификация;<br> `FULL` - полная идентификация.
 userInfo|Object|Прочие пользовательские данные. Объект может отсутствовать, в зависимости от признака `userInfoEnabled` в запросе.
@@ -336,11 +335,10 @@ Host: edge.qiwi.com
 import requests
 
 # идентификация
-def get_identification(api_access_token,my_login):
+def get_identification(api_access_token, my_login):
     s = requests.Session()
     s.headers['authorization'] = 'Bearer ' + api_access_token
     res = s.get('https://edge.qiwi.com/identification/v1/persons/'+my_login+'/identification')
-    print(res)
     return res.json()
 ~~~
 
@@ -403,9 +401,7 @@ Content-Type: application/json
 ~~~python
 mylogin = '79999999999'
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
-get_identification(api_access_token,mylogin)
-
-<Response [200]>
+print(get_identification(api_access_token, mylogin))
 
 {'birthDate': '1984-01-09',
  'firstName': 'Иванов',
@@ -439,7 +435,7 @@ oms| String | Номер полиса ОМС пользователя
 
 Данный запрос позволяет выгрузить маскированные данные и статус идентификации своего QIWI кошелька.
 
-[Подробнее об идентификации](https://qiwi.com/settings/account/identification.action)
+[Подробнее об идентификации](https://qiwi.com/settings/identification#ru)
 
 <h3 class="request method">Запрос → GET</h3>
 
@@ -513,7 +509,7 @@ oms| String | Номер полиса ОМС пользователя (перв�
 
 ## Список платежей {#payments_list}
 
-Запрос выгружает список платежей и пополнений вашего кошелька.
+Запрос выгружает список платежей и пополнений вашего кошелька. Можно использовать фильтр по количеству, ID и дате (интервалу дат) транзакций.
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByUserUsingGET_1)
 
@@ -564,7 +560,7 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
-> Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
+> Пример 3. Продолжение списка платежей за 10.05.2017 (в Примере 2  возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
 ~~~http
 GET /payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
@@ -582,7 +578,6 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
     s.headers['authorization'] = 'Bearer ' + api_access_token  
     parameters = {'rows': rows_num, 'nextTxnId': next_TxnId, 'nextTxnDate': next_TxnDate}
     h = s.get('https://edge.qiwi.com/payment-history/v2/persons/' + my_login + '/payments', params = parameters)
-    print(h)
     return h.json()
 ~~~
 
@@ -611,13 +606,13 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
 
 Параметр|Тип|Описание
 --------|----|----
-rows | Integer |Число платежей в ответе, для разбивки отчета на части. Целое число от 1 до 50. **Обязательный параметр**
+rows | Integer |Число платежей в ответе, для разбивки отчета на части. Целое число от 1 до 50. Запрос возвращает указанное число платежей в обратном хронологическом порядке, начиная от текущей даты или даты в параметре `startDate`. **Обязательный параметр**
 operation|String| Тип операций в отчете, для отбора. Допустимые значения:<br>`ALL` - все операции, <br>`IN` - только пополнения, <br>`OUT` - только платежи, <br>`QIWI_CARD` - только платежи по картам QIWI (QVC, QVP). <br>По умолчанию `ALL`
 sources|Array[String]|Источники платежа, для отбора. Каждый источник задается как отдельный параметр и нумеруется элементом массива, начиная с нуля (`sources[0]`, `sources[1]` и т.д.). Допустимые значения: <br>`QW_RUB` - рублевый счет кошелька, <br>`QW_USD` - счет кошелька в долларах, <br>`QW_EUR` - счет кошелька в евро, <br>`CARD` - привязанные и непривязанные к кошельку банковские карты, <br>`MK` - счет мобильного оператора. Если не указаны, учитываются все источники
 startDate | DateTime URL-encoded| Начальная дата поиска платежей. Дату можно указать в любой временной зоне `TZD` (формат `ГГГГ-ММ-ДД'T'чч:мм:ссTZD`), однако она должна совпадать с временной зоной в параметре `endDate`. Обозначение временной зоны `TZD`: `+чч:мм` или -`чч:мм` (временной сдвиг от GMT). **Используется только вместе с `endDate`**. По умолчанию, равна суточному сдвигу от текущей даты по московскому времени.
-endDate | DateTime URL-encoded | Конечная дата поиска платежей. Дату можно указать в любой временной зоне `TZD` (формат `ГГГГ-ММ-ДД'T'чч:мм:ссTZD`), однако она должна совпадать с временной зоной в параметре `startDate`. Обозначение временной зоны `TZD`: `+чч:мм` или -`чч:мм` (временной сдвиг от GMT). **Используется только вместе с `startDate`**. По умолчанию, равна текущим дате/времени по московскому времени.
-nextTxnDate | DateTime URL-encoded| Дата транзакции для отсчета от предыдущего списка (равна параметру `nextTxnDate` в предыдущем списке). **Используется только вместе с `nextTxnId`**
-nextTxnId | Long | Номер предшествующей транзакции для отсчета от предыдущего списка (равен параметру `nextTxnId` в предыдущем списке). **Используется только вместе с `nextTxnDate`**
+endDate | DateTime URL-encoded | Конечная дата поиска платежей. Дату можно указать в любой временной зоне `TZD` (формат `ГГГГ-ММ-ДД'T'чч:мм:ссTZD`), однако она должна совпадать с временной зоной в параметре `startDate`. Обозначение временной зоны `TZD`: `+чч:мм` или -`чч:мм` (временной сдвиг от GMT). **Используется только вместе со `startDate`**. По умолчанию, равна текущим дате/времени по московскому времени.
+nextTxnDate | DateTime URL-encoded| Дата транзакции для начала отчета (должна быть равна параметру `nextTxnDate` в предыдущем списке). **Используется только вместе с `nextTxnId`**
+nextTxnId | Long | Номер транзакции для начала отчета (должен быть равен параметру `nextTxnId` в предыдущем списке). **Используется только вместе с `nextTxnDate`**
 
 
 <aside class="notice">Максимальный допустимый интервал между <i>startDate</i> и <i>endDate</i> - 90 календарных дней.</aside>
@@ -678,16 +673,16 @@ mylogin = '79999999999'
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
 # последние 20 платежей
-payment_history_last(mylogin, api_access_token, '20','','')
+lastPayments = payment_history_last(mylogin, api_access_token, '5','','')
 
 # дата и время следующего платежа
-nextTxnDate = payment_history_last(mylogin, api_access_token, '3','','')['nextTxnDate']
+nextTxnDate = lastPayments['nextTxnDate']
 
 # id транзакции следующего платежа
-nextTxnId = payment_history_last(mylogin, api_access_token, '3','','')['nextTxnId']
+nextTxnId = lastPayments['nextTxnId']
 
 # История платежей - последние и следующие n платежей
-payment_history_last(mylogin, api_access_token, '3', nextTxnId, nextTxnDate)
+orderedPayments = payment_history_last(mylogin, api_access_token, '5', nextTxnId, nextTxnDate)
 ~~~
 
 Успешный JSON-ответ содержит список платежей из истории кошелька, соответствующих заданному фильтру:
@@ -696,7 +691,7 @@ payment_history_last(mylogin, api_access_token, '3', nextTxnId, nextTxnDate)
 
 Параметр|Тип|Описание
 --------|----|----
-data|Array[Object]|Массив платежей. <br>Число платежей равно параметру `rows` из запроса
+data|Array[Object]|Список транзакций. <br>Число платежей равно параметру `rows` из запроса
 data[].txnId | Integer |ID транзакции в процессинге QIWI Wallet
 data[].personId|Integer|Номер кошелька
 data[].date|DateTime|Дата/время платежа, во временной зоне запроса (см. параметр `startDate`). Формат даты `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`
@@ -766,7 +761,6 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
     s.headers['authorization'] = 'Bearer ' + api_access_token
     parameters = {'startDate': start_Date,'endDate': end_Date}
     h = s.get('https://edge.qiwi.com/payment-history/v2/persons/' + my_login + '/payments/total', params = parameters)
-    print(h)
     return h.json()
 ~~~
 
@@ -828,13 +822,13 @@ api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
 # История платежей - сумма за диапазон
 # не более 90 дней с 12 апреля по 11 июля 2019 года
-payment_history_summ_dates(mylogin, api_access_token, '2019-04-12T00:00:00Z','2019-07-11T23:59:59Z')
+print(payment_history_summ_dates(mylogin, api_access_token, '2019-04-12T00:00:00Z','2019-07-11T23:59:59Z'))
 
 {'incomingTotal': [{'amount': 3.33, 'currency': 840},
   {'amount': 3481, 'currency': 643}],
  'outgoingTotal': [{'amount': 3989.98, 'currency': 643},
   {'amount': 3.33, 'currency': 840}]}
-~~
+~~~
 
 Успешный JSON-ответ содержит статистику платежей за выбранный период:
 
@@ -877,7 +871,6 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
     s.headers['authorization'] = 'Bearer ' + api_access_token  
     parameters = {'type': transaction_type} # transaction_type 'IN' 'OUT'
     h = s.get('https://edge.qiwi.com/payment-history/v1/transactions/'+transaction_id, params = parameters)
-    print(h)
     return h.json()
 ~~~
 
@@ -966,13 +959,14 @@ mylogin = '79999999999'
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
 # История платежей - информация по транзакции
-payment_history_transaction(api_access_token, '11181101215', 'OUT')
+transactionInfo = payment_history_transaction(api_access_token, '11181101215', 'OUT')
 
 # История платежей - информация по транзакции из истории платежей
-last_txn_id = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['txnId']
-last_txn_type = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['type']
+lastPayments = payment_history_last(mylogin, api_access_token, '20','','')
+last_txn_id = lastPayments['data'][5]['txnId']
+last_txn_type = lastPayments['data'][5]['type']
 
-payment_history_transaction(api_access_token, str(last_txn_id), last_txn_type)
+transactionInfo = payment_history_transaction(api_access_token, str(last_txn_id), last_txn_type)
 ~~~
 
 Успешный JSON-ответ содержит данные о транзакции:
@@ -1049,7 +1043,7 @@ def payment_history_cheque_file(transaction_id, transaction_type, filename, api_
     s.headers['authorization'] = 'Bearer ' + api_access_token
     parameters = {'type': transaction_type,'format': 'PDF'}
     h = s.get('https://edge.qiwi.com/payment-history/v1/transactions/'+transaction_id+'/cheque/file', params=parameters)
-    print(h)
+    h.status_code
     with open(filename + '.pdf', 'wb') as f:
         f.write(h.content)
 ~~~
@@ -1097,7 +1091,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactio
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{ "email": "my@example.com" }'
+  -d '{"email": "my@example.com"}'
 ~~~
 
 ~~~http
@@ -1120,8 +1114,8 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
     s.headers['Accept'] ='application/json'
     s.headers['authorization'] = 'Bearer ' + api_access_token
     postjson = {'email':email}
-    h = s.post('https://edge.qiwi.com/payment-history/v1/transactions/' + transaction_id + '/cheque/send?type=' + transaction_type, json=postjson)
-    print(h)
+    h = s.post('https://edge.qiwi.com/payment-history/v1/transactions/' + transaction_id + '/cheque/send?type=' + transaction_type, json = postjson)
+    h.status_code
 ~~~
 
 <ul class="nestedList url">
@@ -1165,10 +1159,11 @@ Content-Type: application/json
 mylogin = '79999999999'
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
-last_txn_id = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['txnId']
-last_txn_type = payment_history_last(mylogin, api_access_token, '20','','')['data'][5]['type']
+lastPayments = payment_history_last(mylogin, api_access_token, '20','','')
+last_txn_id = lastPayments['data'][5]['txnId']
+last_txn_type = lastPayments['data'][5]['type']
 
-# История платежей - оптравить чек на email
+# История платежей - отправить чек на email
 payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', api_access_token)
 ~~~
 
@@ -1206,7 +1201,6 @@ def balance(login, api_access_token):
     s.headers['Accept']= 'application/json'
     s.headers['authorization'] = 'Bearer ' + api_access_token  
     b = s.get('https://edge.qiwi.com/funding-sources/v2/persons/' + login + '/accounts')
-    print(b)
     return b.json()
 ~~~
 
@@ -1274,12 +1268,11 @@ mylogin = '79999999999'
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
 # все балансы
-balance(mylogin,api_access_token)
+balances = balance(mylogin,api_access_token)['accounts']
 
 # рублевый баланс
-balances = balance(mylogin,api_access_token)['accounts']
-rubAlias = [x for x in balances if x.alias =='qw_wallet_rub']
-rubAlias['balance']['amount']
+rubAlias = [x for x in balances if x['alias'] == 'qw_wallet_rub']
+rubBalance = rubAlias['balance']['amount']
 ~~~
 
 Успешный ответ содержит JSON-массив ваших счетов QIWI Кошелька для фондирования платежей и текущие балансы счетов:
@@ -1312,7 +1305,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/funding-sources/v2/persons/79
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{ "alias": "qw_wallet_eur" }'
+  -d '{  "alias": "qw_wallet_eur"}'
 ~~~
 
 ~~~http
@@ -1485,113 +1478,7 @@ Content-Type: application/json
 
 ## Комиссионные тарифы {#rates}
 
-Для провайдеров, оплата которых доступна через API, можно запросить комиссионные условия (стандартные тарифы).
-
-<h3 class="request method">Запрос → GET</h3>
-
-~~~shell
-user@server:~$ curl "https://edge.qiwi.com/sinap/providers/99/form" \
-  --header "Content-Type: application/json" \
-  --header "Accept: application/json"
-~~~
-
-~~~http
-GET /sinap/providers/99/form HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-Host: edge.qiwi.com
-~~~
-
-~~~python
-import requests
-
-# Стандартные комиссии
-def get_prv_commission(prv_id):
-    s = requests.Session()
-    s.headers['Accept']='application/vnd.qiwi.sso-v1+json'
-    s.headers['content-type'] = 'application/json'
-    с = s.get('https://qiwi.com/sinap/providers/'+prv_id+'/form/proxy.action')
-    return c.json()['data']['body']['content']['terms']['commission']
-~~~
-
-<ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/providers/<a>id</a>/form</span></h3></li>
-        <ul>
-        <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>id</strong> - идентификатор провайдера. Возможные значения:
-             <ul><li>99 - Перевод на QIWI Wallet</li>
-             <li>1963 - Перевод на карту Visa (карты российских банков)</li>
-             <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
-             <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<ul><li>1960 – Перевод на карту Visa</li><li>21012 – Перевод на карту MasterCard</li></ul></li>
-             <li>31652 - Перевод на карту национальной платежной системы МИР</li>
-             <li>466 - Тинькофф Банк</li>
-             <li>464 - Альфа-Банк</li>
-             <li>821 - Промсвязьбанк</li>
-             <li>815 - Русский Стандарт</li>
-             <li><a href="#mnp">Идентификаторы операторов мобильной связи</a></li>
-             <li><a href="#charity">Идентификаторы других провайдеров</a></li>
-             <li>1717 - <a href="#freepay">платеж по банковским реквизитам</a></li></ul></li>
-        </ul>
-</ul>
-
-<ul class="nestedList header">
-    <li><h3>HEADERS</h3>
-        <ul>
-             <li>Accept: application/json</li>
-             <li>Content-type: application/json</li>
-        </ul>
-    </li>
-</ul>
-
-<h3 class="request">Ответ ←</h3>
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "content": {
-      "terms": {
-         "commission": {
-                "ranges": [{
-                     "bound": 0,
-                     "fixed": 50.0,
-                     "rate": 0.02
-                },
-                "limits": [{
-                     "currency": "643",
-                     "min": 10,
-                     "max": 15000
-                }]
-            }
-         }
-     }
-}     
-~~~
-
-~~~python
-get_prv_commission('466') # Альфа-Банк
-get_prv_commission('1') # МТС
-~~~
-
-Успешный ответ содержит JSON-фрагмент с данными о ставках комиссии и ограничениях на сумму платежа (с учетом комиссии) для провайдера:
-
-Параметр | Тип | Описание
------|-----|------
-commission | Object | Объект, содержащий данные об условиях комиссий.
-commission.ranges | Array[Object] | Массив объектов с граничными условиями комиссий. Каждый объект содержит параметры:
-ranges[].bound |  Number | сумма платежа, начиная с которой применяется условие
-ranges[].rate | Number |  комиссия (абс.множитель)
-ranges[].min | Number | минимальная сумма комиссии
-ranges[].max | Number | максимальная сумма комиссии
-ranges[].fixed | Number | фиксированная сумма комиссии
-commission.limits | Array[Object] | Массив объектов с ограничениями на полную сумму платежа (вместе с комиссией). Каждый объект содержит параметры:
-limits[].currency |  Number | валюта, в которой выражены ограничения (рубли `643`)
-limits[].min | Number | минимальная сумма платежа
-limits[].max | Number | максимальная сумма платежа
-
-
-Для расчета полной комиссии за платеж (с учетом всех тарифов) по заданному набору платежных реквизитов используйте другой запрос (требует [авторизации](#auth_api)).
+Для расчета полной комиссии за платеж (с учетом всех тарифов) по заданному набору платежных реквизитов используйте данный запрос (требуется [авторизация](#auth_api)).
 
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineCommission' \
@@ -1638,16 +1525,16 @@ Host: edge.qiwi.com
 ~~~python
 import requests
 
-# Сложные комиссии
-def get_online_comission(api_access_token,to_qw,prv_id,sum_pay):
+# Тарифные комиссии
+def get_commission(api_access_token, to_account, prv_id, sum_pay):
     s = requests.Session()
     s.headers = {'content-type': 'application/json'}
     s.headers['authorization'] = 'Bearer ' + api_access_token  
-    postjson = json.loads('{"account":"","paymentMethod":{"type":"Account","accountId":"643"},"purchaseTotals":{"total":{"amount":"","currency":"643"}}}')
-    postjson['account']=to_qw
-    postjson['purchaseTotals']['total']['amount']=sum_pay
-    c_online = s.post('https://edge.qiwi.com/sinap/providers/'+prv_id+'/onlineCommission',json=postjson)
-    return c_online.json()
+    postjson = {"account":"","paymentMethod":{"type":"Account","accountId":"643"}, "purchaseTotals":{"total":{"amount":"","currency":"643"}}}
+    postjson['account'] = to_account
+    postjson['purchaseTotals']['total']['amount'] = sum_pay
+    c_online = s.post('https://edge.qiwi.com/sinap/providers/'+prv_id+'/onlineCommission',json = postjson)
+    return c_online.json()['qwCommission']['amount']
 ~~~
 
 <h3 class="request method">Запрос → POST</h3>
@@ -1666,6 +1553,7 @@ def get_online_comission(api_access_token,to_qw,prv_id,sum_pay):
              <li>464 - Альфа-Банк</li>
              <li>821 - Промсвязьбанк</li>
              <li>815 - Русский Стандарт</li>
+             <li><a href="#banks">Прочие банки</a></li>
              <li><a href="#mnp">Идентификаторы операторов мобильной связи</a></li>
              <li><a href="#charity">Идентификаторы других провайдеров</a></li>
              <li>1717 - <a href="#freepay">платеж по банковским реквизитам</a></li></ul></li>
@@ -1727,10 +1615,10 @@ Content-Type: application/json
 ~~~python
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
-# Сложные комиссии
-get_online_comission(api_access_token,'+380000000000','99',5000)
-get_online_comission(api_access_token,'4890xxxxxxxx1698','22351',1000)
-get_online_comission(api_access_token,'42767xxxxxxxx268','1963',200)
+# Комиссия за перевод на QIWI кошелек
+print(get_commission(api_access_token,'+380000000000','99',5000))
+# Комиссия за перевод на карту
+print(get_commission(api_access_token,'4890xxxxxxxx1698','22351',1000))
 ~~~
 
 <h3 class="request">Ответ ←</h3>
@@ -1743,7 +1631,7 @@ get_online_comission(api_access_token,'42767xxxxxxxx268','1963',200)
 
 [Пример ссылки (нажмите для перехода на форму)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643&blocked[0]=account)
 
-Данный запрос отображает в браузере заполненную форму на сайте qiwi.com для совершения платежа.
+Данный запрос отображает в браузере предзаполненную форму на сайте qiwi.com для совершения платежа.
 
 ~~~shell
 https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643
@@ -1755,13 +1643,14 @@ https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInte
 
 Параметр|Тип|Описание|Поле на форме| Обяз.
 ---------|--------|---|----
-ID | Integer | Идентификатор провайдера (указывается в пути ссылки).<br>Возможные значения:<br>`99` - [Перевод на QIWI Wallet](#p2p)<br>`1963` - [Перевод на карту Visa](#cards) (карты российских банков)<br>`21013` - [Перевод на карту MasterCard](#cards) (карты российских банков)<br>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<br>`1960` – [Перевод на карту Visa](#cards)<br>`21012` – [Перевод на карту MasterCard](#cards)<br>`31652` - [Перевод на карту МИР](#cards)<br>[Идентификаторы операторов мобильной связи](#mnp)<br>[Идентификаторы других провайдеров](#charity) | - | +
+ID | Integer | Идентификатор провайдера (указывается в пути ссылки).<br>Возможные значения:<br>`99` - [Перевод на QIWI Wallet](#p2p)<br>`99999` -  Перевод на QIWI Wallet по никнейму<br>`1963` - [Перевод на карту Visa](#cards) (карты российских банков)<br>`21013` - [Перевод на карту MasterCard](#cards) (карты российских банков)<br>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<br>`1960` – [Перевод на карту Visa](#cards)<br>`21012` – [Перевод на карту MasterCard](#cards)<br>`31652` - [Перевод на карту МИР](#cards)<br>[Идентификаторы операторов мобильной связи](#mnp)<br>[Идентификаторы других провайдеров](#charity) | - | +
 amountInteger|Integer | Целая часть суммы платежа (рубли). Указывается в строке запроса. Если параметр не указан, поле "Сумма" на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)** | Сумма | -
 amountFraction|Integer | Дробная часть суммы платежа (копейки). Указывается в строке запроса. Если параметр не указан, поле "Сумма" на форме будет пустым.|Сумма | -
 currency|Константа, `643` | Код валюты платежа. Указывается в строке запроса. **Обязательный параметр, если вы передаете в ссылке сумму платежа** |-|+
 extra['comment'] |URL-encoded string | Комментарий. Указывается в строке запроса. Имя параметра должно быть URL-закодировано. **Параметр используется только для ID=99** |Комментарий к переводу | -
-extra['account'] |URL-encoded string |  Формат совпадает с форматом параметра `fields.account` в соответствующем платежном запросе. Имя параметра должно быть URL-закодировано.|Номер Кошелька, Номер телефона/счета/карты получателя.|-
+extra['account'] |URL-encoded string |  Формат совпадает с форматом параметра `fields.account` в соответствующем платежном запросе. Для провайдера `99999` указывается никнейм или номер кошелька (в зависимости от параметра `extra['accountType']`).<br>Имя параметра должно быть URL-закодировано.|Номер Кошелька, Номер телефона/счета/карты получателя.|-
 blocked|Array[String]|Признак неактивного поля формы. Пользователь не сможет менять значение данного поля. Каждое поле задается соответствующим именем параметра и нумеруется элементом массива, начиная с нуля (`blocked[0]`, `blocked[1]` и т.д.). Если параметр не указан, пользователь сможет изменить все поля формы. Допустимые значения:<br>`sum` - поле "сумма платежа", <br>`account` - поле "номер счета/телефона/карты",<br>`comment` - поле "комментарий". Пример (неактивное поле суммы платежа): `blocked[0]=sum` |-|-
+extra['accountType'] | URL-encoded string | **Параметр используется только для ID=99999**. Значение определяет перевод на QIWI кошелек по никнейму или по номеру кошелька.<br>`phone` - для перевода по номеру<br>`nickname` - для перевода по никнейму.
 
 
 ## Перевод на QIWI Кошелек {#p2p}
@@ -1773,20 +1662,20 @@ user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payment
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id": "11111111111111",
-        "sum": {
-          "amount":  100,
-          "currency": "643"
+  -d '{ \
+        "id":"11111111111111", \
+        "sum": { \
+          "amount":100, \
+          "currency":"643" \
+        }, \
+        "paymentMethod": { \
+          "type":"Account", \
+          "accountId":"643" \
         },
-        "paymentMethod": {
-          "type": "Account",
-          "accountId": "643"
-        },
-        "comment": "test",
-        "fields": {
-          "account": "+79121112233"
-        }
+        "comment":"test", \
+        "fields": { \
+          "account":"+79121112233" \
+        } \
       }'
 ~~~
 
@@ -1798,19 +1687,19 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 
 {
-	"id": "11111111111111",
-	"sum": {
-		"amount": 100.50,
-		"currency": "643"
-	},
-	"paymentMethod": {
-		"type": "Account",
-		"accountId": "643"
-	},
-	"comment": "test",
-	"fields": {
-		"account": "+79121112233"
-	}
+ "id":"11111111111111",
+ "sum": {
+    "amount":100.50,
+		"currency":"643"
+ },
+ "paymentMethod": {
+		"type":"Account",
+		"accountId":"643"
+ },
+ "comment":"test",
+ "fields": {
+	"account":"+79121112233"
+ }
 }
 ~~~
 
@@ -1819,19 +1708,18 @@ import requests
 import time
 
 # Перевод на QIWI Кошелек
-def send_p2p(my_login,api_access_token,to_qw,comment,sum_p2p):
+def send_p2p(api_access_token, to_qw, comment, sum_p2p):
     s = requests.Session()
     s.headers = {'content-type': 'application/json'}
     s.headers['authorization'] = 'Bearer ' + api_access_token
     s.headers['User-Agent'] = 'Android v3.2.0 MKT'
-    s.headers['Accept']= 'application/json'
-    postjson = json.loads('{"id":"","sum":{"amount":"","currency":""},"paymentMethod":{"type":"Account","accountId":"643"},"comment":"'+comment+'","fields":{"account":""}}')
-    postjson['id']=str(int(time.time() * 1000))
-    postjson['sum']['amount']=sum_p2p
-    postjson['sum']['currency']='643'
-    postjson['fields']['account']=to_qw
-    res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/99/payments',json=postjson)
-    print(res)
+    s.headers['Accept'] = 'application/json'
+    postjson = {"id":"","sum":{"amount":"","currency":""},"paymentMethod":{"type":"Account","accountId":"643"}, "comment":"'+comment+'","fields":{"account":""}}
+    postjson['id'] = str(int(time.time() * 1000))
+    postjson['sum']['amount'] = sum_p2p
+    postjson['sum']['currency'] = '643'
+    postjson['fields']['account'] = to_qw
+    res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/99/payments',json = postjson)
     return res.json()
 ~~~
 
@@ -1895,9 +1783,8 @@ Content-Type: application/json
 ~~~
 
 ~~~python
-send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01)
+print(send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01))
 
-<Response [200]>
 {'comment': 'comment',
  'fields': {'account': '+79261112233'},
  'id': '1514296828893',
@@ -1972,6 +1859,30 @@ Host: edge.qiwi.com
 	 	"account": "+79121112233"
 	}
 }
+~~~
+
+~~~python
+import requests
+import time
+
+# Конвертация в QIWI Кошельке (currency - код валюты String)
+def exchange(api_access_token, sum_exchange, currency, to_qw):
+    s = requests.Session()
+    currencies = ['398', '840', '978']
+    if currency not in currencies:
+      print('This currency not available')
+      return
+    s.headers = {'content-type': 'application/json'}
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    s.headers['User-Agent'] = 'Android v3.2.0 MKT'
+    s.headers['Accept'] = 'application/json'
+    postjson = {"id":"","sum":{"amount":"","currency":""},"paymentMethod":{"type":"Account","accountId":"643"}, "comment":"'+comment+'","fields":{"account":""}}
+    postjson['id'] = str(int(time.time() * 1000))
+    postjson['sum']['amount'] = sum_exchange
+    postjson['sum']['currency'] = currency
+    postjson['fields']['account'] = to_qw
+    res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/99/payments',json = postjson)
+    return res.json()
 ~~~
 
 <ul class="nestedList url">
@@ -2067,6 +1978,30 @@ Accept: application/json
 Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
 Content-type: application/json
 Host: edge.qiwi.com
+~~~
+
+~~~python
+import requests
+
+# Курс пары валют (коды валют в String)
+def exchange(api_access_token, currency_to, currency_from):
+    s = requests.Session()
+    s.headers = {'content-type': 'application/json'}
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    s.headers['User-Agent'] = 'Android v3.2.0 MKT'
+    s.headers['Accept'] = 'application/json'
+    res = s.get('https://edge.qiwi.com/sinap/crossRates')
+
+    # все курсы
+    rates = res.json()['result']
+
+    # запрошенный курс
+    rate = [x for x in rates if x['from'] == currency_from and x['to'] == currency_to]
+    if (len(rate) == 0):
+        print('No rate for this currencies!')
+        return
+    else:
+        return rate[0]['rate']
 ~~~
 
 <ul class="nestedList url">
@@ -2173,20 +2108,20 @@ Host: edge.qiwi.com
 
 ~~~python
 import requests
+import time
 
 # Оплата мобильного телефона
-def send_mobile(api_access_token,prv_id,to_account,comment,sum_pay):
+def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
     s = requests.Session()
-    s.headers['Accept']= 'application/json'
-    s.headers['Content-Type']= 'application/json'
+    s.headers['Accept'] = 'application/json'
+    s.headers['Content-Type'] = 'application/json'
     s.headers['authorization'] = 'Bearer ' + api_access_token
     postjson = {"id":"","sum": {"amount":"","currency":"643"},"paymentMethod": {"type":"Account","accountId":"643"},"comment":"","fields": {"account":""}}
-    postjson['id']=str(int(time.time() * 1000))
-    postjson['sum']['amount']=sum_pay
-    postjson['fields']['account']=to_account
-    postjson['comment']=comment
+    postjson['id'] = str(int(time.time() * 1000))
+    postjson['sum']['amount'] = sum_pay
+    postjson['fields']['account'] = to_account
+    postjson['comment'] = comment
     res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/'+prv_id+'/payments', json=postjson)
-    print(res)
     return res.json()
 ~~~
 
@@ -2298,7 +2233,6 @@ def mobile_operator(phone_number):
     res = s.post('https://qiwi.com/mobile/detect.action', data = {'phone': phone_number })
     s.headers['Accept'] = 'application/json'
     s.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    print(res)
     return res.json()['message']
 ~~~
 
@@ -2316,7 +2250,7 @@ def mobile_operator(phone_number):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как formdata.</span>
+    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как <code>formdata</code>.</span>
     </li>
 </ul>
 
@@ -2359,7 +2293,7 @@ Content-Type: application/json
 ~~~
 
 ~~~python
-mobile_operator(79652468447)
+print(mobile_operator(79652468447))
 ~~~
 
 Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор оператора находится в параметре `message`.
@@ -2368,7 +2302,7 @@ mobile_operator(79652468447)
 
 ## Перевод на карту {#cards}
 
-Запрос выполняет перевод на карты платежных систем Visa или MasterCard. Предварительно можно [проверить тип платежной системы](#card_check).
+Запрос выполняет денежный перевод на карты платежных систем Visa, MasterCard или МИР. Предварительно можно [проверить тип платежной системы](#card_check).
 
 <h3 class="request method">Запрос → POST</h3>
 
@@ -2482,11 +2416,11 @@ Host: edge.qiwi.com
              <ul>
              <li>1963 - Перевод на карту Visa (карты российских банков)</li>
              <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
+             <li>31652 - Перевод на карту национальной платежной системы МИР</li>
              <li>22351 - Перевод на <a href="https://qiwi.com/qvc/help.action">Виртуальную карту QIWI</a></li>
              <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:
              <ul><li>1960 – Перевод на карту Visa</li>
              <li>21012 – Перевод на карту MasterCard</li></ul></li>
-             <li>31652 - Перевод на карту национальной платежной системы МИР</li>
              </ul></li>
         </ul>
 </ul>
@@ -2517,13 +2451,13 @@ paymentMethod.type|String |Константа, `Account`
 paymentMethod.accountId|String| Константа, `643`.
 fields|Object| Реквизиты платежа. Содержит параметры:
 fields.account| String|Номер банковской карты получателя
-fields.rem_name|String|Имя отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
-fields.rem_name_f|String|Фамилия отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
-fields.rec_address|String|Адрес отправителя (без почтового индекса, в произвольной форме). Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
-fields.rec_city|String|Город отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
-fields.rec_country|String|Страна отправителя. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
-fields.reg_name|String|Имя **получателя**. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
-fields.reg_name_f|String|Фамилия **получателя**. Требуется только для ID (идентификатор провайдера в запросе) 1960, 21012
+fields.rem_name|String|Имя отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
+fields.rem_name_f|String|Фамилия отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
+fields.rec_address|String|Адрес отправителя (без почтового индекса, в произвольной форме). Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
+fields.rec_city|String|Город отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
+fields.rec_country|String|Страна отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
+fields.reg_name|String|Имя **получателя**. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
+fields.reg_name_f|String|Фамилия **получателя**. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
 
 <h3 class="request">Ответ ←</h3>
 
@@ -2595,8 +2529,6 @@ import requests
 def card_system(card_number):
     s = requests.Session()
     res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
-    print(res)
-    print(res.text)
     return res.json()['message']
 ~~~
 
@@ -2640,7 +2572,7 @@ Content-Type: application/json
 ~~~
 
 ~~~python
-card_system(4890xxxxxxxx1698)
+print(card_system(4890xxxxxxxx1698))
 ~~~
 
 > Не удалось определить платежную систему карты
@@ -2666,12 +2598,16 @@ Content-Type: application/json
 
 ## Банковский перевод {#banks}
 
-Запрос выполняет перевод на банковские карты/счета российских банков.
+Запрос выполняет денежный перевод на карты/счета физических лиц, открытые в российских банках.
+
+### Перевод по номеру карты
+
+Запрос выполняет денежный перевод на карты физических лиц, выпущенные российскими банками.
 
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/466/payments" \
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/464/payments" \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
@@ -2694,7 +2630,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/466/paymen
 ~~~
 
 ~~~http
-POST /sinap/api/v2/terms/466/payments HTTP/1.1
+POST /sinap/api/v2/terms/464/payments HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
@@ -2723,10 +2659,15 @@ Host: edge.qiwi.com
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
-             <ul><li>466 - Тинькофф Банк</li>
-             <li>464 - Альфа-Банк</li>
-             <li>821 - Промсвязьбанк</li>
+             <ul><li>464 - Альфа-Банк</li>
+             <li>804 - АО "ОТП БАНК"</li>
+             <li>810 - АО "РОССЕЛЬХОЗБАНК"</li>
              <li>815 - Русский Стандарт</li>
+             <li>816 - ВТБ (ПАО)</li>
+             <li>821 - Промсвязьбанк</li>
+             <li>870 - ПАО Сбербанк</li>
+             <li>881 - Ренессанс Кредит</li>
+             <li>1134 - ПАО "МОСКОВСКИЙ КРЕДИТНЫЙ БАНК"</li>
              </ul></li>
         </ul>
 </ul>
@@ -2756,9 +2697,14 @@ paymentMethod | Object| Объект, определяющий обработк�
 paymentMethod.type|String |Константа, `Account`
 paymentMethod.accountId|String| Константа, `643`.
 fields|Object| Реквизиты платежа. Содержит параметры:
-fields.account| String| Номер карты/счета получателя
-fields.exp_date| String|Срок действия карты, в формате `ММГГ` (например, `0218`). **Параметр указывается только в случае перевода на карту.**
-fields.account_type| String|Тип банковского идентификатора. Допустимые значения:<br>для Тинькофф Банк - карта `1`, договор `3`<br>для Альфа-Банка - карта `1`, счет `2`<br>для Промсвязьбанка - карта `7`, счет `9`<br>для банка Русский Стандарт - карта `1`, счет `2`, договор `3`.
+fields.account| String| Номер банковской карты получателя
+fields.exp_date| String|Срок действия карты, в формате `ММГГ` (например, `0218`). **Параметр указывается только в случае перевода на карту Альфа-Банка (ID 464) и Промсвязьбанка (ID 821).**
+fields.account_type| String|Тип банковского идентификатора. Для каждого банка применяется собственное значение:<br>Альфа-Банк - `1`<br>ОТП банк - `1`<br>Русский Стандарт - `1`<br>Россельхозбанк - `5`<br>ВТБ - `5`<br>Промсвязьбанк - `7`<br>Сбербанк - `5`<br>МОСКОВСКИЙ КРЕДИТНЫЙ БАНК - `5`<br>Ренессанс Кредит - `1`.
+fields.mfo| String|БИК соответствующего банка/территориального отделения банка
+fields.lname|String|Фамилия получателя
+fields.fname|String|Имя получателя
+fields.mname|String|Отчество получателя
+
 
 <h3 class="request">Ответ ←</h3>
 
@@ -2768,22 +2714,22 @@ Content-Type: application/json
 
 {
   "id": "21131343",
-  "terms": "466",
+  "terms": "464",
   "fields": {
-          "account": "4256********1231",
-          "account_type": "1",
-          "exp_date": "MMYY"
+      "account": "4256********1231",
+      "account_type": "1",
+      "exp_date": "MMYY"
   },
   "sum": {
-         "amount": 1000,
-         "currency": "643"
+      "amount": 1000,
+      "currency": "643"
   },
   "source": "account_643",
   "transaction": {
-         "id": "4969142201",
-         "state": {
-            "code": "Accepted"
-          }
+      "id": "4969142201",
+      "state": {
+        "code": "Accepted"
+      }
   }
 }
 ~~~
@@ -2794,7 +2740,7 @@ Content-Type: application/json
 -----|----|-----
 id | Number | Копия параметра `id` из исходного запроса
 terms | String | Параметр **ID** из URL запроса
-fields|Object|Копия объекта `fields` из исходного запроса. **В случае перевода на банковскую карту, в параметре** `fields.account` **находится маскированный номер банковской карты получателя**.
+fields|Object|Копия объекта `fields` из исходного запроса. **В параметре** `fields.account` **находится маскированный номер банковской карты получателя**.
 sum|Object|Копия объекта `sum` из исходного запроса.
 source| String| Константа, `account_643`
 transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
@@ -2803,14 +2749,14 @@ transaction.state|Object|Объект содержит текущее состо
 state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
 
 
-## Перевод по банковским реквизитам {#banks_wire}
+### Перевод по номеру счета/договора
 
-Запрос выполняет перевод на счета российских банков по полным реквизитам счета. Возможен обычный перевод или перевод через систему БЭСП (ускоренная обработка платежа, не более 1 операционного дня).
+Запрос выполняет денежный перевод на счета физических лиц, открытые в российских банках. Возможен обычный перевод или перевод с использованием сервиса срочного перевода (исполнение в течение часа, с 9:00 до 19:30).
 
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/382/payments" \
+user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/816/payments" \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
@@ -2837,7 +2783,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/382/paymen
 ~~~
 
 ~~~http
-POST /sinap/api/v2/terms/466/payments HTTP/1.1
+POST /sinap/api/v2/terms/816/payments HTTP/1.1
 Content-Type: application/json
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
@@ -2870,12 +2816,12 @@ Host: edge.qiwi.com
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
-             <ul><li>466 - Тинькофф Банк</li>
+             <ul><li>313 - ХоумКредит Банк</li>
              <li>464 - Альфа-Банк</li>
              <li>821 - Промсвязьбанк</li>
              <li>804 - АО "ОТП БАНК"</li>
              <li>810 - АО "РОССЕЛЬХОЗБАНК"</li>
-             <li>816 - ВТБ 24 (ПАО)</li>
+             <li>816 - ВТБ (ПАО)</li>
              <li>819 - АО ЮНИКРЕДИТ БАНК</li>
              <li>868 - КИВИ БАНК (АО)</li>
              <li>870 - ПАО Сбербанк</li>
@@ -2911,12 +2857,13 @@ paymentMethod.type|String |Константа, `Account`
 paymentMethod.accountId|String| Константа, `643`.
 fields|Object| Реквизиты платежа. Содержит параметры:
 fields.account| String| Номер банковского счета получателя
+fields.urgent | String | Признак ускоренного перевода. Значение 0 - не использовать; значение 1 - выполнить перевод через Сервис срочного перевода ЦБ РФ. **Внимание! Взимается дополнительная комиссия за ускоренный перевод**
 fields.mfo| String|БИК соответствующего банка/территориального отделения банка
-fields.urgent| String|Признак ускоренного перевода по системе БЭСП. Значение `0` - не использовать; значение `1` - выполнить перевод через систему БЭСП (в течение операционного дня). **Внимание! Взимается дополнительная комиссия за перевод в системе БЭСП**
-fields.account_type| String|Тип банковского идентификатора. Для каждого банка применяется собственное значение:<br>Тинькофф Банк - `3`<br>Альфа-Банк - `2`<br>ОТП банк - `2`<br>Россельхозбанк - `2`<br>ВТБ 24 - `2`<br>Промсвязьбанк - `9`<br>ЮНИКРЕДИТ БАНК - `2`<br>КИВИ БАНК - `2`<br>Сбербанк - `2`<br>МОСКОВСКИЙ КРЕДИТНЫЙ БАНК - `2`<br>РАЙФФАЙЗЕНБАНК -`2`.
+fields.account_type| String|Тип банковского идентификатора. Для каждого банка применяется собственное значение:<br>Альфа-Банк - `2`<br>ОТП банк - `2`<br>Россельхозбанк - `2`<br>Русский Стандарт - `2`<br>ВТБ - `2`<br>Промсвязьбанк - `9`<br>ЮНИКРЕДИТ БАНК - `2`<br>КИВИ БАНК - `2`<br>Сбербанк - `2`<br>МОСКОВСКИЙ КРЕДИТНЫЙ БАНК - `2`<br>РАЙФФАЙЗЕНБАНК -`2`<br>Россельхозбанк - `2`<br>ВТБ - `5`<br>Промсвязьбанк - `9`<br>Ренессанс Кредит - `2`<br>ХоумКредит Банк - `6`.
 fields.lname|String|Фамилия получателя
 fields.fname|String|Имя получателя
 fields.mname|String|Отчество получателя
+fileds.agrnum|String|Номер договора - для переводов в ХоумКредит Банк
 
 <h3 class="request">Ответ ←</h3>
 
@@ -2926,11 +2873,10 @@ Content-Type: application/json
 
 {
   "id": "21131343",
-  "terms": "466",
+  "terms": "464",
   "fields": {
           "account": "407121010910909011",
-          "account_type": "1",
-          "exp_date": "MMYY"
+          "account_type": "2"
   },
   "sum": {
          "amount": 1000,
@@ -3016,17 +2962,16 @@ import time
 
 # оплата простого провайдера
 
-def pay_simple_prv(api_access_token,prv_id,to_account,sum_pay):
+def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
     s = requests.Session()
-    s.headers['Accept']= 'application/json'
-    s.headers['Content-Type']= 'application/json'
+    s.headers['Accept'] = 'application/json'
+    s.headers['Content-Type'] = 'application/json'
     s.headers['authorization'] = 'Bearer ' + api_access_token
     postjson = {"id":"","sum": {"amount":"","currency":"643"},"paymentMethod": {"type":"Account","accountId":"643"},"fields": {"account":""}}
-    postjson['id']=str(int(time.time() * 1000))
-    postjson['sum']['amount']=sum_pay
-    postjson['fields']['account']=to_account
+    postjson['id'] = str(int(time.time() * 1000))
+    postjson['sum']['amount'] = sum_pay
+    postjson['fields']['account'] = to_account
     res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/'+prv_id+'/payments', json=postjson)
-    print(res)
     return res.json()
 ~~~
 
@@ -3058,18 +3003,17 @@ def pay_simple_prv(api_access_token,prv_id,to_account,sum_pay):
     </li>
 </ul>
 
-<aside class="notice">Поиск идентификатора выполняется на сайте qiwi.com в поисковой строке. Идентификатор находится в URL ссылки на платежную форму провайдера вида <a>https://qiwi.com/payment/form.action?provider=ID</a> или <a>https://qiwi.com/payment/form/ID</a></aside>
+<aside class="notice">Поиск идентификатора выполняется на сайте qiwi.com в поисковой строке. Идентификатор находится в URL ссылки на платежную форму провайдера вида <a>https://qiwi.com/payment/form/ID</a> или <a>https://qiwi.com/payment/form/ID</a></aside>
 
 ![Поиск провайдера](/images/provider_id.jpg)
 
 ~~~python
 import requests
 
-# поиск на qiwi.com - опредление id провайдера по названию
+# поиск на qiwi.com - определение id провайдера по названию
 def qiwi_com_search(search_phrase):
     s = requests.Session()
     search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
-    print(search)
     return search.json()['data']['items']
 
 qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
@@ -3114,10 +3058,9 @@ Content-Type: application/json
 ~~~
 
 ~~~python
-# zenit
-pay_simple_prv(api_access_token,'26386','2166191','10')
+# Платёж на провайдера
+print(pay_simple_prv(api_access_token,'26386','2166191','10'))
 
-<Response [200]>
 {'fields': {'account': '2166191'},
  'id': '1509031806148',
  'source': 'account_643',
@@ -3619,7 +3562,7 @@ hash|String| Хэш цифровой подписи веб-хука. Как пр
 
 1. По запросу пользователь получает свой ключ, закодированный в Base64: `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
 2. Приходит веб-хук `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79165238345","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
-3. Конкатенируются требуемые поля платежных данных: `643|1|IN|+79165238345|13353941550`
+3. Склеиваются требуемые поля платежных данных: `643|1|IN|+79165238345|13353941550`
 4. Поля шифруются методом SHA-256 с раскодированным ключом из п.1. Результат `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0` совпадает с параметром `hash` из запроса.
 
 ## Регистрация обработчика webhook {#hook_reg}
@@ -3685,7 +3628,9 @@ txnType|String|Тип транзакций, по которым отсылают
 <h3 class="request method">Запрос → DELETE</h3>
 
 ~~~shell
-curl -X DELETE "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X DELETE "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc" \
+   -H "accept: */*" \
+   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
@@ -3735,7 +3680,10 @@ response|String|Описание результата операции
 
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" -H "accept: */*" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" \
+   -H "accept: */*" \
+    -H "accept: */*" \
+    -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
@@ -3789,7 +3737,9 @@ key|String|Base64-закодированный ключ
 
 
 ~~~shell
-curl -X POST "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X POST "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" \
+   -H "accept: */*" \
+   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
@@ -3844,7 +3794,10 @@ key|String|Base64-закодированный новый ключ
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/active" -H "accept: */*" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/active" \
+   -H "accept: */*" \
+   -H "accept: */*" \
+   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
@@ -3896,7 +3849,9 @@ txnType|String|Тип транзакций, по которым отсылают
 
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" -H "accept: */*" -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
+   -H "accept: */*" \
+   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
@@ -3942,7 +3897,7 @@ response|String|Результат запроса
 
 Для выставления счета на QIWI Кошелек используется протокол [API QIWI Кассы](https://developer.qiwi.com/ru/bill-payments/). Для получения ключей авторизации запросов вы можете зайти на [p2p.qiwi.com](https://p2p.qiwi.com) в личный кабинет, или использовать представленный запрос.
 
-Данный запрос возвращает пару ключей (PublicKey и SecretKey) и настраивает URL уведомлений (если нужно).
+Данный запрос возвращает пару ключей (в параметрах `PublicKey` и `SecretKey`) и настраивает URL уведомлений (если нужно).
 
 
 <h3 class="request method">Запрос → POST</h3>
@@ -3982,12 +3937,14 @@ serverNotificationsUrl|String |URL для уведомлений об оплат
 
 ## Список счетов  {#list_invoice}
 
-Получение списка неоплаченных счетов кошелька пользователя.
+Получение списка неоплаченных счетов кошелька пользователя. Список строится в обратном хронологическом порядке. Можно использовать фильтры по времени выставления счета, начальному идентификатору счета.
 
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET --header 'Accept: application/json' --header 'Authorization: Bearer ***' 'https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50'
+user@server:~$ curl -X GET --header 'Accept: application/json' \
+   --header 'Authorization: Bearer ***' \
+   'https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50'
 ~~~
 
 ~~~http
@@ -4019,10 +3976,10 @@ User-Agent: ****
 Параметр|Тип|Описание
 --------|----|----
 rows | Integer |Максимальное число счетов в ответе, для разбивки списка на части. Целое число от 1 до 50. По умолчанию возвращается не более 50 счетов.
-statuses|String| Статус неоплаченного счета. Строка `READY_FOR_PAY`
+statuses|String| Статус неоплаченного счета. Только строка `READY_FOR_PAY`
 min_creation_datetime|Long|Нижняя временная граница для поиска счетов, Unix-time
 max_creation_datetime|Long|Верхняя временная граница для поиска счетов, Unix-time
-next_id|Number|Начальный идентификатор для поиска, чтобы возврат списка выполнялся начиная с этого значения
+next_id|Number|Начальный идентификатор счета для поиска, чтобы возврат списка выполнялся начиная с этого значения
 next_creation_datetime|Long|Начальное время для поиска (возвращаются только счета, выставленные ранее этого времени), Unix-time.
 
 <h3 class="request">Ответ ←</h3>
@@ -4052,7 +4009,7 @@ Content-Type: application/json
         "logo_url":"https://static.qiwi.com/img/providers/logoBig/480706_l.png"
       },
       "comment": "Deposit to FON 13515573",
-      "pay_url":"https://bill.qiwi.com/order/external/form.action?from=480706&to=79262468447&order=1063702405&billref=site"
+      "pay_url":"https://oplata.qiwi.com/form?shop=480706&transaction=102263702405"
     }
   ]
 }
@@ -4090,10 +4047,13 @@ bills[].pay_url|String|Ссылка для оплаты счета в интер
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST --header 'Content-Type: application/json;charset=UTF-8' --header 'Accept: application/json' --header 'Authorization: Bearer 68ec21fd52e4244838946dd07ed225a1' -d '{ \
-   "invoice_uid": "1063702405", \
-   "currency": "643" \
- }' 'https://edge.qiwi.com/checkout/invoice/pay/wallet'
+user@server:~$ curl -X POST --header 'Content-Type: application/json;charset=UTF-8' \
+   --header 'Accept: application/json' \
+   --header 'Authorization: Bearer 68ec21fd52e4244838946dd07ed225a1' \
+   -d '{ \
+         "invoice_uid": "1063702405", \
+         "currency": "643" \
+        }' 'https://edge.qiwi.com/checkout/invoice/pay/wallet'
 ~~~
 
 ~~~http
@@ -4131,8 +4091,8 @@ User-Agent: ****
 
 Параметр|Тип|Описание
 --------|----|----
-invoice_uid | String |ID счета в QIWI (параметр bills[].id в [данных о счете](#invoice_data)
-currency|String| Валюта суммы счета (параметр bills[].sum.currency в [данных о счете](#invoice_data))
+invoice_uid | String |ID счета в QIWI (параметр `bills[].id` в [данных о счете](#invoice_data)
+currency|String| Валюта суммы счета (параметр `bills[].sum.currency` в [данных о счете](#invoice_data))
 
 
 <h3 class="request">Ответ ←</h3>
@@ -4152,7 +4112,7 @@ Content-Type: application/json
 
 Параметр|Тип|Описание
 --------|----|----
-invoice_status|String|Строка кода статуса оплаты счета, PAID_STATUS. Любой другой статус означает неуспех платежной транзакции.
+invoice_status|String|Строка кода статуса оплаты счета, `PAID_STATUS`. Любой другой статус означает неуспех платежной транзакции.
 is_sms_confirm|String|Признак подтверждения по SMS
 
 ## Отмена неоплаченного счета  {#cancel_invoice}
@@ -4163,7 +4123,10 @@ is_sms_confirm|String|Признак подтверждения по SMS
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST --header 'Accept: application/json' --header 'Authorization: Bearer ***' 'https://edge.qiwi.com/checkout/api/bill/reject' -d '{ "id": 1034353453 }'
+user@server:~$ curl -X POST --header 'Accept: application/json' \
+                            --header 'Authorization: Bearer ***' \
+                            'https://edge.qiwi.com/checkout/api/bill/reject' \
+                            -d '{ "id": 1034353453 }'
 ~~~
 
 ~~~http
