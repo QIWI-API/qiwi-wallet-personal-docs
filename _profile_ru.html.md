@@ -1,6 +1,8 @@
 
 # Профиль пользователя {#profile}
 
+Запрос возвращает информацию о вашем профиле - наборе пользовательских данных и настроек вашего QIWI кошелька.
+
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
@@ -69,8 +71,8 @@ profile['authInfo']['boundEmail']
 
 Параметр|Тип |Описание
 --------|----|-------
-authInfoEnabled|Boolean | Логический признак выгрузки настроек авторизации пользователя.<br>По умолчанию `true`
-contractInfoEnabled|Boolean | Логический признак выгрузки данных о кошельке пользователя.<br>По умолчанию `true`
+authInfoEnabled|Boolean | Логический признак выгрузки настроек авторизации.<br>По умолчанию `true`
+contractInfoEnabled|Boolean | Логический признак выгрузки данных о вашем QIWI кошельке.<br>По умолчанию `true`
 userInfoEnabled|Boolean | Логический признак выгрузки прочих пользовательских данных.<br>По умолчанию `true`
 
 <h3 class="request">Ответ ←</h3>
@@ -127,13 +129,13 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный JSON-ответ содержит данные о профиле пользователя:
+Успешный JSON-ответ содержит следующие данные:
 
 Параметр|Тип|Описание
 --------|----|----
-authInfo|Object|Текущие настройки авторизации пользователя. Объект может отсутствовать, в зависимости от признака `authInfoEnabled` в запросе.
-authInfo.personId|Number|Номер кошелька пользователя
-authInfo.registrationDate|String|Дата/время регистрации QIWI Кошелька пользователя (через сайт/мобильное приложение, либо другим способом)
+authInfo|Object|Текущие настройки авторизации. Объект может отсутствовать, в зависимости от признака `authInfoEnabled` в запросе.
+authInfo.personId|Number|Номер кошелька
+authInfo.registrationDate|String|Дата/время регистрации QIWI Кошелька (через сайт/мобильное приложение, либо другим способом)
 authInfo.boundEmail|String|E-mail, привязанный к кошельку. Если отсутствует, то `null`
 authInfo.ip|String|IP-адрес последней пользовательской сессии
 authInfo.lastLoginDate|String|Дата/время последней сессии в QIWI Кошельке
@@ -141,16 +143,16 @@ authInfo.mobilePinInfo|Object|Данные о PIN-коде мобильного 
 mobilePinInfo.mobilePinUsed|Boolean|Логический признак использования PIN-кода (фактически означает, что мобильное приложение используется)
 mobilePinInfo.lastMobilePinChange|String|Дата/время последнего изменения PIN-кода мобильного приложения QIWI Кошелька
 mobilePinInfo.nextMobilePinChange|String|Дата/время следующего (планового) изменения PIN-кода мобильного приложения QIWI Кошелька
-authInfo.passInfo|Object|Данные о пароле к сайту qiwi.com
-passInfo.passwordUsed|Boolean|Логический признак использования пароля (фактически означает, что пользователь заходит на сайт)
+authInfo.passInfo|Object|Данные об использовании пароля к сайту qiwi.com
+passInfo.passwordUsed|Boolean|Логический признак использования пароля (фактически означает использование сайта qiwi.com)
 passInfo.lastPassChange|String|Дата/время последнего изменения пароля сайта qiwi.com
 passInfo.nextPassChange|String|Дата/время следующего (планового) изменения пароля сайта qiwi.com
-authInfo.pinInfo|Object|Данные о PIN-коде к приложению QIWI Кошелька на QIWI терминалах
-pinInfo.pinUsed|Boolean|Логический признак использования PIN-кода (фактически означает, что пользователь заходил в приложение)
-contractInfo|Object| Информация о кошельке пользователя. Объект может отсутствовать, в зависимости от признака `contractInfoEnabled` в запросе.
+authInfo.pinInfo|Object|Данные об использовании PIN-кода к приложению QIWI Кошелька на QIWI терминалах самообслуживания
+pinInfo.pinUsed|Boolean|Логический признак использования PIN-кода для терминала (фактически означает факт использования приложения QIWI Кошелька на терминале)
+contractInfo|Object| Информация о кошельке. Объект может отсутствовать, в зависимости от признака `contractInfoEnabled` в запросе.
 contractInfo.blocked|Boolean|Логический признак блокировки кошелька
-contractInfo.contractId|Number|Номер кошелька пользователя
-contractInfo.creationDate|String|Дата/время создания QIWI Кошелька пользователя (через сайт/мобильное приложение, либо при первом пополнении, либо другим способом)
+contractInfo.contractId|Number|Номер кошелька
+contractInfo.creationDate|String|Дата/время создания QIWI Кошелька (через сайт/мобильное приложение, либо при первом пополнении, либо другим способом)
 contractInfo.features|Array[Object]|Служебная информация
 contractInfo.identificationInfo|Array[Object]|Данные об [идентификации](https://qiwi.com/settings/identification#ru) пользователя.
 identificationInfo[].bankAlias|String|Акроним системы, в которой пользователь получил идентификацию:<br> `QIWI` - QIWI Кошелек.
@@ -159,18 +161,19 @@ userInfo|Object|Прочие пользовательские данные. Об
 userInfo.defaultPayCurrency|Number|Код валюты баланса кошелька по умолчанию (number-3 ISO-4217)
 userInfo.defaultPaySource|Number|Служебная информация
 userInfo.email|String|E-mail пользователя
-userInfo.firstTxnId|Number|Номер первой транзакции пользователя после регистрации
+userInfo.firstTxnId|Number|Номер первой транзакции после регистрации
 userInfo.language|String|Служебная информация
 userInfo.operator|String|Название мобильного оператора номера пользователя
 userInfo.phoneHash|String|Служебная информация
 userInfo.promoEnabled|String|Служебная информация
 
 
+
 # Идентификация {#identification}
 
 ## Идентификация пользователя {#ident}
 
-Данный запрос позволяет отправить данные для упрощенной идентификации своего QIWI кошелька.
+Данный запрос позволяет отправить данные для упрощенной идентификации вашего QIWI кошелька.
 
 <aside class="warning">Допускается идентифицировать не более 5 кошельков на одного владельца. См. п. 3.1.1 ч. III <a href="https://static.qiwi.com/ru/doc/oferta_lk.pdf">Оферты сервиса "QIWI Wallet"</a></aside>
 
@@ -236,7 +239,7 @@ def get_identification(api_access_token, my_login):
     <li><h3>URL <span>https://edge.qiwi.com/identification/v1/persons/<a>wallet</a>/identification</span></h3>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
         </ul>
     </li>    
 </ul>
@@ -346,7 +349,7 @@ Host: edge.qiwi.com
     <li><h3>URL <span>https://edge.qiwi.com/identification/v1/persons/<a>wallet</a>/identification</span></h3>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом, но без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом, но без <i>+</i>)</li>
         </ul>
     </li>
 </ul>
@@ -394,4 +397,3 @@ passport | String | Серия и номер паспорта пользоват
 inn| String|  ИНН пользователя (первые и последние 2 цифры)
 snils |String | Номер СНИЛС пользователя (первые и последние 2 цифры)
 oms| String | Номер полиса ОМС пользователя (первые и последние 2 цифры)
-

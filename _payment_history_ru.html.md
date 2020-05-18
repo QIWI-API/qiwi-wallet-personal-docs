@@ -79,7 +79,7 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
         </ul>
 </ul>
 
@@ -262,7 +262,7 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
     <li><h3>URL <span>https://edge.qiwi.com/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
         </ul>
 </ul>
 
@@ -662,4 +662,3 @@ payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', ap
 ~~~
 
 Успешный JSON-ответ содержит HTTP-код отправки файла.
-

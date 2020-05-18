@@ -3,7 +3,7 @@
 
 ## Список балансов {#balances_list}
 
-Запрос выгружает текущие балансы ваших счетов QIWI Кошелька.
+Запрос выгружает текущие балансы счетов вашего QIWI Кошелька.
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/getByAliasUsingGET_1)
 
@@ -38,7 +38,7 @@ def balance(login, api_access_token):
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
         <ul>
         <strong>В pathname запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
         </ul>
 </ul>
 
@@ -105,7 +105,7 @@ rubAlias = [x for x in balances if x['alias'] == 'qw_wallet_rub']
 rubBalance = rubAlias['balance']['amount']
 ~~~
 
-Успешный ответ содержит JSON-массив ваших счетов QIWI Кошелька для фондирования платежей и текущие балансы счетов:
+Успешный ответ содержит JSON-массив счетов вашего QIWI Кошелька для фондирования платежей и текущие балансы счетов:
 
 Параметр|Тип|Описание
 --------|----|----
@@ -152,7 +152,7 @@ Host: edge.qiwi.com
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
         <ul>
         <strong>В теле запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li  >
+             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li  >
         </ul>
 </ul>
 
@@ -210,7 +210,7 @@ Host: edge.qiwi.com
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
         <ul>
         <strong>В теле запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
         </ul>
 </ul>
 
@@ -270,7 +270,7 @@ Host: edge.qiwi.com
     <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
         <ul>
         <strong>В теле запроса используются обязательные параметры:</strong>
-             <li><strong>personId</strong> - номер кошелька, для которого получен токен доступа (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
              <li><strong>accountAlias</strong> - псевдоним счета в кошельке из <a href="#balances_list">списка счетов</a> (параметр <i>accounts[].alias</i> в ответе)</li>
         </ul>
 </ul>
