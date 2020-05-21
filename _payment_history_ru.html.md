@@ -45,10 +45,10 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
-> Пример 2. Платежи за 10.05.2017
+> Пример 2. Платежи за 10.05.2017 с рублевого счета
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/79112223344/payments?rows=50&sources%5B0%5D=QW_RUB&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
 Accept: application/json
 Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com

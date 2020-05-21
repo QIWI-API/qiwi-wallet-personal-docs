@@ -397,3 +397,121 @@ passport | String | Серия и номер паспорта пользоват
 inn| String|  ИНН пользователя (первые и последние 2 цифры)
 snils |String | Номер СНИЛС пользователя (первые и последние 2 цифры)
 oms| String | Номер полиса ОМС пользователя (первые и последние 2 цифры)
+
+
+# Лимиты QIWI Кошелька {#limits}
+
+Запрос возвращает текущие уровни лимитов по операциям в вашем QIWI Кошельке. Лимиты действуют как ограничения на сумму определенных операций.
+
+
+<h3 class="request method">Запрос → GET</h3>
+
+~~~shell
+user@server:~$ curl "https://edge.qiwi.com/qw-limits/v1/persons/79115221133/actual-limits?types[0]=TURNOVER" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+~~~
+
+~~~http
+GET /qw-limits/v1/persons/79115221133/actual-limits?types[0]=TURNOVER HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+~~~
+
+~~~python
+import requests
+
+# Все лимиты QIWI Кошелька
+def limits(login, api_access_token):
+    types = [ 'TURNOVER', 'REFILL', 'PAYMENTS_P2P', 'PAYMENTS_PROVIDER_INTERNATIONALS', 'PAYMENTS_PROVIDER_PAYOUT', 'WITHDRAW_CASH']
+    s = requests.Session()
+    s.headers['Accept']= 'application/json'
+    s.headers['Content-Type']= 'application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    parameters = {}
+    for i, type in enumerate(types):
+        parameters['types[' + str(i) + ']'] = type
+    b = s.get('https://edge.qiwi.com/qw-limits/v1/persons/' + login + '/actual-limits', params = parameters)
+    return b.json()
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/qw-limits/v1/persons/<a>personId</a>/actual-limits?<a>parameter=value</a></span></h3></li>
+        <ul>
+        <strong>В pathname запроса используется параметр:</strong>
+             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+        </ul>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Данные параметры передаются в строке запроса:</span>
+    </li>
+</ul>
+
+
+Параметр|Тип|Описание
+--------|----|----
+types|Array[String]|Список типов операций, по которым запрашиваются лимиты. Каждый тип задается как отдельный параметр и нумеруется элементом массива, начиная с нуля (`types[0]`, `types[1]` и т.д.). Допустимые типы операций:<br>`REFILL` - максимальный допустимый остаток на счёте<br>`TURNOVER` - оборот в месяц<br>`PAYMENTS_P2P` - переводы на другие кошельки в месяц<br>`PAYMENTS_PROVIDER_INTERNATIONALS` - платежи в адрес иностранных компаний в месяц<br>`PAYMENTS_PROVIDER_PAYOUT` - Переводы на банковские счета и карты, кошельки других систем<br>`WITHDRAW_CASH` - снятие наличных в месяц. Должен быть указан хотя бы один тип операций.
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "limits":{
+      "RU" :[
+        {
+            "type": "TURNOVER",
+            "currency": "RUB",
+            "rest": 200.00,
+            "max": 40000.00,
+            "spent": 39800.00,
+            "interval": {
+                "dateFrom": "2019-11-01T:00:00",
+                "dateTill": "2019-12-01T00:00"
+            }
+        },
+        ...
+    ]
+  }
+}
+~~~
+
+~~~python
+# номер кошелька в формате 79992223344
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# все лимиты (список)
+limits = limits(mylogin,api_access_token)['limits']['RU']
+
+# лимит оборота
+turnoverInfo = [x for x in limits if x['type'] == 'TURNOVER']
+turnoverLimit = turnoverInfo[0]['rest']
+~~~
+
+Успешный ответ содержит JSON-массив лимитов по операциям вашего QIWI Кошелька:
+
+Параметр|Тип|Описание
+--------|----|----
+limits|Object|Описание лимитов
+limits[].'RU'|Array[Object]| Массив лимитов на операции
+type | String |Тип операций, на которые действует данный лимит
+currency | String |Валюта операций
+max | String |Значение лимита
+spent|String|Сумма, потраченная по данным операциям
+rest|Boolean|Остаток лимита, который можно потратить в данный период (период задается в параметре `interval`)
+interval|Object|Сведения о периоде действия лимита
+interval.dateFrom, interval.dateTill| String| Начало и конец периода, формат даты `ГГГГ-ММ-ДДТЧЧ:ММ:ССtmz`

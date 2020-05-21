@@ -102,7 +102,7 @@ balances = balance(mylogin,api_access_token)['accounts']
 
 # рублевый баланс
 rubAlias = [x for x in balances if x['alias'] == 'qw_wallet_rub']
-rubBalance = rubAlias['balance']['amount']
+rubBalance = rubAlias[0]['balance']['amount']
 ~~~
 
 Успешный ответ содержит JSON-массив счетов вашего QIWI Кошелька для фондирования платежей и текущие балансы счетов:
@@ -156,16 +156,6 @@ Host: edge.qiwi.com
         </ul>
 </ul>
 
-<ul class="nestedList params">
-    <li><h3>Параметр</h3><span>Данный параметр передается в JSON-теле запроса:</span>
-    </li>
-</ul>
-
-
-Параметр|Тип|Описание
---------|----|----
-alias|String| Псевдоним нового счета (см. [запрос доступных счетов](#funding_offer))
-
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
         <ul>
@@ -175,6 +165,16 @@ alias|String| Псевдоним нового счета (см. [запрос д
         </ul>
     </li>
 </ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    </li>
+</ul>
+
+
+Параметр|Тип|Описание
+--------|----|----
+alias|String| Псевдоним нового счета (см. [запрос доступных счетов](#funding_offer))
 
 <h3 class="request">Ответ ←</h3>
 
@@ -275,16 +275,6 @@ Host: edge.qiwi.com
         </ul>
 </ul>
 
-<ul class="nestedList params">
-    <li><h3>Параметр</h3><span>Данный параметр передается в JSON-теле запроса:</span>
-    </li>
-</ul>
-
-
-Параметр|Тип|Описание
---------|----|----
-defaultAccount|Boolean| Признак установки счета по умолчанию
-
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
         <ul>
@@ -294,6 +284,16 @@ defaultAccount|Boolean| Признак установки счета по умо
         </ul>
     </li>
 </ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    </li>
+</ul>
+
+
+Параметр|Тип|Описание
+--------|----|----
+defaultAccount|Boolean| Признак установки счета по умолчанию
 
 <h3 class="request">Ответ ←</h3>
 
