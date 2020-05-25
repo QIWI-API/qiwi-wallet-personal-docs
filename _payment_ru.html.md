@@ -169,13 +169,25 @@ Host: qiwi.com
     <li><h3>URL <span>https://qiwi.com/ID?<a>parameter=value</a></span></h3></li>
 </ul>
 
+<ul>
+<strong>В pathname GET-запроса используется параметр:</strong>
+     <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
+     <ul><li>`99` - [Перевод на QIWI Wallet](#p2p)</li>
+     <li>`99999` -  Перевод на QIWI Wallet по никнейму</li>
+     <li>`1963` - [Перевод на карту Visa](#cards) (карты российских банков)</li>
+     <li>`21013` - [Перевод на карту MasterCard](#cards) (карты российских банков)</li>
+     <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<ul><li>`1960` – [Перевод на карту Visa](#cards)</li><li>`21012` – [Перевод на карту MasterCard](#cards)</li></ul>
+     <li>`31652` - [Перевод на карту МИР](#cards)</li>
+     <li>[Идентификаторы операторов мобильной связи](#mnp)</li>
+     <li>[Идентификаторы других провайдеров](#charity)</ul></li>
+</ul>
+
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>В пути ссылки и в строке запроса указываются параметры платежной формы.</span></li>
+    <li><h3>Параметры</h3><span>В строке запроса указываются параметры отображения платежной формы.</span></li>
 </ul>
 
 Параметр|Тип|Описание|Поле на форме| Обяз.
 ---------|--------|---|----
-ID | Integer | Идентификатор провайдера (указывается в пути ссылки).<br>Возможные значения:<br>`99` - [Перевод на QIWI Wallet](#p2p)<br>`99999` -  Перевод на QIWI Wallet по никнейму<br>`1963` - [Перевод на карту Visa](#cards) (карты российских банков)<br>`21013` - [Перевод на карту MasterCard](#cards) (карты российских банков)<br>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<br>`1960` – [Перевод на карту Visa](#cards)<br>`21012` – [Перевод на карту MasterCard](#cards)<br>`31652` - [Перевод на карту МИР](#cards)<br>[Идентификаторы операторов мобильной связи](#mnp)<br>[Идентификаторы других провайдеров](#charity) | - | +
 amountInteger|Integer | Целая часть суммы платежа (рубли). Указывается в строке запроса. Если параметр не указан, поле "Сумма" на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)** | Сумма | -
 amountFraction|Integer | Дробная часть суммы платежа (копейки). Указывается в строке запроса. Если параметр не указан, поле "Сумма" на форме будет пустым.|Сумма | -
 currency|Константа, `643` | Код валюты платежа. Указывается в строке запроса. **Обязательный параметр, если вы передаете в ссылке сумму платежа** |-|+
@@ -1907,11 +1919,11 @@ serverNotificationsUrl|String |URL для [уведомлений об опла�
 ~~~shell
 user@server:~$ curl -X GET --header 'Accept: application/json' \
    --header 'Authorization: Bearer ***' \
-   'https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50'
+   'https://edge.qiwi.com/checkout-api/api/bill/search?statuses=READY_FOR_PAY&rows=50'
 ~~~
 
 ~~~http
-GET /checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50 HTTP/1.1
+GET /checkout-api/api/bill/search?statuses=READY_FOR_PAY&rows=50 HTTP/1.1
 Accept: application/json
 Authorization: Bearer ***
 Host: edge.qiwi.com
@@ -1919,7 +1931,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout/api/bill/search?statuses=READY_FOR_PAY&rows=50</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/search?statuses=READY_FOR_PAY&rows=50</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -2016,11 +2028,11 @@ user@server:~$ curl -X POST --header 'Content-Type: application/json;charset=UTF
    -d '{ \
          "invoice_uid": "1063702405", \
          "currency": "643" \
-        }' 'https://edge.qiwi.com/checkout/invoice/pay/wallet'
+        }' 'https://edge.qiwi.com/checkout-api/invoice/pay/wallet'
 ~~~
 
 ~~~http
-POST /checkout/invoice/pay/wallet HTTP/1.1
+POST /checkout-api/invoice/pay/wallet HTTP/1.1
 Accept: application/json
 Content-type: application/json
 Authorization: Bearer ***
@@ -2034,7 +2046,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout/invoice/pay/wallet</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/invoice/pay/wallet</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -2088,12 +2100,12 @@ is_sms_confirm|String|Признак подтверждения по SMS
 ~~~shell
 user@server:~$ curl -X POST --header 'Accept: application/json' \
                             --header 'Authorization: Bearer ***' \
-                            'https://edge.qiwi.com/checkout/api/bill/reject' \
+                            'https://edge.qiwi.com/checkout-api/api/bill/reject' \
                             -d '{ "id": 1034353453 }'
 ~~~
 
 ~~~http
-POST /checkout/api/bill/reject HTTP/1.1
+POST /checkout-api/api/bill/reject HTTP/1.1
 Accept: application/json
 Authorization: Bearer ***
 Content-type: application/json
@@ -2106,7 +2118,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout/api/bill/reject</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/reject</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -2123,6 +2135,7 @@ User-Agent: ****
     <li><h3>Параметры</h3><span>Данный обязательный параметр передается в теле запроса в формате JSON:</span>
     </li>
 </ul>
+
 
 Параметр|Тип|Описание
 --------|----|----
