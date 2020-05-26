@@ -1615,7 +1615,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
              <li>Идентификатор другого интернет-провайдера</li>
              <li>1239 - Подари жизнь</li>
              <li>Идентификатор другого благотворительного фонда</li>
-             <li>[Как найти идентификатор провайдера](#search)</li>
+             <li><a href="#search">Как найти идентификатор провайдера</a></li>
              </ul></li>
         </ul>
 </ul>
@@ -1665,11 +1665,21 @@ Accept: application/json
 Host: qiwi.com
 ~~~
 
+~~~python
+import requests
+
+# поиск на qiwi.com - определение id провайдера по названию
+def qiwi_com_search(search_phrase):
+    s = requests.Session()
+    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
+    return search.json()['data']['items']
+~~~
+
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
-             <li><strong>searchPhrase</strong> - строка поиска провайдера по ключевым словам.</li>
+             <li><strong>searchPhrase</strong> - строка ключевых слов для поиска провайдера.</li>
         </ul>
 </ul>
 
@@ -1680,18 +1690,6 @@ Host: qiwi.com
         </ul>
     </li>
 </ul>
-
-> Использование API поиска провайдера
-
-~~~python
-import requests
-
-# поиск на qiwi.com - определение id провайдера по названию
-def qiwi_com_search(search_phrase):
-    s = requests.Session()
-    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
-    return search.json()['data']['items']
-~~~
 
 
 <h3 class="request">Ответ ←</h3>
