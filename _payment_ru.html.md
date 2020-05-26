@@ -79,7 +79,7 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
              <li>815 - Русский Стандарт</li>
              <li><a href="#banks">Прочие банки</a></li>
              <li><a href="#mnp">Идентификаторы операторов мобильной связи</a></li>
-             <li><a href="#charity">Идентификаторы других провайдеров</a></li>
+             <li><a href="#services">Идентификаторы других провайдеров</a></li>
              <li>1717 - <a href="#freepay">платеж по банковским реквизитам</a></li></ul></li>
         </ul>
 </ul>
@@ -166,7 +166,7 @@ Host: qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/ID?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3></li>
 </ul>
 
 <ul>
@@ -176,10 +176,11 @@ Host: qiwi.com
      <li>99999 -  Перевод на QIWI Wallet по никнейму</li>
      <li>1963 - Перевод на карту Visa (карты российских банков)</li>
      <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
-     <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<ul><li>1960 – Перевод на карту Visa</li><li>21012 – Перевод на карту MasterCard</li></ul>
+     <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<ul><li>1960 – Перевод на карту Visa</li><li>21012 – Перевод на карту MasterCard</li></ul></li>
      <li>31652 - Перевод на карту МИР</li>
+     <li>22351 - Перевод на <a href="https://qiwi.com/cards/qvc">Виртуальную карту QIWI</a></li>
      <li>Идентификаторы операторов мобильной связи</li>
-     <li>Идентификаторы других провайдеров</ul></li>
+     <li>Идентификаторы других провайдеров</li></ul></li>
 </ul>
 
 <ul class="nestedList params">
@@ -555,7 +556,7 @@ transaction.id|String|ID транзакции в процессинге QIWI Wal
 transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
 state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
 
-## Курс валют {#exchange}
+## Курсы валют {#exchange}
 
 Метод возвращает текущие курсы и кросс-курсы валют КИВИ Банка.
 
@@ -645,7 +646,7 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный JSON-ответ содержит массив данных о курсах валют:
+Успешный JSON-ответ содержит список курсов валют в `result`. Элемент списка соответствует валютной паре:
 
 Параметр|Тип|Описание
 --------|----|----
@@ -1041,7 +1042,7 @@ def send_card(api_access_token, payment_data):
              <li>1963 - Перевод на карту Visa (карты российских банков)</li>
              <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
              <li>31652 - Перевод на карту национальной платежной системы МИР</li>
-             <li>22351 - Перевод на <a href="https://qiwi.com/qvc/help.action">Виртуальную карту QIWI</a></li>
+             <li>22351 - Перевод на <a href="https://qiwi.com/cards/qvc">Виртуальную карту QIWI</a></li>
              <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:
              <ul><li>1960 – Перевод на карту Visa</li>
              <li>21012 – Перевод на карту MasterCard</li></ul></li>
@@ -1222,9 +1223,9 @@ Content-Type: application/json
 }
 ~~~
 
-Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор платежной системы находится в параметре `message`.
+Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор [платежной системы](#cards) находится в параметре `message`.
 
-Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка.
+Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка или платежная система не определена.
 
 ## Банковский перевод {#banks}
 
@@ -1536,7 +1537,7 @@ transaction.id|String|ID транзакции в процессинге QIWI Wal
 transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
 state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
 
-## Оплата других услуг {#charity}
+## Оплата других услуг {#services}
 
 Оплата услуги по идентификатору пользователя. Данный запрос применяется для провайдеров, использующих в реквизитах единственный пользовательский идентификатор, без проверки номера аккаунта.
 
@@ -1614,6 +1615,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
              <li>Идентификатор другого интернет-провайдера</li>
              <li>1239 - Подари жизнь</li>
              <li>Идентификатор другого благотворительного фонда</li>
+             <li>[Как найти идентификатор провайдера](#search)</li>
              </ul></li>
         </ul>
 </ul>
@@ -1633,22 +1635,6 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
     </li>
 </ul>
 
-<aside class="notice">Поиск идентификатора выполняется на сайте qiwi.com в поисковой строке. Идентификатор находится в URL ссылки на платежную форму провайдера вида <a>https://qiwi.com/payment/form/ID</a> или <a>https://qiwi.com/payment/form/ID</a></aside>
-
-![Поиск провайдера](/images/provider_id.jpg)
-
-~~~python
-import requests
-
-# поиск на qiwi.com - определение id провайдера по названию
-def qiwi_com_search(search_phrase):
-    s = requests.Session()
-    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
-    return search.json()['data']['items']
-
-qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
-~~~
-
 Параметр|Тип|Описание
 --------|----|----
 id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
@@ -1661,57 +1647,90 @@ paymentMethod.accountId|String| Константа, `643`.
 fields|Object| Реквизиты платежа. Содержит параметр:
 fields.account| String| Пользовательский идентификатор
 
+
+## Поиск провайдера {#search}
+
+Используйте API для поиска идентификатора провайдера.
+
+<h3 class="request method">Запрос → POST</h3>
+
+~~~shell
+user@server:~$ curl -X POST "https://qiwi.com/search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
+  --header "Accept: application/json"
+~~~
+
+~~~http
+POST /search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
+Accept: application/json
+Host: qiwi.com
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://edge.qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3></li>
+        <ul>
+        <strong>В pathname POST-запроса используется параметр:</strong>
+             <li><strong>searchPhrase</strong> - строка поиска провайдера по ключевым словам.</li>
+        </ul>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+        </ul>
+    </li>
+</ul>
+
+> Использование API поиска провайдера
+
+~~~python
+import requests
+
+# поиск на qiwi.com - определение id провайдера по названию
+def qiwi_com_search(search_phrase):
+    s = requests.Session()
+    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
+    return search.json()['data']['items']
+~~~
+
+
 <h3 class="request">Ответ ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
-
+  
 {
-  "id": "21131343",
-  "terms": "674",
-  "fields": {
-          "account": "111000"
-  },
-  "sum": {
-         "amount": 100,
-         "currency": "643"
-  },
-  "source": "account_643",
-  "transaction": {
-         "id": "4969142201",
-         "state": {
-            "code": "Accepted"
-          }
+  "data": {
+    ...
+    "items": [
+      {
+        "item": {
+          "id": {
+            "id": "120",
+            ...
+          },
+          ...
+        },
+        ...
+      }
+    ]
   }
 }
 ~~~
 
 ~~~python
-# Платёж на провайдера
-print(pay_simple_prv(api_access_token,'26386','2166191','10'))
-
-{'fields': {'account': '2166191'},
- 'id': '1509031806148',
- 'source': 'account_643',
- 'sum': {'amount': 10, 'currency': '643'},
- 'terms': '26386',
- 'transaction': {'id': '11585129951', 'state': {'code': 'Accepted'}}}
+# Поиск провайдера
+prv = qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
+print(prv)
 ~~~
 
-Успешный JSON-ответ содержит данные о принятом платеже:
+Успешный JSON-ответ содержит идентификаторы найденных провайдеров:
 
 Параметр | Тип | Описание
 -----|----|-----
-id | Number | Копия параметра `id` из исходного запроса
-terms | String | Параметр **ID** из URL запроса
-fields|Object|Копия объекта `fields` из исходного запроса.
-sum|Object|Копия объекта `sum` из исходного запроса.
-source| String| Константа, `account_643`
-transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
-transaction.id|String|ID транзакции в процессинге QIWI Wallet
-transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
+data.items | Array | Список провайдеров
+items[].item.id.id | String | Идентификатор провайдера
 
 ## Платеж по свободным реквизитам {#freepay}
 
@@ -2030,7 +2049,7 @@ Content-Type: application/json
 
 Параметр|Тип|Описание
 --------|----|----
-bills|Array[Object]|Массив платежей. <br>Число платежей равно параметру `rows` из запроса, или максимально 50, если параметр не указан
+bills|Array[Object]|Список платежей. <br>Число платежей равно параметру `rows` из запроса, или максимально 50, если параметр не указан
 bills[].id|Integer|Идентификатор счета в QIWI Кошельке
 bills[].external_id|String| Идентификатор счета у мерчанта
 bills[].creation_datetime|Long|Дата/время создания счета, Unix-time
