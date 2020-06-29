@@ -9,19 +9,19 @@ user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineComm
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "account":"380995238345",
-        "paymentMethod":{
-          "type":"Account",
-          "accountId":"643"
-        },
-        "purchaseTotals":{
-          "total":{
-            "amount":10,
-            "currency":"643"
-          }
-        }
-      }'
+  -d '{ \
+        "account":"380995238345", \
+        "paymentMethod":{ \
+          "type":"Account", \
+          "accountId":"643" \
+        },\
+        "purchaseTotals":{ \
+          "total":{ \
+            "amount":10, \
+            "currency":"643" \
+          } \
+        } \
+  }'
 ~~~
 
 ~~~http
@@ -417,20 +417,20 @@ user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/1099/payme
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id":"11111111111111",
-        "sum": {
-          "amount":100,
-          "currency":"398"
-        },
-        "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
-        },
-        "comment":"test",
-        "fields": {
-          "account":"+79121112233"
-        }
+  -d '{ \
+        "id":"11111111111111", \
+        "sum": { \
+          "amount":100, \
+          "currency":"398" \
+        }, \
+        "paymentMethod": { \
+          "type":"Account", \
+          "accountId":"643" \
+        }, \
+        "comment":"test", \
+        "fields": { \
+          "account":"+79121112233" \
+        } \
       }'
 ~~~
 
@@ -664,19 +664,19 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1/payments
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id":"11111111111111",
-        "sum": {
-          "amount":100,
-          "currency":"643"
-        },
-        "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
-        },
-        "fields": {
-          "account":"9161112233"
-        }
+  -d '{ \
+        "id":"11111111111111", \
+        "sum": { \
+          "amount":100, \
+          "currency":"643" \
+        }, \
+        "paymentMethod": { \
+          "type":"Account", \
+          "accountId":"643" \
+        }, \
+        "fields": { \
+          "account":"9161112233" \
+        } \
       }'
 ~~~
 
@@ -908,19 +908,19 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payme
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id":"21131343",
-        "sum":{
-          "amount":1000,
-          "currency":"643"
-        },
-        "paymentMethod":{
-          "type":"Account",
-          "accountId":"643"
-        },
-        "fields": {
-          "account":"4256********1231"
-        }
+  -d '{ \
+        "id":"21131343", \
+        "sum":{ \
+          "amount":1000, \
+          "currency":"643" \
+        }, \
+        "paymentMethod":{ \
+          "type":"Account", \
+          "accountId":"643" \
+        }, \
+        "fields": { \
+          "account":"4256********1231" \
+        } \
       }'
 ~~~
 
@@ -929,26 +929,26 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payme
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id":"21131343",
-        "sum":{
-          "amount":1000,
+  -d '{ \
+        "id":"21131343", \
+        "sum":{ \
+          "amount":1000, \
           "currency":"643"
-        },
-        "paymentMethod":{
-          "type":"Account",
-          "accountId":"643"
-        },
-        "fields": {
-          "account": "402865XXXXXXXXXX",
-          "rec_address": "Ленинский проспект 131, 56",
-          "rec_city": "Москва",
-          "rec_country": "Россия",
-          "reg_name": "Виктор",
-          "reg_name_f": "Петров",
-          "rem_name": "Сергей",
-          "rem_name_f": "Иванов"
-        }
+        }, \
+        "paymentMethod":{ \
+          "type":"Account", \
+          "accountId":"643" \
+        }, \
+        "fields": { \
+          "account": "402865XXXXXXXXXX", \
+          "rec_address": "Ленинский проспект 131, 56", \
+          "rec_city": "Москва", \
+          "rec_country": "Россия", \
+          "reg_name": "Виктор", \
+          "reg_name_f": "Петров", \
+          "rem_name": "Сергей", \
+          "rem_name_f": "Иванов" \
+        } \
       }'
 ~~~
 
@@ -1242,21 +1242,21 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/464/paymen
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id":"21131343",
-        "sum": {
-          "amount":1000,
-          "currency":"643"
-        },
-        "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
-        },
-        "fields": {
-          "account_type": "1",
-          "account":"4256********1231",
-          "exp_date": "MMYY"
-        }
+  -d '{ \
+        "id":"21131343", \
+        "sum": { \
+          "amount":1000, \
+          "currency":"643" \
+        }, \
+        "paymentMethod": { \
+          "type":"Account", \
+          "accountId":"643" \
+        }, \
+        "fields": { \
+          "account_type": "1", \
+          "account":"4256********1231", \
+          "exp_date": "MMYY" \
+        } \
       }'
 ~~~
 
@@ -1391,25 +1391,25 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/816/paymen
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id":"21131343",
-        "sum": {
-          "amount":1000,
-          "currency":"643"
-        },
-        "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
-        },
-        "fields": {
-          "account_type": "2",
-          "urgent": "0",
-          "lname": "Иванов",
-          "fname": "Иван",
-          "mname": "Иванович",
-          "mfo": "046577795",
-          "account":"40817***"
-        }
+  -d '{ \
+        "id":"21131343", \
+        "sum": { \
+          "amount":1000, \
+          "currency":"643" \
+        }, \
+        "paymentMethod": { \
+          "type":"Account", \
+          "accountId":"643" \
+        }, \
+        "fields": { \
+          "account_type": "2", \
+          "urgent": "0", \
+          "lname": "Иванов", \
+          "fname": "Иван", \
+          "mname": "Иванович", \
+          "mfo": "046577795", \
+          "account":"40817***" \
+        } \
       }'
 ~~~
 
@@ -1548,19 +1548,19 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/674/paymen
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{
-        "id":"21131343",
-        "sum": {
-          "amount":100,
-          "currency":"643"
-        },
-        "paymentMethod": {
-          "type":"Account",
-          "accountId":"643"
-        },
-        "fields": {
-          "account":"111000000"
-        }
+  -d '{ \
+        "id":"21131343", \
+        "sum": { \
+          "amount":100, \
+          "currency":"643" \
+        },\
+        "paymentMethod": { \
+          "type":"Account", \
+          "accountId":"643" \
+        }, \
+        "fields": { \
+          "account":"111000000" \
+        } \
       }'
 ~~~
 
@@ -1676,7 +1676,7 @@ def qiwi_com_search(search_phrase):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3></li>
+    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>searchPhrase</strong> - строка ключевых слов для поиска провайдера.</li>
@@ -1742,36 +1742,36 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1717/payme
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
   --header "User-Agent: ***" \
-  -d '{
-  "id":"21131343",
-  "sum": {
-        "amount":1000,
-        "currency":"643"
-  },
-  "paymentMethod": {
-      "type":"Account",
-      "accountId":"643"
-  },
-  "fields": {
-         "extra_to_bik":"044525201",
-         "requestProtocol":"qw1",
-         "city":"МОСКВА",
-         "name":"ПАО АКБ \"АВАНГАРД\"",
-         "to_bik":"044525201",
-         "urgent":"0",
-         "to_kpp":"772111001",
-         "is_commercial":"1",
-         "nds":"НДС не облагается",
-         "goal":" Оплата товара по заказу №090738231",
-         "from_name_p":"Николаевич",
-         "from_name":"Иван",
-         "from_name_f":"Михайлов",
-         "info":"Коммерческие организации",
-         "to_name":"ООО \"Технический Центр ДЕЛЬТА\"",
-         "to_inn":"7726111111",
-         "account":"40711100000012321",
-         "toServiceId":"1717"
-  }
+  -d '{ \
+  "id":"21131343", \
+  "sum": { \
+        "amount":1000, \
+        "currency":"643" \
+  }, \
+  "paymentMethod": { \
+      "type":"Account", \
+      "accountId":"643" \
+  }, \
+  "fields": { \
+         "extra_to_bik":"044525201", \
+         "requestProtocol":"qw1", \
+         "city":"МОСКВА", \
+         "name":"ПАО АКБ \"АВАНГАРД\"", \
+         "to_bik":"044525201", \
+         "urgent":"0", \
+         "to_kpp":"772111001", \
+         "is_commercial":"1", \
+         "nds":"НДС не облагается", \
+         "goal":" Оплата товара по заказу №090738231", \
+         "from_name_p":"Николаевич", \
+         "from_name":"Иван", \
+         "from_name_f":"Михайлов", \
+         "info":"Коммерческие организации", \
+         "to_name":"ООО \"Технический Центр ДЕЛЬТА\"", \
+         "to_inn":"7726111111", \
+         "account":"40711100000012321", \
+         "toServiceId":"1717" \
+  } \
 }'
 ~~~
 

@@ -96,7 +96,7 @@ API QIWI Кошелька использует открытый протокол
 
 ![Token](/images/apiwallet_token_final.jpg)
 
-<aside class="notice">Токен действует в течение 180 дней с момента выпуска. Вы можете заблокировать токен, не дожидаясь окончания срока его действия, на <a href="https://qiwi.com/settings/mine.action">этой странице</a>.</aside>
+<aside class="success">Токен действует в течение 180 дней с момента выпуска. Вы можете заблокировать токен, не дожидаясь окончания срока его действия, на <a href="https://qiwi.com/settings/mine.action">этой странице</a>.</aside>
 
 ## Пример вызова API {#auth_ex}
 
