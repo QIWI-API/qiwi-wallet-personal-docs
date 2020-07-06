@@ -1,8 +1,12 @@
-# Платежи {#payments}
+# Платежное API {#payments}
+
+API предоставляет доступ к платежам в пользу провайдеров услуг, зарегистрированных в сервисах QIWI Кошелька.
 
 ## Комиссионные тарифы {#rates}
 
-Для расчета полной комиссии за платеж (с учетом всех тарифов) по заданному набору платежных реквизитов используйте данный запрос (требуется [авторизация](#auth_api)).
+ Чтобы узнать комиссию за платеж до его совершения, используйте данный запрос (требуется [авторизация](#auth_api)). Возвращается полная комиссия QIWI Кошелька за платеж в пользу указанного провайдера с учетом всех тарифов по заданному набору платежных реквизитов.
+
+<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineCommission' \
@@ -61,8 +65,6 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
     return c_online.json()['qwCommission']['amount']
 ~~~
 
-<h3 class="request method">Запрос → POST</h3>
-
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/sinap/providers/<a>id</a>/onlineCommission</span></h3></li>
         <ul>
@@ -79,8 +81,8 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
              <li>815 - Русский Стандарт</li>
              <li><a href="#banks">Прочие банки</a></li>
              <li><a href="#mnp">Идентификаторы операторов мобильной связи</a></li>
-             <li><a href="#services">Идентификаторы других провайдеров</a></li>
-             <li>1717 - <a href="#freepay">платеж по банковским реквизитам</a></li></ul></li>
+             <li><a href="#search">Идентификаторы других провайдеров</a></li>
+             <li>1717 - платеж по банковским реквизитам</a></li></ul></li>
         </ul>
 </ul>
 
@@ -101,7 +103,7 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
 
 Параметр|Тип|Описание
 --------|----|----
-account| String|Номер телефона (с международным префиксом) или номер карты/счета получателя, в зависимости от провайдера
+account| String| Пользовательский идентификатор (номер телефона с международным префиксом, номер карты/счета получателя, и т.д., в зависимости от провайдера)
 paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
 paymentMethod.type|String |Тип платежа, только `Account`
 paymentMethod.accountId|String| Идентификатор счета, только `643`.
@@ -147,7 +149,7 @@ print(get_commission(api_access_token,'4890xxxxxxxx1698','22351',1000))
 
 <h3 class="request">Ответ ←</h3>
 
-В параметре JSON-ответа `qwCommission.amount` возвращается рассчитанная сумма комиссии.
+Рассчитанная сумма комиссии возвращается в поле `qwCommission.amount` JSON-ответа.
 
 <a name="payform"></a>
 
@@ -155,9 +157,13 @@ print(get_commission(api_access_token,'4890xxxxxxxx1698','22351',1000))
 
 Данный запрос отображает в браузере предзаполненную форму на сайте qiwi.com для совершения платежа.
 
-<h3 class="request method">Запрос → GET</h3>
-
 [Пример ссылки (нажмите для перехода на форму)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643&blocked[0]=account)
+
+[Пример ссылки на перевод по никнейму (нажмите для перехода на форму)](https://qiwi.com/payment/form/99999?extra%5B%27account%27%5D=NICKNAME&amountInteger=1&amountFraction=0&currency=643&blocked[0]=account&extra%5B%27accountType%27%5D=nickname)
+
+<aside class="notice">Для приема переводов на свой QIWI кошелек можно использовать <a href="https://qiwi.com/p2p-admin/transfers/link">P2P-форму</a>.</aside>
+
+<h3 class="request method">Запрос → GET</h3>
 
 ~~~http
 GET /payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643 HTTP/1.1
@@ -179,8 +185,9 @@ Host: qiwi.com
      <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<ul><li>1960 – Перевод на карту Visa</li><li>21012 – Перевод на карту MasterCard</li></ul></li>
      <li>31652 - Перевод на карту МИР</li>
      <li>22351 - Перевод на <a href="https://qiwi.com/cards/qvc">Виртуальную карту QIWI</a></li>
-     <li>Идентификаторы операторов мобильной связи</li>
-     <li>Идентификаторы других провайдеров</li></ul></li>
+     <li><a href="#mnp">Идентификаторы операторов мобильной связи</a></li>
+     <li><a href="#search">Идентификаторы других провайдеров</a></li>
+     <li>1717 - платеж по банковским реквизитам</li></ul></li>
 </ul>
 
 <ul class="nestedList params">
@@ -189,12 +196,12 @@ Host: qiwi.com
 
 Параметр|Тип|Описание|Поле на форме| Обяз.
 ---------|--------|---|----
-amountInteger|Integer | Целая часть суммы платежа (рубли). Указывается в строке запроса. Если параметр не указан, поле "Сумма" на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)** | Сумма | -
-amountFraction|Integer | Дробная часть суммы платежа (копейки). Указывается в строке запроса. Если параметр не указан, поле "Сумма" на форме будет пустым.|Сумма | -
-currency|Константа, `643` | Код валюты платежа. Указывается в строке запроса. **Обязательный параметр, если вы передаете в ссылке сумму платежа** |-|+
-extra['comment'] |URL-encoded string | Комментарий. Указывается в строке запроса. Имя параметра должно быть URL-закодировано. **Параметр используется только для ID=99** |Комментарий к переводу | -
-extra['account'] |URL-encoded string |  Формат совпадает с форматом параметра `fields.account` при оплате соответствующих провайдеров: для провайдера `99` - номер телефона получателя (с международным префиксом); для провайдеров сотовой связи - номер мобильного телефона для пополнения (без префикса 8); для провайдеров перевода на карту - номер банковской карты получателя (без пробелов), для других провайдеров - идентификатор пользователя. Для провайдера `99999` указывается никнейм или номер кошелька (в зависимости от параметра `extra['accountType']`).<br>Имя параметра должно быть URL-закодировано.|Номер Кошелька, номер телефона/счета/карты/пользовательский ID получателя.|-
-blocked|Array[String]|Признак неактивного поля формы. Пользователь не сможет менять значение данного поля. Каждое поле задается соответствующим именем параметра и нумеруется элементом массива, начиная с нуля (`blocked[0]`, `blocked[1]` и т.д.). Если параметр не указан, пользователь сможет изменить все поля формы. Допустимые значения:<br>`sum` - поле "сумма платежа", <br>`account` - поле "номер счета/телефона/карты",<br>`comment` - поле "комментарий".<br> Пример (неактивное поле суммы платежа): `blocked[0]=sum` |-|-
+amountInteger|Integer | Целая часть суммы платежа (рубли). Если параметр не указан, поле "Сумма" на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)** | Сумма | -
+amountFraction|Integer | Дробная часть суммы платежа (копейки). Если параметр не указан, поле "Сумма" на форме будет пустым.|Сумма | -
+currency|Константа, `643` | Код валюты платежа. **Обязательный параметр, если вы передаете в ссылке сумму платежа** |-|+
+extra['comment'] |URL-encoded string | Комментарий. **Параметр используется только для ID=99** |Комментарий к переводу | -
+extra['account'] |URL-encoded string |  Формат совпадает с форматом параметра `fields.account` при оплате соответствующих провайдеров: для провайдера `99` - номер телефона получателя (с международным префиксом); для провайдеров сотовой связи - номер мобильного телефона для пополнения (без префикса 8); для провайдеров перевода на карту - номер банковской карты получателя (без пробелов), для других провайдеров - идентификатор пользователя. Для провайдера `99999` указывается никнейм или номер кошелька (в зависимости от параметра `extra['accountType']`).| Номер Кошелька, номер телефона/счета/карты/пользовательский ID получателя.|-
+blocked|Array[String]|Признак неактивного поля формы. Пользователь не сможет менять значение данного поля. Каждое поле задает соответствующий параметр формы и нумеруется начиная с нуля (`blocked[0]`, `blocked[1]` и т.д.). Если не указан, пользователь сможет изменить все поля формы. Допустимые значения:<br>`sum` - поле "сумма платежа", <br>`account` - поле "номер счета/телефона/карты",<br>`comment` - поле "комментарий".<br> Пример (неактивное поле суммы платежа): `blocked[0]=sum` |-|-
 extra['accountType'] | URL-encoded string | **Параметр используется только для ID=99999**. Значение определяет перевод на QIWI кошелек по никнейму или по номеру кошелька.<br>`phone` - для перевода по номеру<br>`nickname` - для перевода по никнейму.
 
 ### Как узнать свой никнейм через API {#nickname}
@@ -335,49 +342,15 @@ def send_p2p(api_access_token, to_qw, comment, sum_p2p):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON.</span>
+    <li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
     </li>
 </ul>
 
 Параметр|Тип|Описание|Обяз.
 --------|----|----|------
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).|+
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
-sum.currency|String|Валюта (только `643`, рубли)|+
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`|+
-paymentMethod.accountId|String| Константа, `643`|+
-fields|Object| Реквизиты платежа. Содержит параметр:
-fields.account| String|Номер телефона получателя (с международным префиксом)|+
-comment|String|Комментарий к платежу|-
+fields.account| String|Номер кошелька для перевода|+
 
 <h3 class="request">Ответ ←</h3>
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "id": "150217833198900",
-    "terms": "99",
-    "fields": {
-        "account": "79121238345"
-    },
-    "sum": {
-        "amount": 100,
-        "currency": "643"
-    },
-    "transaction": {
-        "id": "11155897070",
-        "state": {
-            "code": "Accepted"
-        }
-    },
-    "source": "account_643",
-    "comment": "test"
-}
-~~~
 
 ~~~python
 print(send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01))
@@ -391,24 +364,11 @@ print(send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01))
  'transaction': {'id': '11982501857', 'state': {'code': 'Accepted'}}}
 ~~~
 
-Успешный JSON-ответ содержит данные о принятом платеже:
-
-Параметр | Тип | Описание
------|----|-----
-id | String | Копия параметра `id` из исходного запроса
-terms | String | Константа, `99`
-fields|Object|Копия объекта `fields` из исходного запроса.
-sum|Object|Копия объекта `sum` из исходного запроса.
-source| String| Константа, `account_643`
-comment|String|Копия параметра `comment` из исходного запроса (если присутствует в запросе)
-transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
-transaction.id|String|ID транзакции в процессинге QIWI Wallet
-transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
 
 ## Конвертация {#CCY}
 
-Метод выполняет перевод средств на валютный счет QIWI Кошелька с конвертацией с вашего рублевого счета. При этом формируются две транзакции: конвертации между счетами вашего кошелька и перевода на другой кошелек.
+Метод выполняет перевод средств на валютный счет QIWI Кошелька с конвертацией с вашего рублевого счета. При этом формируются две транзакции: конвертации между счетами вашего кошелька и перевода на другой кошелек. Курс валют для конвертации можно узнать [другим запросом](#exchange).
 
 <h3 class="request method">Запрос → POST</h3>
 
@@ -497,64 +457,17 @@ def exchange(api_access_token, sum_exchange, currency, to_qw):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON.</span>
-    </li>
+<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+</li>
 </ul>
 
 Параметр|Тип|Описание|Обяз.
 --------|----|----|------
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).|+
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма в валюте конвертации. Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
-sum.currency|String|Код валюты (number-3 ISO-4217)|+
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`|+
-paymentMethod.accountId|String| Константа, `643`|+
-fields|Object| Реквизиты платежа. Содержит параметр:
 fields.account| String|Номер кошелька для перевода|+
-comment|String|Комментарий к платежу|-
 
 <h3 class="request">Ответ ←</h3>
 
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "id": "150217833198900",
-    "terms": "99",
-    "fields": {
-        "account": "79121238345"
-    },
-    "sum": {
-        "amount": 100,
-        "currency": "398"
-    },
-    "transaction": {
-        "id": "11155897070",
-        "state": {
-            "code": "Accepted"
-        }
-    },
-    "source": "account_643",
-    "comment": "test"
-}
-~~~
-
-Успешный JSON-ответ содержит данные о принятом платеже:
-
-Параметр | Тип | Описание
------|----|-----
-id | String | Копия параметра `id` из исходного запроса
-terms | String | Константа, `99`
-fields|Object|Копия объекта `fields` из исходного запроса.
-sum|Object|Копия объекта `sum` из исходного запроса.
-source| String| Константа, `account_643`
-comment|String|Копия параметра `comment` из исходного запроса (если присутствует в запросе)
-transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
-transaction.id|String|ID транзакции в процессинге QIWI Wallet
-transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
 
 ## Курсы валют {#exchange}
 
@@ -646,7 +559,7 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный JSON-ответ содержит список курсов валют в `result`. Элемент списка соответствует валютной паре:
+Успешный JSON-ответ содержит список курсов валют в списке `result`. Элемент списка соответствует валютной паре:
 
 Параметр|Тип|Описание
 --------|----|----
@@ -726,7 +639,7 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
     <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
-             <li><strong>ID</strong> - идентификатор оператора. Определяется с помощью <a href="#mnp">проверки мобильного оператора</a></li>
+             <li><strong>ID</strong> - идентификатор провайдера. Определяется с помощью <a href="#mnp">проверки мобильного оператора</a></li>
         </ul>
 </ul>
 
@@ -741,167 +654,29 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
-    </li>
+<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+</li>
 </ul>
 
 Параметр|Тип|Описание
 --------|----|----
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-sum.currency|String|Валюта (только `643`, рубли)
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`
-paymentMethod.accountId|String| Константа, `643`.
-fields|Object| Реквизиты платежа. Содержит параметр:
 fields.account| String|Номер мобильного телефона для пополнения (без префикса `8`)
 
 <h3 class="request">Ответ ←</h3>
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "id": "21131343",
-    "terms": "1",
-    "fields": {
-          "account": "9161112233"
-    },
-    "sum": {
-         "amount": 1000,
-         "currency": "643"
-    },
-    "source": "account_643",
-    "transaction": {
-         "id": "4969142201",
-         "state": {
-            "code": "Accepted"
-          }
-    }
-}
-~~~
 
 ~~~python
 send_mobile(api_access_token,'2','9670058909','123','1')
 ~~~
 
-Успешный JSON-ответ содержит данные о принятом платеже:
-
-Параметр | Тип | Описание
------|----|-----
-id | Number | Копия параметра `id` из исходного запроса
-terms | String | Копия параметра `ID` из URL запроса
-fields|Object|Копия объекта `fields` из исходного запроса.
-sum|Object|Копия объекта `sum` из исходного запроса.
-source| String| Константа, `account_643`
-transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
-transaction.id|String|ID транзакции в процессинге QIWI Wallet
-transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
-
-Предварительное определение оператора мобильного номера выполняется вспомогательным запросом. В ответе возвращается идентификатор оператора для [запроса пополнения телефона](#cell).
-
-<h3 class="request method" id="mnp">Запрос → POST</h3>
-
-~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action" \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  -d "phone=79651238341"
-~~~
-
-~~~http
-POST /mobile/detect.action HTTP/1.1
-Host: qiwi.com
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-Cache-Control: no-cache
-
-phone=79651238341
-~~~
-
-~~~python
-import requests
-
-def mobile_operator(phone_number):
-    s = requests.Session()
-    res = s.post('https://qiwi.com/mobile/detect.action', data = {'phone': phone_number })
-    s.headers['Accept'] = 'application/json'
-    s.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    return res.json()['message']
-~~~
-
-<ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/mobile/detect.action</span></h3></li>
-</ul>
-
-<ul class="nestedList header">
-    <li><h3>HEADERS</h3>
-        <ul>
-             <li>Accept: application/json</li>
-             <li>Content-type: application/x-www-form-urlencoded</li>
-        </ul>
-    </li>
-</ul>
-
-<ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как <code>formdata</code>.</span>
-    </li>
-</ul>
-
-Параметр|Тип|Описание
---------|----|----
-phone | String URL-encoded |Мобильный номер в международном формате без знака `+`. Обязательный параметр.
-
-<h3 class="request">Ответ ←</h3>
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "code": {
-    "value": "0",
-    "_name": "NORMAL"
-  },
-  "data": null,
-  "message": "3",
-  "messages": null
-}
-~~~
-
-> Не удалось определить мобильного оператора
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "code": {
-    "value": "2",
-    "_name": "ERROR"
-  },
- "data": null,
- "message": "По указанному номеру невозможно определить оператора сотовой связи. Воспользуйтесь поиском.",
- "messages": {}
-}
-~~~
-
-~~~python
-print(mobile_operator(79652468447))
-~~~
-
-Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор оператора находится в параметре `message`.
-
-Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что невозможно определить оператора.
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
 
 ## Перевод на карту {#cards}
 
-Запрос выполняет денежный перевод на карты платежных систем Visa, MasterCard или МИР. Предварительно можно [проверить тип платежной системы](#card_check).
+Запрос выполняет денежный перевод на карты платежных систем Visa, MasterCard или МИР. Предварительно можно узнать [код провайдера для перевода на карту](#card_check) по номеру карты.
 
 <h3 class="request method">Запрос → POST</h3>
+
+> Пример перевода на карту банка РФ
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payments" \
@@ -923,6 +698,32 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payme
         } \
       }'
 ~~~
+
+
+~~~http
+POST /sinap/api/v2/terms/1963/payments HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+
+{
+  "id":"21131343",
+  "sum": {
+        "amount":1000,
+        "currency":"643"
+  },
+  "paymentMethod": {
+      "type":"Account",
+      "accountId":"643"
+  },
+  "fields": {
+        "account":"4256XXXXXXXX1231"
+  }
+}
+~~~
+
+> Пример перевода на международную карту
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payments" \
@@ -952,28 +753,6 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payme
       }'
 ~~~
 
-~~~http
-POST /sinap/api/v2/terms/1963/payments HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
-Host: edge.qiwi.com
-
-{
-  "id":"21131343",
-  "sum": {
-        "amount":1000,
-        "currency":"643"
-  },
-  "paymentMethod": {
-      "type":"Account",
-      "accountId":"643"
-  },
-  "fields": {
-        "account":"4256XXXXXXXX1231"
-  }
-}
-~~~
 
 ~~~http
 POST /sinap/api/v2/terms/1960/payments HTTP/1.1
@@ -1061,20 +840,12 @@ def send_card(api_access_token, payment_data):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
-    </li>
+<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+</li>
 </ul>
 
 Параметр|Тип|Описание
 --------|----|----
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-sum.currency|String|Валюта (только `643`, рубли)
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`
-paymentMethod.accountId|String| Константа, `643`.
-fields|Object| Реквизиты платежа. Содержит параметры:
 fields.account| String|Номер банковской карты получателя (без пробелов)
 fields.rem_name|String|Имя отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
 fields.rem_name_f|String|Фамилия отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
@@ -1086,146 +857,13 @@ fields.reg_name_f|String|Фамилия **получателя**. Требует
 
 <h3 class="request">Ответ ←</h3>
 
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "id": "21131343",
-  "terms": "1963",
-  "fields": {
-          "account": "4256********1231"
-    },
-    "sum": {
-         "amount": 1000,
-         "currency": "643"
-    },
-    "source": "account_643",
-    "transaction": {
-         "id": "4969142201",
-         "state": {
-            "code": "Accepted"
-          }
-    }
-}
-~~~
-
 ~~~python
 payment_data = {'prv_id': '1963', 'to_card' : '41548XXXXXXXX008', 'sum': 100}
 
 jss = send_card(token, payment_data)
 ~~~
 
-Успешный ответ содержит JSON-данные о принятом платеже:
-
-Параметр | Тип | Описание
------|----|-----
-id | Number | Копия параметра `id` из исходного запроса
-terms | String | Параметр **ID** из URL запроса
-fields|Object| Реквизиты платежа. Содержит параметр:
-fields.account| String|Маскированный номер банковской карты получателя
-sum|Object|Копия объекта `sum` из исходного запроса.
-source| String| Константа, `account_643`
-transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
-transaction.id|String|ID транзакции в процессинге QIWI Wallet
-transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
-
-Определение платежной системы карты выполняется отдельным запросом. В ответе возвращается идентификатор платежной системы для [запроса перевода на карту](#cards).
-
-Запрос не требует авторизации.
-
-<h3 class="request method" id="card_check">Запрос → POST</h3>
-
-~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/card/detect.action" \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  -d "cardNumber=4256********1231"
-~~~
-
-~~~http
-POST /card/detect.action HTTP/1.1
-Host: qiwi.com
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-Cache-Control: no-cache
-
-cardNumber=4256********1231
-~~~
-
-~~~python
-import requests
-
-def card_system(card_number):
-    s = requests.Session()
-    res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
-    return res.json()['message']
-~~~
-
-<ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/card/detect.action</span></h3></li>
-</ul>
-
-<ul class="nestedList header">
-    <li><h3>HEADERS</h3>
-        <ul>
-             <li>Accept: application/json</li>
-             <li>Content-type: application/x-www-form-urlencoded</li>
-        </ul>
-    </li>
-</ul>
-
-<ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как formdata.</span>
-    </li>
-</ul> 
-
-Параметр|Тип|Описание
---------|----|----
-cardNumber | String |Немаскированный номер карты (без пробелов). Обязательный параметр
-
-<h3 class="request">Ответ ←</h3>
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "code": {
-    "value": "0",
-    "_name": "NORMAL"
-  },
-  "data": null,
-  "message": "1963",
-  "messages": null
-}
-~~~
-
-~~~python
-print(card_system(4890xxxxxxxx1698))
-~~~
-
-> Не удалось определить платежную систему карты
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "code": {
-        "value": "2",
-        "_name": "ERROR"
-    },
-    "data": null,
-    "message": "Неверно введен номер банковской карты. Попробуйте ввести номер еще раз.",
-    "messages": {}
-}
-~~~
-
-Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор [платежной системы](#cards) находится в параметре `message`.
-
-Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка или платежная система не определена.
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
 
 ## Банковский перевод {#banks}
 
@@ -1314,20 +952,12 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
-    </li>
+<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+</li>
 </ul>
 
 Параметр|Тип|Описание
 --------|----|----
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-sum.currency|String|Валюта (только `643`, рубли)
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`
-paymentMethod.accountId|String| Константа, `643`.
-fields|Object| Реквизиты платежа. Содержит параметры:
 fields.account| String| Номер банковской карты получателя (без пробелов)
 fields.exp_date| String|Срок действия карты, в формате `ММГГ` (например, `0218`). **Параметр указывается только в случае перевода на карту Альфа-Банка (ID 464) и Промсвязьбанка (ID 821).**
 fields.account_type| String|Тип банковского идентификатора. Для каждого банка применяется собственное значение:<br>Альфа-Банк - `1`<br>ОТП банк - `1`<br>Русский Стандарт - `1`<br>Россельхозбанк - `5`<br>ВТБ - `5`<br>Промсвязьбанк - `7`<br>Сбербанк - `5`<br>МОСКОВСКИЙ КРЕДИТНЫЙ БАНК - `5`<br>Ренессанс Кредит - `1`.
@@ -1339,45 +969,7 @@ fields.mname|String|Отчество получателя
 
 <h3 class="request">Ответ ←</h3>
 
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "id": "21131343",
-  "terms": "464",
-  "fields": {
-      "account": "4256********1231",
-      "account_type": "1",
-      "exp_date": "MMYY"
-  },
-  "sum": {
-      "amount": 1000,
-      "currency": "643"
-  },
-  "source": "account_643",
-  "transaction": {
-      "id": "4969142201",
-      "state": {
-        "code": "Accepted"
-      }
-  }
-}
-~~~
-
-Успешный JSON-ответ содержит данные о принятом платеже:
-
-Параметр | Тип | Описание
------|----|-----
-id | Number | Копия параметра `id` из исходного запроса
-terms | String | Параметр **ID** из URL запроса
-fields|Object|Копия объекта `fields` из исходного запроса. **В параметре** `fields.account` **находится маскированный номер банковской карты получателя**.
-sum|Object|Копия объекта `sum` из исходного запроса.
-source| String| Константа, `account_643`
-transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
-transaction.id|String|ID транзакции в процессинге QIWI Wallet
-transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
 
 
 ### Перевод по номеру счета/договора
@@ -1473,20 +1065,12 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
-    </li>
+<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+</li>
 </ul>
 
 Параметр|Тип|Описание
 --------|----|----
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-sum.currency|String|Валюта (только `643`, рубли)
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`
-paymentMethod.accountId|String| Константа, `643`.
-fields|Object| Реквизиты платежа. Содержит параметры:
 fields.account| String| Номер банковского счета получателя
 fields.urgent | String | Признак ускоренного перевода. Значение 0 - не использовать; значение 1 - выполнить перевод через Сервис срочного перевода ЦБ РФ. **Внимание! Взимается дополнительная комиссия за ускоренный перевод**
 fields.mfo| String|БИК соответствующего банка/территориального отделения банка
@@ -1498,44 +1082,7 @@ fileds.agrnum|String|Номер договора - для переводов в 
 
 <h3 class="request">Ответ ←</h3>
 
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "id": "21131343",
-  "terms": "464",
-  "fields": {
-          "account": "407121010910909011",
-          "account_type": "2"
-  },
-  "sum": {
-         "amount": 1000,
-         "currency": "643"
-  },
-  "source": "account_643",
-  "transaction": {
-         "id": "4969142201",
-         "state": {
-            "code": "Accepted"
-          }
-  }
-}
-~~~
-
-Успешный JSON-ответ содержит данные о принятом платеже:
-
-Параметр | Тип | Описание
------|----|-----
-id | Number | Копия параметра `id` из исходного запроса
-terms | String | Параметр **ID** из URL запроса
-fields|Object|Копия объекта `fields` из исходного запроса
-sum|Object|Копия объекта `sum` из исходного запроса.
-source| String| Константа, `account_643`
-transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
-transaction.id|String|ID транзакции в процессинге QIWI Wallet
-transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
 
 ## Оплата других услуг {#services}
 
@@ -1631,104 +1178,17 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
-    </li>
+<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+</li>
 </ul>
 
 Параметр|Тип|Описание
 --------|----|----
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-sum.currency|String|Валюта (только `643`, рубли)
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Константа, `Account`
-paymentMethod.accountId|String| Константа, `643`.
-fields|Object| Реквизиты платежа. Содержит параметр:
 fields.account| String| Пользовательский идентификатор
-
-
-## Поиск провайдера {#search}
-
-Используйте API для поиска идентификатора провайдера.
-
-<h3 class="request method">Запрос → POST</h3>
-
-~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
-  --header "Accept: application/json"
-~~~
-
-~~~http
-POST /search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
-Accept: application/json
-Host: qiwi.com
-~~~
-
-~~~python
-import requests
-
-# поиск на qiwi.com - определение id провайдера по названию
-def qiwi_com_search(search_phrase):
-    s = requests.Session()
-    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
-    return search.json()['data']['items']
-~~~
-
-<ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3></li>
-        <ul>
-        <strong>В pathname POST-запроса используется параметр:</strong>
-             <li><strong>searchPhrase</strong> - строка ключевых слов для поиска провайдера.</li>
-        </ul>
-</ul>
-
-<ul class="nestedList header">
-    <li><h3>HEADERS</h3>
-        <ul>
-             <li>Accept: application/json</li>
-        </ul>
-    </li>
-</ul>
-
 
 <h3 class="request">Ответ ←</h3>
 
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-  
-{
-  "data": {
-    ...
-    "items": [
-      {
-        "item": {
-          "id": {
-            "id": "120",
-            ...
-          },
-          ...
-        },
-        ...
-      }
-    ]
-  }
-}
-~~~
-
-~~~python
-# Поиск провайдера
-prv = qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
-print(prv)
-~~~
-
-Успешный JSON-ответ содержит идентификаторы найденных провайдеров:
-
-Параметр | Тип | Описание
------|----|-----
-data.items | Array | Список провайдеров
-items[].item.id.id | String | Идентификатор провайдера
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
 
 ## Платеж по свободным реквизитам {#freepay}
 
@@ -1831,20 +1291,12 @@ User-Agent: ****
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
-    </li>
+<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+</li>
 </ul>
 
 Параметр|Тип|Описание
 --------|----|----
-id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).
-sum|Object| Данные о сумме платежа:
-sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-sum.currency|String|Валюта (только `643`, рубли)
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Тип платежа, только `Account`
-paymentMethod.accountId|String| Идентификатор счета, только `643`.
-fields|Object| Реквизиты платежа. Содержит параметры:
 fields.name|String|Наименование банка получателя (кавычки экранируются символом `\`)
 fields.extra_to_bik|String|БИК банка получателя
 fields.to_bik|String|БИК банка получателя
@@ -1866,60 +1318,372 @@ fields.toServiceId|String|Служебная информация, конста�
 
 <h3 class="request">Ответ ←</h3>
 
+Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+
+
+## Поиск провайдера {#search}
+
+Поиск провайдера может понадобиться, если вы не знаете значения ID провайдера услуг для оплаты по идентификатору пользователя, либо для определения провайдера мобильной связи по номеру телефона или перевода на карту по номеру карты.
+
+### Поиск провайдера по строке
+
+Используйте API для поиска идентификатора провайдера.
+
+<h3 class="request method">Запрос → POST</h3>
+
+~~~shell
+user@server:~$ curl -X POST "https://qiwi.com/search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
+  --header "Accept: application/json"
+~~~
+
+~~~http
+POST /search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
+Accept: application/json
+Host: qiwi.com
+~~~
+
+~~~python
+import requests
+
+# поиск на qiwi.com - определение id провайдера по названию
+def qiwi_com_search(search_phrase):
+    s = requests.Session()
+    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
+    return search.json()['data']['items']
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3></li>
+        <ul>
+        <strong>В pathname POST-запроса используется параметр:</strong>
+             <li><strong>searchPhrase</strong> - строка ключевых слов для поиска провайдера.</li>
+        </ul>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+        </ul>
+    </li>
+</ul>
+
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+  
+{
+  "data": {
+    ...
+    "items": [
+      {
+        "item": {
+          "id": {
+            "id": "120",
+            ...
+          },
+          ...
+        },
+        ...
+      }
+    ]
+  }
+}
+~~~
+
+~~~python
+# Поиск провайдера
+prv = qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
+print(prv)
+~~~
+
+Успешный JSON-ответ содержит идентификаторы найденных провайдеров:
+
+Параметр | Тип | Описание
+-----|----|-----
+data.items | Array | Список провайдеров
+items[].item.id.id | String | Идентификатор провайдера
+
+### Определение мобильного оператора {#mnp}
+
+Предварительное определение оператора мобильного номера выполняется данным запросом. В ответе возвращается идентификатор провайдера для [запроса пополнения телефона](#cell).
+
+<h3 class="request method" id="mnp">Запрос → POST</h3>
+
+~~~shell
+user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/x-www-form-urlencoded" \
+  -d "phone=79651238341"
+~~~
+
+~~~http
+POST /mobile/detect.action HTTP/1.1
+Host: qiwi.com
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Cache-Control: no-cache
+
+phone=79651238341
+~~~
+
+~~~python
+import requests
+
+def mobile_operator(phone_number):
+    s = requests.Session()
+    res = s.post('https://qiwi.com/mobile/detect.action', data = {'phone': phone_number })
+    s.headers['Accept'] = 'application/json'
+    s.headers['Content-Type'] = 'application/x-www-form-urlencoded'
+    return res.json()['message']
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://qiwi.com/mobile/detect.action</span></h3></li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/x-www-form-urlencoded</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как <code>formdata</code>.</span>
+    </li>
+</ul>
+
+Параметр|Тип|Описание
+--------|----|----
+phone | String URL-encoded |Мобильный номер в международном формате без знака `+`. Обязательный параметр.
+
+<h3 class="request">Ответ ←</h3>
+
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
 
 {
-  "id": "21131343",
-  "terms": "1717",
-  "fields": {
-         "extra_to_bik":"044525201",
-         "requestProtocol":"qw1",
-         "city":"МОСКВА",
-         "name":"ПАО АКБ \"АВАНГАРД\"",
-         "to_bik":"044525201",
-         "urgent":"0",
-         "to_kpp":"772111001",
-         "is_commercial":"1",
-         "nds":"НДС не облагается",
-         "goal":" Оплата товара по заказу №090738231",
-         "from_name_p":"Николаевич",
-         "from_name":"Иван",
-         "from_name_f":"Михайлов",
-         "info":"Коммерческие организации",
-         "to_name":"ООО \"Технический Центр ДЕЛЬТА\"",
-         "to_inn":"7726111111",
-         "account":"40711100000012321",
-         "toServiceId":"1717"
+  "code": {
+    "value": "0",
+    "_name": "NORMAL"
   },
-  "sum": {
-         "amount": 1000,
-         "currency": "643"
-  },
-  "source": "account_643",
-  "transaction": {
-         "id": "10969142201",
-         "state": {
-            "code": "Accepted"
-          }
-  }
+  "data": null,
+  "message": "3",
+  "messages": null
 }
 ~~~
 
-Успешный JSON-ответ содержит данные о принятом платеже:
+> Не удалось определить мобильного оператора
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "code": {
+    "value": "2",
+    "_name": "ERROR"
+  },
+ "data": null,
+ "message": "По указанному номеру невозможно определить оператора сотовой связи. Воспользуйтесь поиском.",
+ "messages": {}
+}
+~~~
+
+~~~python
+print(mobile_operator(79652468447))
+~~~
+
+Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор оператора находится в параметре `message`.
+
+Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что невозможно определить оператора.
+
+### Определение провайдера перевода на карту {#card_check}
+
+Определение провайдера перевода на карту выполняется данным запросом. В ответе возвращается идентификатор провайдера для [запроса перевода на карту](#cards).
+
+Запрос не требует авторизации.
+
+<h3 class="request method" id="card_check">Запрос → POST</h3>
+
+~~~shell
+user@server:~$ curl -X POST "https://qiwi.com/card/detect.action" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/x-www-form-urlencoded" \
+  -d "cardNumber=4256********1231"
+~~~
+
+~~~http
+POST /card/detect.action HTTP/1.1
+Host: qiwi.com
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Cache-Control: no-cache
+
+cardNumber=4256********1231
+~~~
+
+~~~python
+import requests
+
+def card_system(card_number):
+    s = requests.Session()
+    res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
+    return res.json()['message']
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>https://qiwi.com/card/detect.action</span></h3></li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/x-www-form-urlencoded</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как formdata.</span>
+    </li>
+</ul> 
+
+Параметр|Тип|Описание
+--------|----|----
+cardNumber | String |Немаскированный номер карты (без пробелов). Обязательный параметр
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "code": {
+    "value": "0",
+    "_name": "NORMAL"
+  },
+  "data": null,
+  "message": "1963",
+  "messages": null
+}
+~~~
+
+~~~python
+print(card_system(4890xxxxxxxx1698))
+~~~
+
+> Не удалось определить платежную систему карты
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "code": {
+        "value": "2",
+        "_name": "ERROR"
+    },
+    "data": null,
+    "message": "Неверно введен номер банковской карты. Попробуйте ввести номер еще раз.",
+    "messages": {}
+}
+~~~
+
+Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор [платежной системы](#cards) находится в параметре `message`.
+
+Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка или платежная система не определена.
+
+## Модели данных API {#payments_model}
+
+### Класс Payment {#payment_obj}
+
+Объект, описывающий данные для платежа на провайдера в QIWI Кошельке.
+
+Параметр|Тип|Описание|Обяз.
+--------|----|----|------
+id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).|+
+sum|Object| Данные о сумме платежа:
+sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
+sum.currency|String|Валюта (только `643`, рубли)|+
+paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
+paymentMethod.type|String |Константа, `Account`|+
+paymentMethod.accountId|String| Константа, `643`|+
+fields|Object| Реквизиты платежа. Состав полей зависит от провайдера.
+comment|String|Комментарий к платежу. Используется только для [переводов на QIWI кошелек](#p2p) и при [конвертации](#CCY) |-
+
+
+### Класс PaymentInfo {#payment_info}
+
+~~~json
+{
+    "id": "150217833198900",
+    "terms": "99",
+    "fields": {
+        "account": "79121238345"
+    },
+    "sum": {
+        "amount": 100,
+        "currency": "643"
+    },
+    "transaction": {
+        "id": "11155897070",
+        "state": {
+            "code": "Accepted"
+        }
+    },
+    "source": "account_643",
+    "comment": "test"
+}
+~~~
+
+> Пример ответа с маскированным полем
+
+~~~json
+{
+  "id": "21131343",
+  "terms": "1963",
+  "fields": {
+          "account": "4256********1231"
+    },
+    "sum": {
+         "amount": 1000,
+         "currency": "643"
+    },
+    "source": "account_643",
+    "transaction": {
+         "id": "4969142201",
+         "state": {
+            "code": "Accepted"
+          }
+    }
+}
+~~~
+
+Объект, описывающий данные платежной транзакции в QIWI Кошельке. Возвращается в ответ на запросы к платежному API.
 
 Параметр | Тип | Описание
 -----|----|-----
-id | Number | Копия параметра `id` из исходного запроса
-terms | String | Константа, `1717`
-fields|Object|Копия объекта `fields` из исходного запроса
-sum|Object|Копия объекта `sum` из исходного запроса
+id | Number | Копия параметра `id` из платежного запроса
+terms | String | Идентификатор провайдера, на которого был отправлен платеж
+fields|Object|Копия объекта `fields` из платежного запроса. **Номер карты (если был выполнен перевод на карту) возвращается в маскированном виде**
+sum|Object|Копия объекта `sum` из платежного запроса
 source| String| Константа, `account_643`
+comment| String | Копия параметра `comment` из платежного запроса (возвращается, если присутствует в запросе)
 transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
 transaction.id|String|ID транзакции в процессинге QIWI Wallet
 transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
 state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments).
+
 
 # Счета {#invoices}
 
