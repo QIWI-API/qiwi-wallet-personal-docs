@@ -35,7 +35,7 @@ def balance(login, api_access_token):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
         <ul>
         <strong>В pathname запроса используется параметр:</strong>
              <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
@@ -118,7 +118,7 @@ accounts[].hasBalance|Boolean|Логический признак реально
 accounts[].currency | Number| Код валюты баланса (number-3 ISO-4217). Возвращаются балансы в следующих валютах: 643 - российский рубль, 840 - американский доллар, 978 - евро
 accounts[].type|Object|Сведения о счете
 type.id, type.title| String| Описание счета
-accounts[].balance|Object |Сведения о балансе данного счета.<br>Если вернулся `null` и при этом параметр `accounts[].hasBalance` равен `true`, повторите запрос с дополнительными параметрами:<br>`timeout=1000` и `alias=accounts[].alias` (псевдоним этого баланса).<br>Например<br>`GET /funding-sources/v1/accounts/current?timeout=1000&alias=qw_wallet_rub`
+accounts[].balance|Object |Сведения о балансе данного счета.<br>Если вернулся `null` и при этом параметр `accounts[].hasBalance` равен `true`, повторите запрос с дополнительными параметрами:<br>`timeout=1000` и `alias=accounts[].alias` (псевдоним этого баланса).<br>Например<br>`GET /funding-sources/v2/persons/79115221133/accounts?timeout=1000&alias=qw_wallet_rub`
 balance.amount|Number|Текущий баланс данного счета
 balance.currency | Number| Код валюты баланса (number-3 ISO-4217)
 
@@ -149,7 +149,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
         <ul>
         <strong>В теле запроса используется параметр:</strong>
              <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li  >
@@ -207,7 +207,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
+    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
         <ul>
         <strong>В теле запроса используется параметр:</strong>
              <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
@@ -267,7 +267,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
+    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
         <ul>
         <strong>В теле запроса используются обязательные параметры:</strong>
              <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>

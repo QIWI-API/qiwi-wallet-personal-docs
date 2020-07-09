@@ -66,7 +66,7 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/providers/<a>id</a>/onlineCommission</span></h3></li>
+    <li><h3>URL Path <span>/sinap/providers/<a>id</a>/onlineCommission</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>id</strong> - идентификатор провайдера. Возможные значения:
@@ -172,7 +172,7 @@ Host: qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL  <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3></li>
 </ul>
 
 <ul>
@@ -224,7 +224,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/qw-nicknames/v1/persons/<a>wallet</a>/nickname</span></h3>
+    <li><h3>URL Path <span>/qw-nicknames/v1/persons/<a>wallet</a>/nickname</span></h3>
         <ul>
         <strong>В pathname GET-запроса используется параметр:</strong>
              <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом, но без <i>+</i>)</li>
@@ -328,7 +328,7 @@ def send_p2p(api_access_token, to_qw, comment, sum_p2p):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/99/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/99/payments</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -443,7 +443,7 @@ def exchange(api_access_token, sum_exchange, currency, to_qw):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/1099/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/1099/payments</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -515,7 +515,7 @@ def exchange(api_access_token, currency_to, currency_from):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/crossRates</span></h3></li>
+    <li><h3>URL Path <span>/sinap/crossRates</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -636,7 +636,7 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>ID</strong> - идентификатор провайдера. Определяется с помощью <a href="#mnp">проверки мобильного оператора</a></li>
@@ -813,7 +813,7 @@ def send_card(api_access_token, payment_data):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
@@ -924,7 +924,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
@@ -1035,7 +1035,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
@@ -1154,7 +1154,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
         <strong>В pathname POST-запроса используется параметр:</strong>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
@@ -1277,7 +1277,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/sinap/api/v2/terms/1717/payments</span></h3></li>
+    <li><h3>URL Path <span>/sinap/api/v2/terms/1717/payments</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -1717,7 +1717,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-<li><h3>URL</h3> <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></li>
+<li><h3>URL Path <span>/widgets-api/api/p2p/protected/keys/create</span></h3></li>
 </ul>
 
 Параметр|Тип|Описание
@@ -1746,7 +1746,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/search?statuses=READY_FOR_PAY&rows=50</span></h3></li>
+    <li><h3>URL Path <span>/checkout-api/api/bill/search?parameter=value</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -1861,7 +1861,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/invoice/pay/wallet</span></h3></li>
+    <li><h3>URL Path <span>/checkout-api/invoice/pay/wallet</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -1933,7 +1933,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/reject</span></h3></li>
+    <li><h3>URL Path <span>/checkout-api/api/bill/reject</span></h3></li>
 </ul>
 
 <ul class="nestedList header">

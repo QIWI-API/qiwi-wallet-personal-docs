@@ -317,7 +317,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-notifier/v1/hooks</span></h3></li>
+    <li><h3>URL Path <span>/payment-notifier/v1/hooks</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -382,7 +382,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-        <li><h3>URL <span>https://edge.qiwi.com/payment-notifier/v1/hooks/<a>hookId</a></span></h3></li>
+        <li><h3>URL Path <span>/payment-notifier/v1/hooks/<a>hookId</a></span></h3></li>
         <ul>
         <strong>В pathname запроса используется параметр:</strong>
              <li><strong>hookId</strong> - UUID вебхука</li>
@@ -438,7 +438,7 @@ User-Agent: ****
 
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-notifier/v1/hooks/<a>hookId</a>/key</span></h3></li>
+    <li><h3>URL Path <span>/payment-notifier/v1/hooks/<a>hookId</a>/key</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -496,7 +496,7 @@ User-Agent: ****
 
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-notifier/v1/hooks/<a>hookId</a>/newkey</span></h3></li>
+    <li><h3>URL Path <span>/payment-notifier/v1/hooks/<a>hookId</a>/newkey</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -555,7 +555,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-notifier/v1/hooks/active</span></h3></li>
+    <li><h3>URL Path <span>/payment-notifier/v1/hooks/active</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -616,7 +616,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/payment-notifier/v1/hooks/test</span></h3></li>
+    <li><h3>URL Path <span>/payment-notifier/v1/hooks/test</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
