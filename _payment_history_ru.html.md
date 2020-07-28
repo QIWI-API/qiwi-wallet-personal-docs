@@ -1,6 +1,8 @@
 
 # История платежей {#payments_history}
 
+###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_history_ru.html.md)
+
 ## Список платежей {#payments_list}
 
 Запрос выгружает список платежей и пополнений вашего кошелька. Можно использовать фильтр по количеству, ID и дате (интервалу дат) транзакций.
@@ -78,10 +80,9 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
         <ul>
-        <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
 </ul>
 
@@ -225,10 +226,9 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
         <ul>
-        <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
 </ul>
 
@@ -333,9 +333,8 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3></li>
         <ul>
-        <strong>В pathname GET-запроса используются два параметра:</strong>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
              <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе). Данный параметр является необязательным</li>
         </ul>
@@ -469,9 +468,8 @@ def payment_history_cheque_file(transaction_id, transaction_type, filename, api_
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3></li>
         <ul>
-        <strong>В pathname GET-запроса используются три параметра:</strong>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
              <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе)</li>
              <li><strong>format</strong> - тип файла, в который сохраняется квитанция. Допустимые значения: <i>JPEG</i>, <i>PDF</i></li>
@@ -539,9 +537,8 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3></li>
         <ul>
-        <strong>В pathname POST-запроса используются два параметра:</strong>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
              <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе)</li>
         </ul>

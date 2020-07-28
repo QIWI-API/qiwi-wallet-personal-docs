@@ -1,7 +1,7 @@
 
-# Уведомления (вебхуки) {#webhook}
+# Callbacks {#webhook}
 
-###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_webhook_ru.html.md)
+###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_webhook_en.html.md)
 
 > Исходящие платежи - платеж в проведении
 

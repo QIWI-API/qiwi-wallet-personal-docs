@@ -1,14 +1,10 @@
-# Платежное API {#payments}
+# Payments API {#payments}
 
-###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_ru.html.md)
+###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_en.html.md)
 
-API предоставляет доступ к платежам в пользу провайдеров услуг, зарегистрированных в сервисах QIWI Кошелька.
+## Commission rates {#rates}
 
-## Комиссионные тарифы {#rates}
-
- Чтобы узнать комиссию за платеж до его совершения, используйте данный запрос (требуется [авторизация](#auth_api)). Возвращается полная комиссия QIWI Кошелька за платеж в пользу указанного провайдера с учетом всех тарифов по заданному набору платежных реквизитов.
-
-<h3 class="request method">Запрос → POST</h3>
+Use the method to get total commission amount for the payment by the given payment requisites.
 
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineCommission' \
@@ -67,23 +63,25 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
     return c_online.json()['qwCommission']['amount']
 ~~~
 
+<h3 class="request method">Запрос → POST</h3>
+
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/providers/<a>id</a>/onlineCommission</span></h3></li>
         <ul>
-             <li><strong>id</strong> - идентификатор провайдера. Возможные значения:
-             <ul><li>99 - Перевод на QIWI Wallet</li>
-             <li>1963 - Перевод на карту Visa (карты российских банков)</li>
-             <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
-             <li>Для карт, выпущенных банками стран Азербайджан, Армения, Беларусь, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<ul><li>1960 – Перевод на карту Visa</li><li>21012 – Перевод на карту MasterCard</li></ul></li>
-             <li>31652 - Перевод на карту национальной платежной системы МИР</li>
-             <li>466 - Тинькофф Банк</li>
-             <li>464 - Альфа-Банк</li>
-             <li>821 - Промсвязьбанк</li>
-             <li>815 - Русский Стандарт</li>
-             <li><a href="#banks">Прочие банки</a></li>
-             <li><a href="#mnp">Операторы мобильной связи</a></li>
-             <li><a href="#search">Другие провайдеры</a></li>
-             <li>1717 - платеж по банковским реквизитам</a></li></ul></li>
+             <li><strong>id</strong> - provider's identifier. Possible values:
+             <ul><li>99 - QIWI Wallet transfer</li>
+             <li>1963 - Visa card transfer (issued by only Russian banks)</li>
+             <li>21013 - MasterCard card transfer (issued by only Russian banks)</li>
+             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Georgia, Kazakhstan, Kyrgyzstan, Moldova, Tajikistan, Turkmenistan, Ukraine, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
+             <li>31652 - national payment system MIR card transer</li>
+             <li>466 - Tinkoff bank</li>
+             <li>464 - Alpha bank</li>
+             <li>821 - Promsvyazbank</li>
+             <li>815 - Russkiy Standard</li>
+             <li><a href="#banks">Other banks</a></li>
+             <li><a href="#mnp">Mobile network operators</a></li>
+             <li><a href="#search">Other providers</a></li>
+             <li>1717 - payment by bank requisites</a></li></ul></li>
         </ul>
 </ul>
 
@@ -98,20 +96,20 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
+    <li><h3>Parameters</h3><span>Send it in JSON body. All parameters are required.</span>
     </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter|Type|Description
 --------|----|----
-account| String| Пользовательский идентификатор (номер телефона с международным префиксом, номер карты/счета получателя, и т.д., в зависимости от провайдера)
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
-paymentMethod.type|String |Метод платежа, только `Account`
-paymentMethod.accountId|String| Идентификатор счета, только `643`.
-purchaseTotals | Object |Объект с платежными реквизитами
-purchaseTotals.total|Object| Объект, содержащий данные о сумме платежа:
-total.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.
-total.currency|String|Валюта (только `643`, рубли)
+account| String| User's identifier (phone number, card/account number, and other entity depending on provider)
+paymentMethod | Object| Object defining payment processing by QIWI Wallet. Includes the following parameters:
+paymentMethod.type|String | Payment method, `Account` only
+paymentMethod.accountId|String| QIWI Wallet account identifier, `643` only.
+purchaseTotals | Object | Object with payment requisites
+purchaseTotals.total|Object| Payment amount data:
+total.amount|Number | Amount (rubles and kopeks, divided by `.`). Positive number, rounded down to 2 decimals. If you send more decimals, value will be rounded down to kopeks.
+total.currency|String|Currency (`643` only, that is rubles)
 
 ~~~http
 HTTP/1.1 200 OK
@@ -142,31 +140,31 @@ Content-Type: application/json
 ~~~python
 api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
 
-# Комиссия за перевод на QIWI кошелек
+# QIWI wallet transfer commission
 print(get_commission(api_access_token,'+380000000000','99',5000))
-# Комиссия за перевод на карту
+# Card transfer commission
 print(get_commission(api_access_token,'4890xxxxxxxx1698','22351',1000))
 ~~~
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
-Рассчитанная сумма комиссии возвращается в поле `qwCommission.amount` JSON-ответа.
+Commission rate returns in `qwCommission.amount` field of the JSON response.
 
 <a name="payform"></a>
 
-## Автозаполнение платежных форм {#autocomplete}
+## Payment form autofilling {#autocomplete}
 
-Данный запрос отображает в браузере предзаполненную форму на сайте qiwi.com для совершения платежа.
+The request provides autofilled payment form on qiwi.com site.
 
-[Пример ссылки (нажмите для перехода на форму)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643&blocked[0]=account)
+[Link example (click to see the form)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643&blocked[0]=account)
 
-Если вы не хотите, чтобы пользователь видел номер вашего кошелька на форме, используйте перевод по никнейму:
+If you don't want to show your wallet number, use transfer to wallet nickname:
 
-[Пример ссылки на перевод по никнейму (нажмите для перехода на форму)](https://qiwi.com/payment/form/99999?extra%5B%27account%27%5D=NICKNAME&amountInteger=1&amountFraction=0&currency=643&blocked[0]=account&extra%5B%27accountType%27%5D=nickname)
+[Link example for nickname transfer (click to see the form)](https://qiwi.com/payment/form/99999?extra%5B%27account%27%5D=NICKNAME&amountInteger=1&amountFraction=0&currency=643&blocked[0]=account&extra%5B%27accountType%27%5D=nickname)
 
-<aside class="notice">Для приема переводов на свой QIWI кошелек можно использовать <a href="https://qiwi.com/p2p-admin/transfers/link">P2P-форму</a>.</aside>
+To get payments to your QIWI Wallet, you can use also [P2P-form](https://qiwi.com/p2p-admin/transfers/link).
 
-<h3 class="request method">Запрос → GET</h3>
+<h3 class="request method">Request → GET</h3>
 
 ~~~http
 GET /payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643 HTTP/1.1
@@ -175,41 +173,41 @@ Host: qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL  <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3></li>
 <ul>
-     <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
-     <ul><li>99 - Перевод на QIWI Wallet</li>
-     <li>99999 -  Перевод на QIWI Wallet по никнейму</li>
-     <li>1963 - Перевод на карту Visa (карты российских банков)</li>
-     <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
-     <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:<ul><li>1960 – Перевод на карту Visa</li><li>21012 – Перевод на карту MasterCard</li></ul></li>
-     <li>31652 - Перевод на карту МИР</li>
-     <li>22351 - Перевод на <a href="https://qiwi.com/cards/qvc">Виртуальную карту QIWI</a></li>
-     <li><a href="#mnp">Идентификаторы операторов мобильной связи</a></li>
-     <li><a href="#search">Идентификаторы других провайдеров</a></li>
-     <li>1717 - платеж по банковским реквизитам</li>
-     </ul></li>
-</ul></ul>
+<li><strong>id</strong> - provider's identifier. Possible values:
+<ul><li>99 - QIWI Wallet transfer</li>
+<li>99999 - QIWI Wallet nickname transfer</li>
+<li>1963 - Visa card transfer (issued by only Russian banks)</li>
+<li>21013 - MasterCard card transfer (issued by only Russian banks)</li>
+<li>For credit card issued by Azerbaijan, Armenia, Belarus, Georgia, Kazakhstan, Kyrgyzstan, Moldova, Tajikistan, Turkmenistan, Ukraine, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
+<li>31652 - national payment system MIR card transer</li>
+<li>22351 - <a href="https://qiwi.com/cards/qvc">QIWI Virtual card</a> transfer</li>
+<li><a href="#banks">Transfer to bank account</a></li>
+<li><a href="#mnp">Mobile network operators</a></li>
+<li><a href="#search">Other providers</a></li>
+<li>1717 - payment by bank requisites</a></li></ul></li>
+</ul></li></ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>В строке запроса указываются параметры отображения платежной формы.</span></li>
+    <li><h3>Parameters</h3><span>Send in URL query to properly fill the form fields.</span></li>
 </ul>
 
-Параметр|Тип|Описание|Поле на форме| Обяз.
----------|--------|---|----|-----
-amountInteger|Integer | Целая часть суммы платежа (рубли). Если параметр не указан, поле "Сумма" на форме будет пустым. **Допустимо число не больше 99 999 (ограничение на сумму платежа)** | Сумма | -
-amountFraction|Integer | Дробная часть суммы платежа (копейки). Если параметр не указан, поле "Сумма" на форме будет пустым.|Сумма | -
-currency|Константа, `643` | Код валюты платежа. **Обязательный параметр, если вы передаете в ссылке сумму платежа** |-|+
-extra['comment'] |URL-encoded string | Комментарий. **Параметр используется только для ID=99** |Комментарий к переводу | -
-extra['account'] |URL-encoded string |  Формат совпадает с форматом параметра `fields.account` при оплате соответствующих провайдеров: для провайдера `99` - номер кошелька получателя; для провайдеров сотовой связи - номер мобильного телефона для пополнения (без префикса 8); для провайдеров перевода на карту - номер банковской карты получателя (без пробелов), для других провайдеров - идентификатор пользователя. Для провайдера `99999` указывается никнейм или номер кошелька получателя (задайте соответствующее значение параметра `extra['accountType']`).| Номер Кошелька, номер телефона/счета/карты/пользовательский ID получателя.|-
-blocked|Array[String]|Признак неактивного поля формы. Пользователь не сможет менять значение данного поля. Каждый параметр задает соответствующее поле формы и нумеруется начиная с нуля (`blocked[0]`, `blocked[1]` и т.д.). Если не указан, пользователь сможет изменить все поля формы. Допустимые значения:<br>`sum` - поле "сумма платежа", <br>`account` - поле "номер счета/телефона/карты",<br>`comment` - поле "комментарий".<br> Пример (неактивное поле суммы платежа): `blocked[0]=sum` |-|-
-extra['accountType'] | URL-encoded string | **Параметр используется только для ID=99999**. Значение определяет перевод на QIWI кошелек по никнейму или по номеру кошелька. Если вы не хотите, чтобы пользователь видел номер вашего кошелька на форме, используйте перевод по никнейму.<br>`phone` - для перевода по номеру<br>`nickname` - для перевода по никнейму.
+Parameter | Type | Description | Form field | Required
+---------|--------|---|----|----
+amountInteger|Integer | Integer part of the payment amount (in rubles). If absent, "Amount" field will be empty. **The number not greater than 99 999 (payment amount limit)** | Anmount | -
+amountFraction|Integer | Fractional part of the payment amount (kopeks). If absent,  Дробная часть суммы платежа (копейки). Если параметр не указан, "Amount" field will be empty.|Сумма | -
+currency|Constant string, `643` | Payment currency code. **Required if you send the payment amount in the link** |-|+
+extra['comment'] |URL-encoded string | Payment comment. **Use it only for ID=99** | Comment to the transfer | -
+extra['account'] |URL-encoded string |  Field format is the same as `fields.account` of the corresponding payment request: for provider `99` - recipient's wallet number; for mobile network operators - phone number for top-up (without international prefix); for card transfer - recipient's card number without spaces, for other providers - user's identifier. For provider `99999` use nickname or number of the wallet and use appropriate value of `extra['accountType']` parameter.| Wallet number, phone number, user ID.|-
+blocked|Array[String]|Name of blocked (inactive) form field. User will not be able to change this field. Each parameter corresponds to respective form field and should be numbered starting from zero (`blocked[0]`, `blocked[1]`, and so on). If absent, user can change all form fields. Possible values:<br>`sum` - "Payment amount" field, <br>`account` - "Phone number/Account number" field,<br>`comment` - "Comment" field.<br> Example (for payment amount field): `blocked[0]=sum` |-|-
+extra['accountType'] | URL-encoded string | **Use only for ID=99999**. The value determines transfer to QIWI wallet by nickname or wallet number. If you don't want to show your wallet number, use transfer to wallet nickname.<br>`phone` - for transfer to wallet number<br>`nickname` - for transfer to wallet nickname. 
 
-### Как узнать свой никнейм через API {#nickname}
+### How to get your wallet nickname {#nickname}
 
-Используйте данный запрос:
+Use the following request:
 
-<h3 class="request method">Запрос → GET</h3>
+<h3 class="request method">Request → GET</h3>
 
 ~~~shell
 user@server:~$ curl -X GET "https://edge.qiwi.com/qw-nicknames/v1/persons/79111234567/nickname" \
@@ -227,7 +225,7 @@ Host: edge.qiwi.com
 <ul class="nestedList url">
     <li><h3>URL <span>/qw-nicknames/v1/persons/<a>wallet</a>/nickname</span></h3>
         <ul>
-             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
+             <li><strong>wallet</strong> - your wallet number without <i>+</i> sign</li>
         </ul>
     </li>
 </ul>
@@ -241,7 +239,7 @@ Host: edge.qiwi.com
     </li>
 </ul>
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -255,11 +253,11 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный ответ в формате JSON содержит никнейм вашего кошелька в поле `nickname`.
+Successful response contains nickname of your wallet in JSON field `nickname`.
 
-## Перевод на QIWI Кошелек {#p2p}
+## QIWI wallet transfer {#p2p}
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payments' \
@@ -311,7 +309,7 @@ Host: edge.qiwi.com
 import requests
 import time
 
-# Перевод на QIWI Кошелек
+# QIWI wallet transfer
 def send_p2p(api_access_token, to_qw, comment, sum_p2p):
     s = requests.Session()
     s.headers = {'content-type': 'application/json'}
@@ -342,15 +340,40 @@ def send_p2p(api_access_token, to_qw, comment, sum_p2p):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+    <li><h3>Parameters</h3><span>Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in <code>fields</code> field:</span>
     </li>
 </ul>
 
-Параметр|Тип|Описание|Обяз.
+Parameter|Type|Description|Required
 --------|----|----|------
-fields.account| String|Номер кошелька для перевода|+
+fields.account| String|Wallet number of the recipient |+
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id": "150217833198900",
+    "terms": "99",
+    "fields": {
+        "account": "79121238345"
+    },
+    "sum": {
+        "amount": 100,
+        "currency": "643"
+    },
+    "transaction": {
+        "id": "11155897070",
+        "state": {
+            "code": "Accepted"
+        }
+    },
+    "source": "account_643",
+    "comment": "test"
+}
+~~~
 
 ~~~python
 print(send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01))
@@ -364,13 +387,13 @@ print(send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01))
  'transaction': {'id': '11982501857', 'state': {'code': 'Accepted'}}}
 ~~~
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-## Конвертация {#CCY}
+## Conversion {#CCY}
 
-Метод выполняет перевод средств на валютный счет QIWI Кошелька с конвертацией с вашего рублевого счета. При этом формируются две транзакции: конвертации между счетами вашего кошелька и перевода на другой кошелек. Курс валют для конвертации можно узнать [другим запросом](#exchange).
+API method to transfer funds to currency account in QIWI wallet with conversion from your QIWI wallet ruble account. Two transactions are created: conversion between accounts of your QIWI wallet, and transfer to another wallet. You can get currency rates from [another API method](#exchange).
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/1099/payments' \
@@ -422,7 +445,7 @@ Host: edge.qiwi.com
 import requests
 import time
 
-# Конвертация в QIWI Кошельке (currency - код валюты String)
+# Conversion in QIWI wallet (currency as currency integer code as String)
 def exchange(api_access_token, sum_exchange, currency, to_qw):
     s = requests.Session()
     currencies = ['398', '840', '978']
@@ -457,23 +480,48 @@ def exchange(api_access_token, sum_exchange, currency, to_qw):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+<li><h3>Parameters</h3><span>Send JSON-object [Payment](#payment_obj) in the request's body. Payment's requisites in <code>fields</code> JSON field:</span>
 </li>
 </ul>
 
-Параметр|Тип|Описание|Обяз.
+Parameter|Type|Description|Required
 --------|----|----|------
-fields.account| String|Номер кошелька для перевода|+
+fields.account| String|Wallet number for the conversion|+
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
 
-## Курсы валют {#exchange}
+{
+    "id": "150217833198900",
+    "terms": "99",
+    "fields": {
+        "account": "79121238345"
+    },
+    "sum": {
+        "amount": 100,
+        "currency": "398"
+    },
+    "transaction": {
+        "id": "11155897070",
+        "state": {
+            "code": "Accepted"
+        }
+    },
+    "source": "account_643",
+    "comment": "test"
+}
+~~~
 
-Метод возвращает текущие курсы и кросс-курсы валют КИВИ Банка.
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-<h3 class="request method">Запрос → GET</h3>
+## Currency rates {#exchange}
+
+API method returns current QIWI Bank currency rates and cross-rates.
+
+<h3 class="request method">Request → GET</h3>
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/sinap/crossRates" \
@@ -493,7 +541,7 @@ Host: edge.qiwi.com
 ~~~python
 import requests
 
-# Курс пары валют (коды валют в String)
+# Currencies rate (currency pair codes in String)
 def exchange(api_access_token, currency_to, currency_from):
     s = requests.Session()
     s.headers = {'content-type': 'application/json'}
@@ -502,10 +550,10 @@ def exchange(api_access_token, currency_to, currency_from):
     s.headers['Accept'] = 'application/json'
     res = s.get('https://edge.qiwi.com/sinap/crossRates')
 
-    # все курсы
+    # all rates
     rates = res.json()['result']
 
-    # запрошенный курс
+    # requested rate
     rate = [x for x in rates if x['from'] == currency_from and x['to'] == currency_to]
     if (len(rate) == 0):
         print('No rate for this currencies!')
@@ -528,7 +576,7 @@ def exchange(api_access_token, currency_to, currency_from):
     </li>
 </ul>
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -559,18 +607,18 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный JSON-ответ содержит список курсов валют в списке `result`. Элемент списка соответствует валютной паре:
+Successful response containt JSON array of currency rates in `result` field. An element of the list corresponds to currency pair:
 
-Параметр|Тип|Описание
+Parameter|Type|Description
 --------|----|----
-from|String|Валюта покупки
-to|String|Валюта продажи
-rate|Number|Курс
+from|String| Base currency
+to|String| Quote currency
+rate|Number|Rate
 
 
-## Оплата сотовой связи {#cell}
+## Mobile network payment {#cell}
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1/payments" \
@@ -620,7 +668,7 @@ Host: edge.qiwi.com
 import requests
 import time
 
-# Оплата мобильного телефона
+# Cell phone topup
 def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
     s = requests.Session()
     s.headers['Accept'] = 'application/json'
@@ -638,7 +686,7 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
-                     <li><strong>ID</strong> - идентификатор провайдера. Определяется с помощью <a href="#mnp">проверки мобильного оператора</a></li>
+             <li><strong>ID</strong> - provider identifier. <a href="#mnp">Check mobile operator</a> to get the proper ID</li>
         </ul>
 </ul>
 
@@ -653,29 +701,51 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+<li><h3>Parameters</h3><span>Send JSON-object [Payment](#payment_obj) in the request's body. Payments requisites in JSON-field <code>fields</code>:</span>
 </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter|Type|Description
 --------|----|----
-fields.account| String|Номер мобильного телефона для пополнения (без префикса `8`)
+fields.account| String|Cell phone number to topup (without `8` prefix)
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "id": "21131343",
+    "terms": "1",
+    "fields": {
+          "account": "9161112233"
+    },
+    "sum": {
+         "amount": 1000,
+         "currency": "643"
+    },
+    "source": "account_643",
+    "transaction": {
+         "id": "4969142201",
+         "state": {
+            "code": "Accepted"
+          }
+    }
+}
+~~~
 
 ~~~python
 send_mobile(api_access_token,'2','9670058909','123','1')
 ~~~
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-## Перевод на карту {#cards}
+## Card money transfer {#cards}
 
-Запрос выполняет денежный перевод на карты платежных систем Visa, MasterCard или МИР. Предварительно можно узнать [код провайдера для перевода на карту](#card_check) по номеру карты.
+This request makes money transfer to Visa, MasterCard, or MIR credit cards. You can preliminary check [card system](#card_check).
 
-<h3 class="request method">Запрос → POST</h3>
-
-> Пример перевода на карту банка РФ
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payments" \
@@ -697,32 +767,6 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1963/payme
         } \
       }'
 ~~~
-
-
-~~~http
-POST /sinap/api/v2/terms/1963/payments HTTP/1.1
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
-Host: edge.qiwi.com
-
-{
-  "id":"21131343",
-  "sum": {
-        "amount":1000,
-        "currency":"643"
-  },
-  "paymentMethod": {
-      "type":"Account",
-      "accountId":"643"
-  },
-  "fields": {
-        "account":"4256XXXXXXXX1231"
-  }
-}
-~~~
-
-> Пример перевода на международную карту
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payments" \
@@ -752,6 +796,28 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1960/payme
       }'
 ~~~
 
+~~~http
+POST /sinap/api/v2/terms/1963/payments HTTP/1.1
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+
+{
+  "id":"21131343",
+  "sum": {
+        "amount":1000,
+        "currency":"643"
+  },
+  "paymentMethod": {
+      "type":"Account",
+      "accountId":"643"
+  },
+  "fields": {
+        "account":"4256XXXXXXXX1231"
+  }
+}
+~~~
 
 ~~~http
 POST /sinap/api/v2/terms/1960/payments HTTP/1.1
@@ -787,7 +853,7 @@ Host: edge.qiwi.com
 import requests
 import time
 
-# Перевод на карту
+# Card money transer
 def send_card(api_access_token, payment_data):
     # payment_data - dictionary with all payment data
     s = requests.Session()
@@ -814,16 +880,13 @@ def send_card(api_access_token, payment_data):
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
-             <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
+             <li><strong>ID</strong> - QIWI provider identifier. Possible values:
              <ul>
-             <li>1963 - Перевод на карту Visa (карты российских банков)</li>
-             <li>21013 - Перевод на карту MasterCard (карты российских банков)</li>
-             <li>31652 - Перевод на карту национальной платежной системы МИР</li>
-             <li>22351 - Перевод на <a href="https://qiwi.com/cards/qvc">Виртуальную карту QIWI</a></li>
-             <li>Для карт, выпущенных банками стран Азербайджан, Армения, Белоруссия, Грузия, Казахстан, Киргизия, Молдавия, Таджикистан, Туркменистан, Украина, Узбекистан:
-             <ul><li>1960 – Перевод на карту Visa</li>
-             <li>21012 – Перевод на карту MasterCard</li></ul></li>
-             </ul></li>
+             <li>1963 - Visa card money transfer (issued by only Russian banks)</li>
+             <li>21013 - MasterCard card money transfer (issued by only Russian banks)</li>
+             <li>31652 - national payment system MIR card money transfer</li>
+             <li>22351 - money transfer to <a href="https://qiwi.com/cards/qvc">QIWI Virtual Card</a></li>
+             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Georgia, Kazakhstan, Kyrgyzstan, Moldova, Tajikistan, Turkmenistan, Ukraine, Uzbekistan:<ul><li>1960 – Visa card money transfer</li><li>21012 – MasterCard card money transfer</li></ul></li>
         </ul>
 </ul>
 
@@ -838,22 +901,46 @@ def send_card(api_access_token, payment_data):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+<li><h3>Parameters</h3><span>Send JSON-object [Payment](#payment_obj) in the request' body. Payment requisites in <code>fields</code> parameter:</span>
 </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter | Type | Description
 --------|----|----
-fields.account| String|Номер банковской карты получателя (без пробелов)
-fields.rem_name|String|Имя отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
-fields.rem_name_f|String|Фамилия отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
-fields.rec_address|String|Адрес отправителя (без почтового индекса, в произвольной форме). Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
-fields.rec_city|String|Город отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
-fields.rec_country|String|Страна отправителя. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
-fields.reg_name|String|Имя **получателя**. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
-fields.reg_name_f|String|Фамилия **получателя**. Требуется только для ID (идентификатор провайдера в запросе) `1960`, `21012`
+fields.account| String| Recipient's card number (no spaces)
+fields.rem_name|String| Sender's first name. Required for ID  `1960`, `21012` only
+fields.rem_name_f|String| Sender's last name. Required for ID  `1960`, `21012` only
+fields.rec_address|String| Sender's address (no zip code, only text). Required for ID  `1960`, `21012` only
+fields.rec_city|String| Sender's city. Required for ID  `1960`, `21012` only
+fields.rec_country|String| Sender's country. Required for ID  `1960`, `21012` only
+fields.reg_name|String| Recipient's first name. Required for ID  `1960`, `21012` only
+fields.reg_name_f|String| Recipient's last name. Required for ID  `1960`, `21012` only
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": "21131343",
+  "terms": "1963",
+  "fields": {
+          "account": "4256********1231"
+    },
+    "sum": {
+         "amount": 1000,
+         "currency": "643"
+    },
+    "source": "account_643",
+    "transaction": {
+         "id": "4969142201",
+         "state": {
+            "code": "Accepted"
+          }
+    }
+}
+~~~
 
 ~~~python
 payment_data = {'prv_id': '1963', 'to_card' : '41548XXXXXXXX008', 'sum': 100}
@@ -861,17 +948,17 @@ payment_data = {'prv_id': '1963', 'to_card' : '41548XXXXXXXX008', 'sum': 100}
 jss = send_card(token, payment_data)
 ~~~
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-## Банковский перевод {#banks}
+## Bank money transfer {#banks}
 
-Запрос выполняет денежный перевод на карты/счета физических лиц, открытые в российских банках.
+To make money transfer to bank cards/accounts of persons opened in Russian banks, use the following methods.
 
-### Перевод по номеру карты
+### Card nunmber transfer
 
-Запрос выполняет денежный перевод на карты физических лиц, выпущенные российскими банками.
+The request makes money transfer to cards issued by Russian banks.
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/464/payments" \
@@ -924,16 +1011,16 @@ Host: edge.qiwi.com
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
-             <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
-             <ul><li>464 - Альфа-Банк</li>
-             <li>804 - АО "ОТП БАНК"</li>
-             <li>810 - АО "РОССЕЛЬХОЗБАНК"</li>
-             <li>815 - Русский Стандарт</li>
-             <li>816 - ВТБ (ПАО)</li>
-             <li>821 - Промсвязьбанк</li>
-             <li>870 - ПАО Сбербанк</li>
-             <li>881 - Ренессанс Кредит</li>
-             <li>1134 - ПАО "МОСКОВСКИЙ КРЕДИТНЫЙ БАНК"</li>
+             <li><strong>ID</strong> - QIWI provider identifier. Possible values:
+             <ul><li>464 - Alfa Bank</li>
+             <li>804 - OTP Bank</li>
+             <li>810 - Rosselkhozbank</li>
+             <li>815 - Russkiy Standart</li>
+             <li>816 - VTB</li>
+             <li>821 - Promsvyazbank</li>
+             <li>870 - Sberbank</li>
+             <li>881 - Renaissance Credit</li>
+             <li>1134 - Moskovskiy Creditnyi Bank</li>
              </ul></li>
         </ul>
 </ul>
@@ -949,31 +1036,57 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+<li><h3>Parameters</h3><span>Send JSON-object [Payment](#payment_obj) in the request' body. Payment requisites in <code>fields</code> parameter:</span>
 </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter | Type | Description
 --------|----|----
-fields.account| String| Номер банковской карты получателя (без пробелов)
-fields.exp_date| String|Срок действия карты, в формате `ММГГ` (например, `0218`). **Параметр указывается только в случае перевода на карту Альфа-Банка (ID 464) и Промсвязьбанка (ID 821).**
-fields.account_type| String|Тип банковского идентификатора. Для каждого банка применяется собственное значение:<br>Альфа-Банк - `1`<br>ОТП банк - `1`<br>Русский Стандарт - `1`<br>Россельхозбанк - `5`<br>ВТБ - `5`<br>Промсвязьбанк - `7`<br>Сбербанк - `5`<br>МОСКОВСКИЙ КРЕДИТНЫЙ БАНК - `5`<br>Ренессанс Кредит - `1`.
-fields.mfo| String|БИК соответствующего банка/территориального отделения банка
-fields.lname|String|Фамилия получателя
-fields.fname|String|Имя получателя
-fields.mname|String|Отчество получателя
+fields.account| String| Recipient's card number (no spaces)
+fields.exp_date| String| Card expiry date, as `MMYY` (for example, `0218`). **Parameter is required for ID 464 and 821.**
+fields.account_type| String| Bank identifier type. For each bank specific value applies:<br>ID 464 - `1`<br>ID 084 - `1`<br>ID 815 - `1`<br>ID 810 - `5`<br>ID 816 - `5`<br>ID 821 - `7`<br>ID 870 - `5`<br>ID 1134 - `5`<br>ID 881 - `1`.
+fields.mfo| String| Bank MFO (BIK)
+fields.lname|String| Recipient's last name
+fields.fname|String| Recipient's first name
+fields.mname|String| Recipient's middle name
 
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": "21131343",
+  "terms": "464",
+  "fields": {
+      "account": "4256********1231",
+      "account_type": "1",
+      "exp_date": "MMYY"
+  },
+  "sum": {
+      "amount": 1000,
+      "currency": "643"
+  },
+  "source": "account_643",
+  "transaction": {
+      "id": "4969142201",
+      "state": {
+        "code": "Accepted"
+      }
+  }
+}
+~~~
+
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
 
-### Перевод по номеру счета/договора
+### Bank account transfer
 
-Запрос выполняет денежный перевод на счета физических лиц, открытые в российских банках. Возможен обычный перевод или перевод с использованием сервиса срочного перевода (исполнение в течение часа, с 9:00 до 19:30).
+The request makes money transfer to personal accounts opened in Russian banks. You can use quick transfer service (within an hour if transaction is made from 9:00 until 19:30).
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/816/payments" \
@@ -1034,18 +1147,20 @@ Host: edge.qiwi.com
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
-             <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
-             <ul><li>313 - ХоумКредит Банк</li>
-             <li>464 - Альфа-Банк</li>
-             <li>821 - Промсвязьбанк</li>
-             <li>804 - АО "ОТП БАНК"</li>
-             <li>810 - АО "РОССЕЛЬХОЗБАНК"</li>
-             <li>816 - ВТБ (ПАО)</li>
-             <li>819 - АО ЮНИКРЕДИТ БАНК</li>
-             <li>868 - КИВИ БАНК (АО)</li>
-             <li>870 - ПАО Сбербанк</li>
-             <li>1134 - ПАО "МОСКОВСКИЙ КРЕДИТНЫЙ БАНК"</li>
-             <li>27324 - АО "РАЙФФАЙЗЕНБАНК"</li>
+             <li><strong>ID</strong> - QIWI provider identifier. Possible values:
+             <ul><li>313 - HomeCredit Bank</li>
+             <li>464 - Alfa Bank</li>
+             <li>821 - Promsvyazbank</li>
+             <li>804 - OTP Bank</li>
+             <li>810 - Rosselkhozbank</li>
+             <li>816 - VTB</li>
+             <li>819 - Unicredit Bank</li>
+             <li>868 - QIWI Bank</li>
+             <li>870 - Sberbank</li>
+             <li>815 - Russkiy Standart</li>
+             <li>881 - Renaissance Credit</li>
+             <li>1134 - Moskovskiy Creditnyi Bank</li>
+             <li>27324 - Raiffeisen Bank</li>
              </ul></li>
         </ul>
 </ul>
@@ -1061,30 +1176,55 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+<li><h3>Parameters</h3><span>Send JSON-object [Payment](#payment_obj) in the request' body. Payment requisites in <code>fields</code> parameter:</span>
 </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter | Type | Description
 --------|----|----
-fields.account| String| Номер банковского счета получателя
-fields.urgent | String | Признак ускоренного перевода. Значение 0 - не использовать; значение 1 - выполнить перевод через Сервис срочного перевода ЦБ РФ. **Внимание! Взимается дополнительная комиссия за ускоренный перевод**
-fields.mfo| String|БИК соответствующего банка/территориального отделения банка
-fields.account_type| String|Тип банковского идентификатора. Для каждого банка применяется собственное значение:<br>Альфа-Банк - `2`<br>ОТП банк - `2`<br>Россельхозбанк - `2`<br>Русский Стандарт - `2`<br>ВТБ - `2`<br>Промсвязьбанк - `9`<br>ЮНИКРЕДИТ БАНК - `2`<br>КИВИ БАНК - `2`<br>Сбербанк - `2`<br>МОСКОВСКИЙ КРЕДИТНЫЙ БАНК - `2`<br>РАЙФФАЙЗЕНБАНК -`2`<br>Россельхозбанк - `2`<br>ВТБ - `5`<br>Промсвязьбанк - `9`<br>Ренессанс Кредит - `2`<br>ХоумКредит Банк - `6`.
-fields.lname|String|Фамилия получателя
-fields.fname|String|Имя получателя
-fields.mname|String|Отчество получателя
-fileds.agrnum|String|Номер договора - для переводов в ХоумКредит Банк
+fields.account| String| Recipient's bank account number
+fields.urgent | String | Quick transfer flag. For `0` - not used; for `1` - make quick transfer by Urgent transfer service of Central Bank of Russia. **Extra commission is paid for quick transfer**
+fields.mfo| String| Bank MFO (BIK)
+fields.account_type| String| Bank identifier type. For each bank specfic value applies:<br>ID 464 - `2`<br>ID 804 - `2`<br>ID 810 - `2`<br>ID 815 - `2`<br>ID 816 - `2`<br>ID 821 - `9`<br>ID 819 - `2`<br>ID 868 - `2`<br>ID 870 - `2`<br>ID 1134 - `2`<br>ID 27324 -`2`<br>ID 810 - `2`<br>ID 816 - `5`<br>ID 821 - `9`<br>ID 881 - `2`<br>ID 313 - `6`.
+fields.lname|String| Recipient's last name
+fields.fname|String| Recipient's first name
+fields.mname|String| Recipient's middle name
+fileds.agrnum|String| Bank agreement number - for ID 313
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
 
-## Оплата других услуг {#services}
+{
+  "id": "21131343",
+  "terms": "464",
+  "fields": {
+          "account": "407121010910909011",
+          "account_type": "2"
+  },
+  "sum": {
+         "amount": 1000,
+         "currency": "643"
+  },
+  "source": "account_643",
+  "transaction": {
+         "id": "4969142201",
+         "state": {
+            "code": "Accepted"
+          }
+  }
+}
+~~~
 
-Оплата услуги по идентификатору пользователя. Данный запрос применяется для провайдеров, использующих в реквизитах единственный пользовательский идентификатор, без проверки номера аккаунта.
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-<h3 class="request method">Запрос → POST</h3>
+## Other services {#services}
+
+You can pay for services by user identifier. This request applies for QIWI providers with one user identifier and without account number online check.
+
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/674/payments" \
@@ -1134,7 +1274,7 @@ Host: edge.qiwi.com
 import requests
 import time
 
-# оплата простого провайдера
+# payment for service provider
 
 def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
     s = requests.Session()
@@ -1152,12 +1292,12 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
         <ul>
-             <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
+             <li><strong>ID</strong> - QIWI provider identifier. Possible values:
              <ul><li>674 - OnLime</li>
-             <li>Идентификатор другого интернет-провайдера</li>
-             <li>1239 - Подари жизнь</li>
-             <li>Идентификатор другого благотворительного фонда</li>
-             <li><a href="#search">Как найти идентификатор провайдера</a></li>
+             <li>Other Internet providers</li>
+             <li>1239 - Podari zhizn Charitable Foundation</li>
+             <li>Other charitable foundations identifiers</li>
+             <li><a href="#search">How to find a service provider identifier</a></li>
              </ul></li>
         </ul>
 </ul>
@@ -1173,23 +1313,47 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+<li><h3>Parameters</h3><span>Send JSON-object [Payment](#payment_obj) in the request' body. Payment requisites in <code>fields</code> parameter:</span>
 </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter | Type | Description
 --------|----|----
-fields.account| String| Пользовательский идентификатор
+fields.account| String| User identifier
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
 
-## Платеж по свободным реквизитам {#freepay}
+{
+  "id": "21131343",
+  "terms": "674",
+  "fields": {
+          "account": "111000"
+  },
+  "sum": {
+         "amount": 100,
+         "currency": "643"
+  },
+  "source": "account_643",
+  "transaction": {
+         "id": "4969142201",
+         "state": {
+            "code": "Accepted"
+          }
+  }
+}
+~~~
 
-Оплата услуг коммерческих организаций по их банковским реквизитам.
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-<h3 class="request method">Запрос → POST</h3>
+## Payment by any requisites {#freepay}
+
+This method makes payments for commercial services by their bank details.
+
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/1717/payments" \
@@ -1286,11 +1450,11 @@ User-Agent: ****
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Параметры</h3><span>В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>.<br>Набор реквизитов платежа в поле <code>fields</code>:</span>
+<li><h3>Parameters</h3><span>Send JSON-object [Payment](#payment_obj) in the request' body. Payment requisites in <code>fields</code> parameter:</span>
 </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter | Type | Description
 --------|----|----
 fields.name|String|Наименование банка получателя (кавычки экранируются символом `\`)
 fields.extra_to_bik|String|БИК банка получателя
@@ -1313,14 +1477,53 @@ fields.toServiceId|String|Служебная информация, конста�
 
 <h3 class="request">Ответ ←</h3>
 
-Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже.
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "id": "21131343",
+  "terms": "1717",
+  "fields": {
+         "extra_to_bik":"044525201",
+         "requestProtocol":"qw1",
+         "city":"МОСКВА",
+         "name":"ПАО АКБ \"АВАНГАРД\"",
+         "to_bik":"044525201",
+         "urgent":"0",
+         "to_kpp":"772111001",
+         "is_commercial":"1",
+         "nds":"НДС не облагается",
+         "goal":" Оплата товара по заказу №090738231",
+         "from_name_p":"Николаевич",
+         "from_name":"Иван",
+         "from_name_f":"Михайлов",
+         "info":"Коммерческие организации",
+         "to_name":"ООО \"Технический Центр ДЕЛЬТА\"",
+         "to_inn":"7726111111",
+         "account":"40711100000012321",
+         "toServiceId":"1717"
+  },
+  "sum": {
+         "amount": 1000,
+         "currency": "643"
+  },
+  "source": "account_643",
+  "transaction": {
+         "id": "10969142201",
+         "state": {
+            "code": "Accepted"
+          }
+  }
+}
+~~~
+
+Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
 
 ## Поиск провайдера {#search}
 
-Поиск провайдера может понадобиться, если вы не знаете значения ID провайдера услуг для оплаты по идентификатору пользователя, либо для определения провайдера мобильной связи по номеру телефона или перевода на карту по номеру карты.
-
-### Поиск провайдера по строке
+## Поиск провайдера по строке
 
 Используйте API для поиска идентификатора провайдера.
 
@@ -1597,7 +1800,7 @@ Content-Type: application/json
 
 Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка или платежная система не определена.
 
-## Модели данных API {#payments_model}
+## Модели данных API 
 
 ### Класс Payment {#payment_obj}
 
@@ -1637,29 +1840,6 @@ comment|String|Комментарий к платежу. Используетс�
     },
     "source": "account_643",
     "comment": "test"
-}
-~~~
-
-> Пример ответа с маскированным полем
-
-~~~json
-{
-  "id": "21131343",
-  "terms": "1963",
-  "fields": {
-          "account": "4256********1231"
-    },
-    "sum": {
-         "amount": 1000,
-         "currency": "643"
-    },
-    "source": "account_643",
-    "transaction": {
-         "id": "4969142201",
-         "state": {
-            "code": "Accepted"
-          }
-    }
 }
 ~~~
 
@@ -1710,31 +1890,9 @@ User-Agent: ****
 {"keysPairName":"Name", "serverNotificationsUrl":"https://test.com"}
 ~~~
 
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"PublicKey": "XXX", "SecretKey": "YYY"}
-~~~
-
 <ul class="nestedList url">
-<li><h3>URL <span>/widgets-api/api/p2p/protected/keys/create</span></h3></li>
+<li><h3>URL</h3> <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></li>
 </ul>
-
-<ul class="nestedList header">
-    <li><h3>HEADERS</h3>
-        <ul>
-             <li>Accept: application/json</li>
-             <li>Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f</li>
-        </ul>
-    </li>
-</ul>
-
-
-<ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса как JSON.</span>
-    </li>
-</ul> 
 
 Параметр|Тип|Описание
 --------|----|----
@@ -1762,7 +1920,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/checkout-api/api/bill/search?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/search?statuses=READY_FOR_PAY&rows=50</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -1877,7 +2035,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/checkout-api/invoice/pay/wallet</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/invoice/pay/wallet</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -1949,7 +2107,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/checkout-api/api/bill/reject</span></h3></li>
+    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/reject</span></h3></li>
 </ul>
 
 <ul class="nestedList header">

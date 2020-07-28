@@ -1,6 +1,8 @@
 
 # Профиль пользователя {#profile}
 
+###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_profile_ru.html.md)
+
 Запрос возвращает информацию о вашем профиле - наборе пользовательских данных и настроек вашего QIWI кошелька.
 
 <h3 class="request method">Запрос → GET</h3>
@@ -51,7 +53,7 @@ profile['authInfo']['boundEmail']
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/person-profile/v1/profile/current?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/person-profile/v1/profile/current?<a>parameter=value</a></span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -236,10 +238,9 @@ def get_identification(api_access_token, my_login):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/identification/v1/persons/<a>wallet</a>/identification</span></h3>
+    <li><h3>URL <span>/identification/v1/persons/<a>wallet</a>/identification</span></h3>
         <ul>
-        <strong>В pathname POST-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
     </li>    
 </ul>
@@ -346,10 +347,9 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/identification/v1/persons/<a>wallet</a>/identification</span></h3>
+    <li><h3>URL <span>/identification/v1/persons/<a>wallet</a>/identification</span></h3>
         <ul>
-        <strong>В pathname GET-запроса используется параметр:</strong>
-             <li><strong>wallet</strong> - номер вашего кошелька (с международным префиксом, но без <i>+</i>)</li>
+             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
     </li>
 </ul>
@@ -437,10 +437,9 @@ def limits(login, api_access_token):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/qw-limits/v1/persons/<a>personId</a>/actual-limits?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/qw-limits/v1/persons/<a>personId</a>/actual-limits?<a>parameter=value</a></span></h3></li>
         <ul>
-        <strong>В pathname запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
 </ul>
 

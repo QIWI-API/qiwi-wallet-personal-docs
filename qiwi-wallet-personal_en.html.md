@@ -5,18 +5,32 @@ search: true
 
 metatitle: QIWI Wallet API
 
-metadescription: QIWI Wallet API  allows you to access QIWI Wallet account information and make some payment operations as well as get payment reports.
+metadescription: QIWI Wallet API  allows you to access your QIWI Wallet account information and make payment operations as well as get payment reports and many more.
 
 toc_footers:
- - <a href='/index-en.html'>Home page</a>
- - <a href='mailto:api_help@qiwi.com'>Feedback</a>
+- <a href='/en/'>Main page</a>
+- <a href='mailto:api_help@qiwi.com'>Feedback</a>
+- <a href='/sandbox/index.html'>Interactive API</a>
+ 
+ includes:
+  - qiwi-wallet-personal/profile_en
+  - qiwi-wallet-personal/payment_history_en
+  - qiwi-wallet-personal/balance_en
+  - qiwi-wallet-personal/payment_en
+  - qiwi-wallet-personal/webhook_en
+  - qiwi-wallet-personal/error_en
 ---
+
+*[Token]: String for user authentication in API by OAuth 2.0 standard RFC 6749, RFC 6750.
+*[token]: String for user authentication in API by **OAuth 2.0** standard, see RFC 6749, RFC 6750.
 
 # Introduction
 
-###### Last update: 2017-08-01 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwicom_ru.html.md)
+###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_en.html.md)
 
 QIWI Wallet API makes it easy to automate getting info on your account's state in [QIWI Wallet service](https://qiwi.com) and making financial operations.
+
+API uses HTTPS requests and JSON-formatted responses. 
 
 API methods are accessible after the user is registered in [QIWI Wallet service](https://qiwi.com).
 
@@ -31,6 +45,17 @@ Parameter|Description|Type
  ---------|--------|---
  token | [Token](#auth_data) to authorize API requests. Token is valid within one month after its [issuing](#auth_data). | String
 
+# API Access 
+
+Main URL address to call API methods (unless explicitly stated):
+
+`https://edge.qiwi.com`
+
+To make a successful request of API methods, you need:
+
+* Correct HTTP headers: `Accept` and `Content-Type`, as designated in a method description.
+* URL composed according to the method reference
+* OAuth token issued for your QIWI Wallet. Some requests do not require it though.
 
 # Authorization {#auth_api}
 
@@ -38,21 +63,23 @@ Parameter|Description|Type
 
 QIWI Wallet API implements OAuth 2.0 open authorization protocol specification. A user registers or authenticates on <https://qiwi.com> QIWI Wallet site and requests a token with a certain scopes. Token issue is confirmed by SMS code.
 
+**How to get a token**
+
 1. Open <https://qiwi.com/api> page in your browser. You will need to register or authenticate on QIWI Wallet service.
   ![Token Issue](/images/apiwallet_get_token.jpg)
-2. Click on **Выпустить новый токен**. Select token scopes in the pop-up window:
-    * Запрос информации о профиле кошелька - allows [person's profile requests](#profile)
+2. Click on **Выпустить новый токен** (please note, interface is Russian only). Select token scopes in the pop-up window:
+    * Запрос информации о профиле кошелька - allows use of [person's profile requests](#profile), [identification API](#identification), [limits API](#limits)
     * Запрос баланса кошелька - allows [balance requests](#balance)
     * Просмотр истории платежей - allows [payments history requests](#payments)
-    * Проведение платежей без SMS - allows making payment requests with no SMS confirmation (regardless the settings <https://qiwi.com/settings/options/security.action>)
+    * Проведение платежей без SMS - allows making [payment requests](#payments) with no SMS confirmation (regardless the settings <https://qiwi.com/settings/options/security.action>), using [invoicing's API](#pay_invoice) and [notification service](#webhook)
   ![Token Scopes](/images/apiwallet_token_scopes.jpg)
-3. Click **Продолжить** and confirm a token issue by entering SMS code.
+3. Click **Продолжить**, confirm a token issuing and enter confirmation code from SMS.
   ![Token Accept](/images/apiwallet_token_sms.jpg)
-4. Copy token string and save it securely. Use the token in [QIWI Wallet API requests](#auth_ex).
+4. Copy token string and save it in secure place. [Use the token](#auth_ex) in all QIWI Wallet API requests which require authorization.
 
   ![Token](/images/apiwallet_token_final.jpg)
 
-Token is valid one month from this issuing. You can block the token before its lifetime ends using this link <https://qiwi.com/settings/mine.action>.
+<aside class="success">Token is valid 180 days from this issuing. You can block the token before its lifetime ends using this link <https://qiwi.com/settings/apps>.</aside>
 
 ## Authorization example {#auth_ex}
 
@@ -62,7 +89,7 @@ user@server:~$ curl "server address"
 ~~~
 
 <aside class="notice">
-Add "Authorization" header to the request with its value as "Bearer <a href="#auth_data">token</a>"
+Add <code>Authorization</code> header to the request with its value as "Bearer <a href="#auth_data">token</a>"
 </aside>
 
 
@@ -75,434 +102,6 @@ Add "Authorization" header to the request with its value as "Bearer <a href="#au
 * The header has to be added to each API request:
 
 `Authorization: Bearer U1QtOTkwMTAyLWNud3FpdWhmbzg3M`
-
-# Person's Profile {#profile}
-
-~~~shell
-user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
-~~~
-
-~~~http
-GET /person-profile/v1/profile/current HTTP/1.1
-Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
-Content-type: application/json
-Host: edge.qiwi.com
-~~~
-
-Тип запроса - GET.
-
-URL запроса:
-
-`https://edge.qiwi.com/person-profile/v1/profile/current?<parameters>`
-
-Заголовки запроса:
-
-* `Accept: application/json`
-* `Content-Type: application/json`
-* `Authorization: Bearer ***`
-
-В заголовке `Authorization` указываются [параметры авторизации](#auth_api).
-
-Параметры URL запроса:
-
-* `<parameters>` - дополнительные параметры запроса (необязательные):
-
-Параметр|Тип |Описание
---------|----|-------
-authInfoEnabled|Boolean | Логический признак выгрузки настроек авторизации пользователя. По умолчанию `true`
-contractInfoEnabled|Boolean | Логический признак выгрузки данных о кошельке пользователя. По умолчанию `true`
-userInfoEnabled|Boolean | Логический признак выгрузки прочих пользовательских данных. По умолчанию `true`
-
-## Response format
-
-~~~json
-{
-  "authInfo": {
-    "boundEmail": "m@ya.ru",
-    "ip": "81.210.201.22",
-    "lastLoginDate": "2017-07-27T06:51:06.099Z",
-    "mobilePinInfo": {
-      "lastMobilePinChange": "2017-07-13T11:22:06.099Z",
-      "mobilePinUsed": true,
-      "nextMobilePinChange": "2017-11-27T06:51:06.099Z"
-    },
-    "passInfo": {
-      "lastPassChange": "2017-07-21T09:25:06.099Z",
-      "nextPassChange": "2017-08-21T09:25:06.099Z",
-      "passwordUsed": true
-    },
-    "personId": 79683851815,
-    "pinInfo": {
-      "pinUsed": true
-    },
-    "registrationDate": "2017-01-07T16:51:06.100Z"
-  },
-  "contractInfo": {
-    "blocked": false,
-    "contractId": 79683851815,
-    "creationDate": "2017-01-07T16:51:06.100Z",
-    "features": [
-      ...
-    ],
-    "identificationInfo": [
-      {
-        "bankAlias": "QIWI",
-        "identificationLevel": "SIMPLE"
-      }
-    ]
-  },
-  "userInfo": {
-    "defaultPayCurrency": 643,
-    "defaultPaySource": 7,
-    "email": null,
-    "firstTxnId": 10807097143,
-    "language": "string",
-    "operator": "Beeline",
-    "phoneHash": "lgsco87234f0287",
-    "promoEnabled": null
-  }
-}
-~~~
-
-Успешный ответ содержит данные о профиле пользователя:
-
-Параметр|Тип|Описание
---------|----|----
-authInfo|Object|Настройки авторизации пользователя
-personId|Number|Номер кошелька пользователя
-registrationDate|String|Дата/время регистрации QIWI Кошелька пользователя (через сайт либо мобильноое приложение, либо другим способом)
-boundEmail|String|E-mail, привязанный к кошельку. Если отсутствует, то `null`
-ip|String|IP-адрес последней пользовательской сессии
-lastLoginDate|String|Дата/время последней сессии в QIWI Кошельке
-mobilePinInfo|Object|Данные о PIN-коде мобильного приложения QIWI Кошелька
-mobilePinUsed|Boolean|Логический признак использования PIN-кода (фактически означает, что мобильное приложение используется)
-lastMobilePinChange|String|Дата/время последнего изменения PIN-кода мобильного приложения QIWI Кошелька
-nextMobilePinChange|String|Дата/время следующего (планового) изменения PIN-кода мобильного приложения QIWI Кошелька
-passInfo|Object|Данные о пароле к сайту qiwi.com
-passwordUsed|Boolean|Логический признак использования пароля (фактически означает, что пользователь заходит на сайт)
-lastPassChange|String|Дата/время последнего изменения пароля сайта qiwi.com
-nextPassChange|String|Дата/время следующего (планового) изменения пароля сайта qiwi.com
-pinInfo|Object|Данные о PIN-коде к приложению QIWI Кошелька на QIWI терминалах
-pinUsed|Boolean|Логический признак использования PIN-кода (фактически означает, что пользователь заходил в приложение)
-contractInfo|Object| Информация о кошельке пользователя
-blocked|Boolean|Логический признак блокировки кошелька
-contractId|Number|Номер кошелька пользователя
-creationDate|String|Дата/время создания QIWI Кошелька пользователя (через сайт либо мобильноое приложение, либо при первом пополнении, либо другим способом)
-features|Array[Object]|Служебная информация
-identificationInfo|Array[Object]|Данные об [идентификации](https://qiwi.com/settings/account/identification.action) пользователя.
-bankAlias|String|Акроним системы, в которой пользователь получил идентификацию: `QIWI` - QIWI Кошелек.
-identificationLevel|Уровень идентификации: `ANONYMOUS` - без идентификации; `SIMPLE`, `VERIFIED` - упрощенная идентификация; `FULL` - полная идентификация.
-userInfo|Object|Прочие пользовательские данные
-defaultPayCurrency|Number|Код валюты баланса кошелька по умолчанию (number-3 ISO-4217)
-defaultPaySource|Number|Служебная информация
-email|String|E-mail пользователя
-firstTxnId|Number|Номер первой транзакции пользователя после регистрации
-language|String|Служебная информация
-operator|String|Название мобильного оператора номера пользователя
-phoneHash|String|Служебная информация
-promoEnabled|String|Служебная информация
-
-# Checkout  {#invoice}
-
-To use Checkout in  [API QIWI Kassa](https://developer.qiwi.com/en/bill-payments/), you can create authorization key in   [p2p.qiwi.com](https://p2p.qiwi.com) or use this POST request.
-
-This request create keys (PublicKey и SecretKey) and add  Server Notifications in settings.
-
-
-~~~shell
-curl -X POST \
-  https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create \
-  -H 'Authorization: Bearer ec74********' \
-  -H 'Content-Type: application/json' \
-  -H 'cache-control: no-cache' \
-  -d '{"keysPairName":"Name","serverNotificationsUrl":"https://test.com"}'
-~~~
-
-<h3 class="request method">Запрос → POST</h3>
-
-In `Authorization` header use open api token.
-
-<h3>URL <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></h3>
-
-Parameter|Type|Description
---------|----|----
-keysPairName| String| Names Keys
-serverNotificationsUrl|String |URL for Server Notifications
-
-
-
-
-
-# Payments History {#payments}
-
-История платежей и пополнений вашего кошелька.
-
-Тип запроса - GET.
-
-~~~shell
-Пример 1. Последние 10 платежей
-
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=10"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
-
-Пример 2. Платежи за 10.05.2017
-
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00Z&endDate=2017-05-10T23%3A59%3A59Z"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
-
-Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
-
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12:35:23Z"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
-~~~
-
-~~~text
-Пример 1. Последние 10 платежей с рублевого баланса и с привязанной карты
-~~~
-
-~~~http
-GET /payment-history/v1/persons/79112223344/payments?rows=10&operation=OUT&sources[0]=QW_RUB&sources[1]=CARD HTTP/1.1
-Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
-Content-type: application/json
-Host: edge.qiwi.com
-~~~
-
-~~~text
-Пример 2. Платежи за 10.05.2017
-~~~
-
-~~~http
-GET /payment-history/v1/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00Z&endDate=2017-05-10T23%3A59%3A59Z HTTP/1.1
-Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
-Content-type: application/json
-Host: edge.qiwi.com
-~~~
-
-~~~text
-Пример 3. Продолжение списка платежей
-
-(в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23)
-~~~
-
-~~~http
-GET /payment-history/v1/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23Z HTTP/1.1
-Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
-Content-type: application/json
-Host: edge.qiwi.com
-~~~
-
-URL запроса:
-
-`https://edge.qiwi.com/payment-history/v1/persons/<wallet>/payments?<parameters>`
-
-Параметры URL запроса:
-
-* `<wallet>` - номер кошелька, для которого получена авторизация (с международным префиксом, но без `+`), **обязательный параметр**
-* `<parameters>` - дополнительные параметры запроса (см. ниже)
-
-Заголовки запроса:
-
-* `Accept: application/json`
-* `Content-Type: application/json`
-* `Authorization: Bearer ***`
-
-В заголовке `Authorization` указываются [параметры авторизации](#auth_api).
-
-Параметры запроса:
-
-Параметр|Тип|Описание
---------|----|----
-rows | Integer |Число платежей в ответе, для разбивки отчета на части. Целое число от 1 до 50. **Обязательный параметр**
-operation|String| Тип операций в отчете, для отбора. Допустимые значения:<br>`ALL` - все операции, <br>`IN` - только пополнения, <br>`OUT` - только платежи, <br>`QIWI_CARD` - только платежи по картам QIWI (QVC, QVP). <br>По умолчанию `ALL`
-sources|Array[String]|Источники платежа, для отбора. Каждый источник задается как отдельный параметр и нумеруется элементом массива, начиная с нуля (`sources[0]`, `sources[1]` и т.д.). Допустимые значения: <br>`QW_RUB` - рублевый счет кошелька, <br>`QW_USD` - счет кошелька в долларах, <br>`QW_EUR` - счет кошелька в евро, <br>`CARD` - привязанные и непривязанные к кошельку банковские карты, <br>`MK` - счет мобильного оператора. Если не указаны, учитываются все источники
-startDate | DateTime URL-encoded| Начальная дата поиска платежей (формат ГГГГ-ММ-ДДTчч:мм:ссZ). По умолчанию, равен вчерашней дате. **Используется только вместе с `endDate`**
-endDate | DateTime URL-encoded | Конечная дата поиска платежей (формат ГГГГ-ММ-ДДTчч:мм:ссZ). По умолчанию, равен текущей дате. **Используется только вместе с `startDate`**
-nextTxnDate | DateTime URL-encoded| Дата транзакции (формат ГГГГ-ММ-ДДTчч:мм:ссZ), для отсчета от предыдущего списка (см. параметр `nextTxnDate` в ответе). Используется только вместе с `nextTxnId`
-nextTxnId | Long | Номер предшествующей транзакции, для отсчета от предыдущего списка (см. параметр `nextTxnId` в ответе). **Используется только вместе с `nextTxnDate`**
-
-
-<aside class="notice">Максимальный допустимый интервал между startDate и endDate - 90 календарных дней.</aside>
-
-## Формат ответа
-
-~~~json
-{"data":
-  [
-    {
-    "txnId":9309,
-    "personId":79112223344,
-    "date":"2017-01-21T11:41:07+03:00",
-    "errorCode":0,
-    "error":null,
-    "status":"SUCCESS",
-    "type":"OUT",
-    "statusText":"Успешно",
-    "trmTxnId":"1489826461807",
-    "account":"0003***",
-    "sum":{
-        "amount":70,
-        "currency":"RUB"
-        },
-    "commission":{
-        "amount":0,
-        "currency":"RUB"
-        },
-    "total":{
-        "amount":70,
-        "currency":"RUB"
-        },
-    "provider":{
-                       "id":26476,
-                       "shortName":"Yandex.Money",
-                       "longName":"ООО НКО \"Яндекс.Деньги\"",
-                       "logoUrl":"https://static.qiwi.com/img/providers/logoBig/26476_l.png",
-                       "description":"Яндекс.Деньги",
-                       "keys":"***",
-                       "siteUrl":null
-                      },
-    "comment":null,
-    "currencyRate":1,
-    "extras":null,
-    "chequeReady":true,
-    "bankDocumentAvailable":false,
-    "bankDocumentReady":false,
-                "repeatPaymentEnabled":false
-    }
-  ],
-  "nextTxnId":9001,
-  "nextTxnDate":"2017-01-31T15:24:10+03:00"
-}
-~~~
-
-Успешный ответ содержит список платежей из истории кошелька, соответствующих заданному фильтру:
-
-Параметр|Тип|Описание
---------|----|----
-data|Array[Object]|Массив платежей. <br>Число платежей равно параметру `rows` из запроса
-txnId | Integer |ID транзакции в процессинге
-personId|Integer|Номер кошелька
-date|DateTime|Дата/время платежа (в формате ГГГГ-ММ-ДДTчч:мм:ссTMZ)
-errorCode|Integer|Код ошибки платежа
-error| String| Описание ошибки
-status|String|Статус платежа. Возможные значения:<br>`WAITING` - платеж проводится, <br>`SUCCESS` - успешный платеж, <br>`ERROR` - ошибка платежа.
-type | String| Тип платежа (соответствует параметру запроса `operation`)
-statusText|String |Описание статуса платежа
-trmTxnId|String|Клиентский ID транзакции
-account| String|Номер счета получателя
-sum|Object| Объект с суммой платежа. Параметры:
-amount|Decimal|сумма,
-currency|String|валюта
-commission|Object| Объект с комиссией платежа. Параметры:
-amount|Decimal|сумма,
-currency|String|валюта
-total|Object| Объект с общей суммой платежа. Параметры:
-amount|Decimal|сумма,
-currency|String|валюта
-provider|Object| Объект с описанием провайдера. Параметры:
-id|Integer|ID провайдера в процессинге,
-shortName|String|краткое наименование провайдера,
-longName|String|развернутое наименование провайдера,
-logoUrl|String|ссылка на логотип провайдера,
-description|String|описание провайдера (HTML),
-keys|String|список ключевых слов,
-siteUrl|String|сайт провайдера
-comment|String|Комментарий к платежу
-currencyRate|Decimal|Курс конвертации (если применяется в транзакции)
-extras|Object|Дополнительные поля платежа, список не фиксирован
-chequeReady| Boolean|Специальное поле
-bankDocumentAvailable|Boolean|Специальное поле
-bankDocumentReady|Boolean|Специальное поле
-repeatPaymentEnabled|Boolean|Специальное поле
-nextTxnId|Integer|ID следующей транзакции в полном списке
-nextTxnDate|DateTime|Дата/время следующей транзакции в полном списке
-
-## Statistics on payments {#stat}
-
-Для получения статистики по суммам платежей за заданный период используется подзапрос запроса истории.
-
-~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00Z&endDate=2017-03-31T11%3A44%3A15Z"
-  --header "Accept: application/json"
-  --header "Content-Type: application/json"
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
-~~~
-
-~~~http
-GET /payment-history/v1/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00Z&endDate=2017-03-31T11%3A44%3A15Z HTTP/1.1
-Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
-Content-type: application/json
-Host: edge.qiwi.com
-~~~
-
-Тип запроса - GET.
-
-URL запроса:
-
-`https://edge.qiwi.com/payment-history/v1/persons/<wallet>/payments/total?<parameters>`
-
-Заголовки запроса:
-
-* `Accept: application/json`
-* `Content-Type: application/json`
-* `Authorization: Bearer ***`
-
-В заголовке `Authorization` указываются [параметры авторизации](#auth_api).
-
-Параметры URL запроса:
-
-* `<wallet>` - номер кошелька, для которого получена авторизация (с международным префиксом, но без знака "+"), **обязательный параметр**
-* `<parameters>` - дополнительные параметры запроса:
-
-Параметр|Тип |Описание
---------|----|-------
-startDate|DateTime URL-encoded | Начальная дата периода статистики (в формате ГГГГ-ММ-ДДTчч:мм:ссZ). **Обязательный параметр**
-endDate|DateTime URL-encoded| Конечная дата периода статистики (в формате ГГГГ-ММ-ДДTчч:мм:ссZ). **Обязательный параметр**
-operation|String| Тип операций, учитываемых при подсчете статистики. Допустимые значения:<br>`ALL` - все операции, <br>`IN` - только пополнения, <br>`OUT` - только платежи, <br>`QIWI_CARD` - только платежи по картам QIWI (QVC, QVP). <br>По умолчанию `ALL`.|Нет
-sources|Array[String]|Источники платежа, учитываемые при подсчете статистики. Каждый источник задается как отдельный параметр и нумеруется элементом массива, начиная с нуля (`sources[0]`, `sources[1]` и т.д.). Допустимые значения: <br>`QW_RUB` - рублевый счет кошелька, <br>`QW_USD` - счет кошелька в долларах, <br>`QW_EUR` - счет кошелька в евро, <br>`CARD` - привязанные и непривязанные к кошельку банковские карты, <br>`MK` - счет мобильного оператора. Если не указан, учитываются все источники платежа.|Нет
-
-
-<aside class="notice">Максимальный период для выгрузки статистики - 90 календарных дней.</aside>
-
-~~~json
-{
- "incomingTotal":[
-  {
-  "amount":3500,
-  "currency":"RUB"
-  }],
- "outgoingTotal":[
-  {
-  "amount":3497.5,
-  "currency":"RUB"
-  }]
-}
-~~~
-
-Успешный ответ содержит статистику платежей за соответствующий период:
-
-Параметр|Тип|Описание
---------|----|----
-incomingTotal|Array[Object]|Данные о входящих платежах (пополнениях), отдельно по каждой валюте
-amount | Decimal |Сумма пополнений за период
-currency|String|Валюта пополнений
-outgoingTotal|Array[Object]|Данные об исходящих платежах, отдельно по каждой валюте
-amount | Decimal |Сумма платежей за период
-currency|String|Валюта платежей
-
 
 # QIWI Wallet Balances {#balance}
 

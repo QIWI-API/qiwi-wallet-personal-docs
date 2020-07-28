@@ -1,6 +1,8 @@
 
 # Баланс QIWI Кошелька {#balance}
 
+###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_ru.html.md)
+
 ## Список балансов {#balances_list}
 
 Запрос выгружает текущие балансы счетов вашего QIWI Кошелька.
@@ -35,10 +37,9 @@ def balance(login, api_access_token):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
         <ul>
-        <strong>В pathname запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
 </ul>
 
@@ -149,10 +150,9 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
         <ul>
-        <strong>В теле запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li  >
+             <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li  >
         </ul>
 </ul>
 
@@ -183,7 +183,7 @@ HTTP/1.1 201 Created
 Content-Type: application/json
 ~~~
 
-Успешный ответ содержит HTTP-код запроса 201.
+Успешный ответ содержит HTTP-код 201.
 
 ## Запрос доступных счетов {#funding_offer}
 
@@ -207,10 +207,9 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
         <ul>
-        <strong>В теле запроса используется параметр:</strong>
-             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
 </ul>
 
@@ -267,10 +266,9 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL Path <span>/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
         <ul>
-        <strong>В теле запроса используются обязательные параметры:</strong>
-             <li><strong>personId</strong> - номер вашего кошелька (с международным префиксом без <i>+</i>)</li>
+             <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
              <li><strong>accountAlias</strong> - псевдоним счета в кошельке из <a href="#balances_list">списка счетов</a> (параметр <i>accounts[].alias</i> в ответе)</li>
         </ul>
 </ul>
@@ -298,8 +296,8 @@ defaultAccount|Boolean| Признак установки счета по умо
 <h3 class="request">Ответ ←</h3>
 
 ~~~http
-HTTP/1.1 200 OK
+HTTP/1.1 204 Modified
 Content-Type: application/json
 ~~~
 
-Успешный ответ содержит HTTP-код запроса 200.
+Успешный ответ содержит HTTP-код 204.
