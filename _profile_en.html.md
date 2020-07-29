@@ -1,9 +1,9 @@
 
-# User's Profile API {}#profile}
+# User's Profile API {#profile}
 
 ###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_profile_en.html.md)
 
-The request returns information about your profile - a set of user data and settings of your QIWI Wallet.
+The API returns information about your profile - a set of user data and settings of your QIWI Wallet.
 
 <h3 class="request method">Request → GET</h3>
 
@@ -168,16 +168,20 @@ userInfo.phoneHash|String|Service info
 userInfo.promoEnabled|String|Service info
 
 
-
 # Identification API {#identification}
+
+Use methods of this API to identify and check identification status of your wallet in QIWI Wallet service. You need identification to get access to increased limits for balances and transactions.
+
+[Identification details (in Russian)](https://qiwi.com/settings/identification#ru)
+
 
 ## User identification {#ident}
 
-This request allows you to send data to make the simplified identification of your QIWI Wallet.
+This request allows you to start the identification of your QIWI Wallet.
 
 <aside class="warning">It is permissible to identify no more than 5 wallets per owner. See 3.1.1(III) of the <a href="https://static.qiwi.com/ru/doc/oferta_lk.pdf">QIWI Wallet Offer</a></aside>
 
-To obtain simplified wallet status, you must provide the following data about the owner of the wallet:
+To obtain Main wallet status, you must provide the following data about the owner of the wallet:
 
 * The name
 * Series / Passport No.
@@ -227,7 +231,6 @@ Host: edge.qiwi.com
 ~~~python
 import requests
 
-# идентификация
 def get_identification(api_access_token, my_login):
     s = requests.Session()
     s.headers['authorization'] = 'Bearer ' + api_access_token
@@ -312,7 +315,7 @@ Successful JSON response confirms wallet identification data:
 Parameter|Type|Description
 --------|----|----
 id|  Number  | User's QIWI wallet number
-type | String | Current identification level of the wallet:<br>`SIMPLE` - no identification.<br>`VERIFIED` - simplified identification (identification data has been successfully verified).<br>`FULL` – the wallet already got full identification by the provided name, passport and date of birth.
+type | String | Current identification level of the wallet:<br>`SIMPLE` - no identification, wallet status "MINIMAL".<br>`VERIFIED` - wallet status "MAIN"  (identification data has been successfully verified).<br>`FULL` – the wallet already got "FULL" status by the provided personally verified name, passport and date of birth.
 birthDate |String | Date of birth
 firstName|String| User's first name
 middleName|String| User's surname
@@ -325,9 +328,7 @@ oms|String| User's medical insurance number (OMS)
 
 ## Identification data {#ident_data}
 
-Use the request to get masked private data and identification level of your QIWI Wallet.
-
-[Identification details](https://qiwi.com/settings/identification#ru)
+Use the request to get masked private data and identification status of your QIWI Wallet.
 
 <h3 class="request method">Request → GET</h3>
 
@@ -350,6 +351,13 @@ Host: edge.qiwi.com
              <li><strong>wallet</strong> - your QIWI wallet number without <i>+</i> sign</li>
         </ul>
     </li>
+</ul>
+
+<ul class="nestedList url">
+    <li><h3>URL <span>/qw-limits/v1/persons/<a>personId</a>/actual-limits?<a>parameter=value</a></span></h3></li>
+        <ul>
+             <li><strong>personId</strong> - your QIWI wallet number without <i>+</i> sign</li>
+        </ul>
 </ul>
 
 <ul class="nestedList header">
@@ -386,7 +394,7 @@ Successful JSON response contains masked data used for the wallet identification
 Parameter|Type|Description
 --------|----|----
 id|  Number  | User's QIWI wallet number
-type | String | Current identification level of the wallet:<br>`SIMPLE` - no identification.<br>`VERIFIED` - simplified identification (identification data has been successfully verified).<br>`FULL` – the wallet already got full identification by the provided name, passport and date of birth.
+type | String | Current identification level of the wallet:<br>`SIMPLE` - no identification, status "MINIMAL".<br>`VERIFIED` - status "MAIN" (identification data has been successfully verified).<br>`FULL` – "FULL" status, the wallet already got full identification by the provided name, passport and date of birth.
 birthDate |String | Date of birth
 firstName|String| User's first name
 middleName|String| User's surname
@@ -398,7 +406,7 @@ oms|String| User's medical insurance number (OMS) (first and last two digits)
 
 # QIWI Wallet Limits API {#limits}
 
-You can get current limits for operations in your QIWI wallet. Limits apply on amount of the operations.
+By using this API, you can get current limits for operations in your QIWI wallet. Limits apply on amount of the operations.
 
 <h3 class="request method">Request → GET</h3>
 
@@ -418,7 +426,6 @@ Host: edge.qiwi.com
 ~~~python
 import requests
 
-# Все лимиты QIWI Кошелька
 def limits(login, api_access_token):
     types = [ 'TURNOVER', 'REFILL', 'PAYMENTS_P2P', 'PAYMENTS_PROVIDER_INTERNATIONALS', 'PAYMENTS_PROVIDER_PAYOUT', 'WITHDRAW_CASH']
     s = requests.Session()
@@ -433,10 +440,11 @@ def limits(login, api_access_token):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/qw-limits/v1/persons/<a>personId</a>/actual-limits?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/qw-limits/v1/persons/<a>personId</a>/actual-limits?<a>parameter=value</a></span></h3>
         <ul>
              <li><strong>personId</strong> - your QIWI wallet number without <i>+</i> sign</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">

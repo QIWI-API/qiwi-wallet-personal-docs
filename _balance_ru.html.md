@@ -3,6 +3,8 @@
 
 ###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_ru.html.md)
 
+Методы данного API предназначены для управления балансами вашего QIWI кошелька.
+
 ## Список балансов {#balances_list}
 
 Запрос выгружает текущие балансы счетов вашего QIWI Кошелька.
@@ -37,10 +39,11 @@ def balance(login, api_access_token):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3>
         <ul>
              <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -150,10 +153,11 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3>
         <ul>
              <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li  >
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -207,10 +211,11 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3>
         <ul>
              <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -266,11 +271,12 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3>
         <ul>
              <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
              <li><strong>accountAlias</strong> - псевдоним счета в кошельке из <a href="#balances_list">списка счетов</a> (параметр <i>accounts[].alias</i> в ответе)</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">

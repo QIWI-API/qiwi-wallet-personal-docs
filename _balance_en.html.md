@@ -3,6 +3,8 @@
 
 ###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_en.html.md)
 
+API provides methods to control balances of your QIWI wallet.
+
 ## List of balances {#balances_list}
 
 The request provides current balances of your QIWI Wallet.
@@ -37,10 +39,11 @@ def balance(login, api_access_token):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3>
         <ul>
              <li><strong>personId</strong> - your wallet number (without  <i>+</i> sign)</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -150,10 +153,11 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts</span></h3>
         <ul>
-             <li><strong>personId</strong> - your wallet number without <i>+</i> sign</li  >
+             <li><strong>personId</strong> - your wallet number without <i>+</i> sign</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -207,10 +211,11 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/offer</span></h3>
         <ul>
              <li><strong>personId</strong> - your wallet number without <i>+</i> sign</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -266,11 +271,12 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3></li>
+    <li><h3>URL <span>/funding-sources/v2/persons/<a>personId</a>/accounts/<a>accountAlias</a></span></h3>
         <ul>
              <li><strong>personId</strong> - your wallet number without <i>+</i> sign</li>
              <li><strong>accountAlias</strong> - account's alias in the wallet, from <a href="#balances_list">a list</a> (see parameter <i>accounts[].alias</i> in response)</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">

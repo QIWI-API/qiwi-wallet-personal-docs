@@ -3,6 +3,8 @@
 
 ###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_history_en.html.md)
 
+The API gives access to the history of transactions in your QIWI wallet.
+
 ## List of payments {#payments_list}
 
 The request provides a list of payments and top-ups of your wallet. You can use the filter by number, ID and date (date interval) of transactions.
@@ -80,10 +82,11 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3>
         <ul>
              <li><strong>wallet</strong> - your QIWI wallet number without <i>+</i> sign</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -224,10 +227,11 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3>
         <ul>
              <li><strong>wallet</strong> - the number of your QIWI wallet without <i>+</i> sign</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -330,11 +334,12 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3>
         <ul>
              <li><strong>transactionId</strong> - transaction ID from <a href="#history_data">Payments history</a> report (<i>txnId</i> field of Transaction object)</li>
              <li><strong>type</strong> - transaction type from <a href="#history_data">Payments history</a> report (<i>type</i> field of Transaction object). This is optional parameter</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -464,12 +469,13 @@ def payment_history_cheque_file(transaction_id, transaction_type, filename, api_
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3>
         <ul>
              <li><strong>transactionId</strong> - transaction ID from <a href="#history_data">Payments history</a> report (<i>txnId</i> field in Transaction object)</li>
              <li><strong>type</strong> - transaction type from <a href="#history_data">Payments history</a> report (<i>type</i> field in Transaction object)</li>
              <li><strong>format</strong> - file type for receipt export. Possible values: <i>JPEG</i>, <i>PDF</i></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -533,11 +539,12 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3>
         <ul>
         <li><strong>transactionId</strong> - transaction ID from <a href="#history_data">Payments history</a> report (<i>txnId</i> field in Transaction object)</li>
         <li><strong>type</strong> - transaction type from <a href="#history_data">Payments history</a> report (<i>type</i> field in Transaction object)</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -582,9 +589,9 @@ payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', ap
 
 Successful JSON-response contains HTTP result code of file sending operation.
 
-## Data models
+## API data models
 
-### Transaction object {#txnid}
+### Transaction class {#txnid}
 
 Object contains information about existing QIWI Wallet transaction.
 
@@ -600,16 +607,23 @@ status|String| Payment status. Possible values:<br>`WAITING` - payment is proces
 statusText|String | Text description of the status
 trmTxnId|String| Transaction's client ID (assigned on the client device)
 account| String| For payments, recipient's account number. For top-ups, sender's number, terminal's number or top-up agent name
-sum|Object| Payment's amount data. Parameters:
+sum|Object| Payment's amount data.
+-----|-----|-----
 sum.amount|Number(Decimal)|amount,
 sum.currency|String| currency
-commission|Object| Payment's commission data. Parameters:
+-----|-----|-----
+commission|Object| Payment's commission data
+-----|-----|-----
 commission.amount|Number(Decimal)|amount,
 commission.currency|String| currency
-total|Object| Total amount of transaction. Parameters:
+-----|-----|-----
+total|Object| Total amount of transaction.
+-----|-----|-----
 total.amount|Number(Decimal)|amount, it is `sum.amount` plus `commission.amount`,
-total.currency|String| currency
-provider|Object| Provider's data. Parameters:
+total.currency|String| currenc
+-----|-----|-----
+provider|Object| Provider's data
+-----|-----|-----
 provider.id|Integer| Provider ID in QIWI Wallet system,
 provider.shortName|String| Provider's short name,
 provider.longName|String | Provider's extended name,
@@ -617,6 +631,7 @@ provider.logoUrl|String | Provider's logo URL,
 provider.description|String | Provider's description (in HTML),
 provider.keys|String | Provider's keywords list,
 provider.siteUrl|String | Provider's site
+-----|-----|-----
 comment|String | Comment to the payment
 currencyRate|Number(Decimal) | Currency exchange rate (if applied to transaction)
 extras|Object | Service information

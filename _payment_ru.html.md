@@ -68,7 +68,7 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/sinap/providers/<a>id</a>/onlineCommission</span></h3></li>
+    <li><h3>URL <span>/sinap/providers/<a>id</a>/onlineCommission</span></h3>
         <ul>
              <li><strong>id</strong> - идентификатор провайдера. Возможные значения:
              <ul><li>99 - Перевод на QIWI Wallet</li>
@@ -85,6 +85,7 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
              <li><a href="#search">Другие провайдеры</a></li>
              <li>1717 - платеж по банковским реквизитам</a></li></ul></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -175,7 +176,7 @@ Host: qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL  <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL  <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3>
 <ul>
      <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
      <ul><li>99 - Перевод на QIWI Wallet</li>
@@ -189,7 +190,9 @@ Host: qiwi.com
      <li><a href="#search">Идентификаторы других провайдеров</a></li>
      <li>1717 - платеж по банковским реквизитам</li>
      </ul></li>
-</ul></ul>
+</ul>
+</li>
+</ul>
 
 <ul class="nestedList params">
     <li><h3>Параметры</h3><span>В строке запроса указываются параметры отображения платежной формы.</span></li>
@@ -636,10 +639,11 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
         <ul>
                      <li><strong>ID</strong> - идентификатор провайдера. Определяется с помощью <a href="#mnp">проверки мобильного оператора</a></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -812,7 +816,7 @@ def send_card(api_access_token, payment_data):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
         <ul>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
              <ul>
@@ -825,6 +829,7 @@ def send_card(api_access_token, payment_data):
              <li>21012 – Перевод на карту MasterCard</li></ul></li>
              </ul></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -922,7 +927,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
         <ul>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
              <ul><li>464 - Альфа-Банк</li>
@@ -936,6 +941,7 @@ Host: edge.qiwi.com
              <li>1134 - ПАО "МОСКОВСКИЙ КРЕДИТНЫЙ БАНК"</li>
              </ul></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -1032,7 +1038,7 @@ Host: edge.qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
         <ul>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
              <ul><li>313 - ХоумКредит Банк</li>
@@ -1048,6 +1054,7 @@ Host: edge.qiwi.com
              <li>27324 - АО "РАЙФФАЙЗЕНБАНК"</li>
              </ul></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -1150,7 +1157,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3></li>
+    <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
         <ul>
              <li><strong>ID</strong> - идентификатор провайдера. Возможные значения:
              <ul><li>674 - OnLime</li>
@@ -1160,6 +1167,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
              <li><a href="#search">Как найти идентификатор провайдера</a></li>
              </ul></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -1348,10 +1356,11 @@ def qiwi_com_search(search_phrase):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3></li>
+    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3>
         <ul>
              <li><strong>searchPhrase</strong> - строка ключевых слов для поиска провайдера.</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -1405,7 +1414,7 @@ items[].item.id.id | String | Идентификатор провайдера
 
 Предварительное определение оператора мобильного номера выполняется данным запросом. В ответе возвращается идентификатор провайдера для [запроса пополнения телефона](#cell).
 
-<h3 class="request method" id="mnp">Запрос → POST</h3>
+<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action" \
@@ -1505,7 +1514,7 @@ print(mobile_operator(79652468447))
 
 Запрос не требует авторизации.
 
-<h3 class="request method" id="card_check">Запрос → POST</h3>
+<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST "https://qiwi.com/card/detect.action" \
@@ -1547,7 +1556,7 @@ def card_system(card_number):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как formdata.</span>
+    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как <code>formdata</code>.</span>
     </li>
 </ul> 
 
@@ -1606,12 +1615,16 @@ Content-Type: application/json
 Параметр|Тип|Описание|Обяз.
 --------|----|----|------
 id | String |Клиентский ID транзакции (максимум 20 цифр). Должен быть уникальным для каждой транзакции и увеличиваться с каждой последующей транзакцией. Для выполнения этих требований рекомендуется задавать равным 1000*(Standard Unix time в секундах).|+
-sum|Object| Данные о сумме платежа:
+sum|Object| Данные о сумме платежа
+-----|-----|-----
 sum.amount|Number|Сумма (можно указать рубли и копейки, разделитель `.`). Положительное число, округленное до 2 знаков после десятичной точки. При большем числе знаков значение будет округлено до копеек в меньшую сторону.|+
 sum.currency|String|Валюта (только `643`, рубли)|+
-paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet. Содержит следующие параметры:
+-----|-----|-----
+paymentMethod | Object| Объект, определяющий обработку платежа процессингом QIWI Wallet.
+-----|-----|-----
 paymentMethod.type|String |Константа, `Account`|+
 paymentMethod.accountId|String| Константа, `643`|+
+-----|-----|-----
 fields|Object| Реквизиты платежа. Состав полей зависит от провайдера.
 comment|String|Комментарий к платежу. Используется только для [переводов на QIWI кошелек](#p2p) и при [конвертации](#CCY) |-
 
@@ -1676,7 +1689,7 @@ comment| String | Копия параметра `comment` из платежно�
 transaction|Object|Объект с данными о транзакции в процессинге QIWI Wallet. Параметры:
 transaction.id|String|ID транзакции в процессинге QIWI Wallet
 transaction.state|Object|Объект содержит текущее состояние транзакции в процессинге QIWI Wallet. Параметр:
-state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments).
+state.code | String| Текущий статус транзакции, только значение `Accepted` (платеж принят к проведению). Финальный результат транзакции можно узнать в [истории платежей](#payments_history).
 
 
 # Счета {#invoices}

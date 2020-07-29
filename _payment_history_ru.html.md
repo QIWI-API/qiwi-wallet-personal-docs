@@ -80,10 +80,11 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments?<a>parameter=value</a></span></h3>
         <ul>
              <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -226,10 +227,11 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/persons/<a>wallet</a>/payments/total?<a>parameter=value</a></span></h3>
         <ul>
              <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -333,11 +335,12 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3>
         <ul>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
              <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе). Данный параметр является необязательным</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -468,12 +471,13 @@ def payment_history_cheque_file(transaction_id, transaction_type, filename, api_
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/file?<a>type=value&format=value</a></span></h3>
         <ul>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
              <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе)</li>
              <li><strong>format</strong> - тип файла, в который сохраняется квитанция. Допустимые значения: <i>JPEG</i>, <i>PDF</i></li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -537,11 +541,12 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3></li>
+    <li><h3>URL <span>/payment-history/v1/transactions/<a>transactionId</a>/cheque/send?<a>type=value</a></span></h3>
         <ul>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
              <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе)</li>
         </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
@@ -660,23 +665,31 @@ status|String|Статус платежа. Возможные значения:<
 statusText|String |Текстовое описание статуса платежа
 trmTxnId|String|Клиентский ID транзакции
 account| String|Для платежей - номер счета получателя. Для пополнений - номер отправителя, терминала или название агента пополнения кошелька
-sum|Object| Данные о сумме платежа или пополнения. Параметры:
-sum.amount|Number(Decimal)|сумма,
-sum.currency|String|валюта
-commission|Object| Данные о комиссии платежа. Параметры:
-commission.amount|Number(Decimal)|сумма,
+sum|Object| Данные о сумме платежа или пополнения.
+-----|-----|-----
+sum.amount|Number(Decimal)|сумма платежа
+sum.currency|String|валюта платежа
+-----|-----|-----
+commission|Object| Данные о комиссии платежа
+-----|-----|-----
+commission.amount|Number(Decimal)|сумма
 commission.currency|String|валюта
-total|Object| Данные о фактической сумме платежа или пополнения. Параметры:
-total.amount|Number(Decimal)|сумма (равна сумме платежа `sum.amount` и комиссии `commission.amount`),
+-----|-----|-----
+total|Object| Данные о фактической сумме платежа или пополнения.
+-----|-----|-----
+total.amount|Number(Decimal)|сумма (равна сумме платежа `sum.amount` и комиссии `commission.amount`)
 total.currency|String|валюта
-provider|Object| Данные о провайдере. Параметры:
-provider.id|Integer|ID провайдера в QIWI Wallet,
-provider.shortName|String|краткое наименование провайдера,
-provider.longName|String|развернутое наименование провайдера,
-provider.logoUrl|String|ссылка на логотип провайдера,
-provider.description|String|описание провайдера (HTML),
-provider.keys|String|список ключевых слов,
+-----|-----|-----
+provider|Object| Данные о провайдере.
+-----|-----|-----
+provider.id|Integer|ID провайдера в QIWI Wallet
+provider.shortName|String|краткое наименование провайдера
+provider.longName|String|развернутое наименование провайдера
+provider.logoUrl|String|ссылка на логотип провайдера
+provider.description|String|описание провайдера (HTML)
+provider.keys|String|список ключевых слов
 provider.siteUrl|String|сайт провайдера
+-----|-----|-----
 source|Object|Служебная информация
 comment|String|Комментарий к платежу
 currencyRate|Number(Decimal)|Курс конвертации (если применяется в транзакции)
