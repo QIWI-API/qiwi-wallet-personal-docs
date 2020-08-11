@@ -515,3 +515,86 @@ spent|String|Сумма, потраченная по данным операци
 rest|Boolean|Остаток лимита, который можно потратить в данный период (период задается в параметре `interval`)
 interval|Object|Сведения о периоде действия лимита
 interval.dateFrom, interval.dateTill| String| Начало и конец периода, формат даты `ГГГГ-ММ-ДДТЧЧ:ММ:ССtmz`
+
+# Блокировки QIWI Кошелька {#restrictions}
+
+Следующий запрос возвращает список блокировок QIWI кошелька
+
+<h3 class="request method">Запрос → GET</h3>
+
+~~~shell
+user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/persons/79115221133/status/restrictions \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+~~~
+
+~~~http
+GET /person-profile/v1/persons/79115221133/status/restrictions HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+~~~
+
+~~~python
+import requests
+
+# Блокировки
+def get_restrictions(api_access_token, mylogin):
+    s7 = requests.Session()
+    s7.headers['Accept']= 'application/json'
+    s7.headers['authorization'] = 'Bearer ' + api_access_token
+    p = s7.get('https://edge.qiwi.com/person-profile/v1/persons/' + mylogin + '/status/restrictions')
+    return p.json()
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>person-profile/v1/persons/<a>personId</a>/status/restrictions</span></h3>
+                     <ul>
+                          <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
+                     </ul>
+    </li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+[
+    {
+        "restrictionCode": "OUTGOING_PAYMENTS",
+        "restrictionDescription": "Исходящие платежи заблокированы"
+    }
+]
+~~~
+
+~~~python
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+print(get_restrictions(api_access_token, mylogin))
+
+[
+    {
+        "restrictionCode": "OUTGOING_PAYMENTS",
+        "restrictionDescription": "Исходящие платежи заблокированы"
+    }
+]
+~~~
+
+Успешный ответ содержит JSON-массив блокировок кошелька с их описанием
+
+Поле ответа |Тип|Описание
+--------|----|----
+restrictionCode|  String  |Код блокировки
+restrictionDescription|  String  |Описание блокировки
