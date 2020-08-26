@@ -1914,15 +1914,24 @@ state.code | String| Current status of the transaction. Only `Accepted` is retur
 
 # Invoices {#invoices}
 
-## Invoice issue {#invoice}
+Invoice is the universal request for payment or money transfer in QIWI Wallet system.
 
-Для выставления счета на QIWI Кошелек используется протокол [API P2P-счетов](https://developer.qiwi.com/ru/p2p-payments/#create).Для авторизации используется токен P2P. 
+API provides operations of invoice creation (only P2P invoices for money transfer to another QIWI wallet), payment, rejection, and
+also method for requesting list of unpaid invoices issued to your QIWI wallet.
 
-Вы можете получить токен P2P на [p2p.qiwi.com](https://p2p.qiwi.com) в личном кабинете, или использовать представленный ниже запрос. Этим запросом можно также настроить адрес [уведомлений об оплате счетов](https://developer.qiwi.com/ru/p2p-payments/#notification)
+## Invoice issue and P2P token {#invoice}
 
-Данный запрос возвращает пару токенов P2P (для выставления счета при вызове платежной формы и через API, соответственно) в параметрах ответа `PublicKey` и `SecretKey`. Для авторизации используется [токен API QIWI Кошелька](#auth_data).
+You can issue invoices to any QIWI wallet by using [P2P invoices API](https://developer.qiwi.com/ru/p2p-payments/#create). Use special P2P token for authorization in P2P invoices API.
 
-<h3 class="request method">Запрос → POST</h3>
+### How to get P2P token
+
+To get P2P token, authorize on [p2p.qiwi.com](https://p2p.qiwi.com), or use the given request. You may also specify [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) in this request.
+
+The method returns P2P tokens for using with Payment form and with P2P API in `PublicKey` and `SecretKey` fields of the response. 
+
+Use [QIWI Wallet API token](#auth_data) for authorization.
+
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 curl -X POST \
@@ -1944,19 +1953,37 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-<li><h3>URL</h3> <span>https://edge.qiwi.com/widgets-api/api/p2p/protected/keys/create</span></li>
+<li><h3>URL <span>/widgets-api/api/p2p/protected/keys/create</span></h3></li>
 </ul>
 
-Параметр|Тип|Описание
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Authorization: Bearer XXX</li>
+        </ul>
+    </li>
+</ul>
+
+
+<ul class="nestedList params">
+    <li><h3>Parameters</h3><span>Send in JSON-body.</span>
+    </li>
+</ul> 
+
+Parameter|Type|Description
 --------|----|----
-keysPairName| String| Название пары ключей P2P
-serverNotificationsUrl|String |URL для [уведомлений об оплате счетов](https://developer.qiwi.com/ru/p2p-payments/#notification) (необязательный параметр)
+keysPairName| String| Name for the couple of P2P tokens
+serverNotificationsUrl|String | [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) (optional)
 
 ## List of invoices  {#list_invoice}
 
-Метод получения списка неоплаченных счетов вашего кошелька. Список строится в обратном хронологическом порядке. Можно использовать фильтры по времени выставления счета, начальному идентификатору счета.
+API provides the method for getting unpaid invoices issued to your wallet.
+Invoices are placed in the list in reverse chronological order. 
+By default, the list is paginated on 50 elements on each page. You can specify the number of elements on each page.
+You may use filters: invoice creation period of dates and starting invoice ID.
 
-<h3 class="request method">Запрос → GET</h3>
+<h3 class="request method">Request → GET</h3>
 
 ~~~shell
 user@server:~$ curl -X GET --header 'Accept: application/json' \
@@ -1973,33 +2000,33 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/search?statuses=READY_FOR_PAY&rows=50</span></h3></li>
+    <li><h3>URL <span>/checkout-api/api/bill/search?statuses=READY_FOR_PAY&<a>parameter=value</a></span></h3></li>
 </ul>
 
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f</li>
+             <li>Authorization: Bearer XXX</li>
         </ul>
     </li>
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Данные параметры передаются в строке запроса:</span>
+    <li><h3>Parameters</h3><span>Send them in the request query:</span>
     </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter|Type|Description
 --------|----|----
-rows | Integer |Максимальное число счетов в ответе, для разбивки списка на части. Целое число от 1 до 50. По умолчанию возвращается не более 50 счетов.
-statuses|String| Статус неоплаченного счета. Только строка `READY_FOR_PAY`
-min_creation_datetime|Long|Нижняя временная граница для поиска счетов, Unix-time
-max_creation_datetime|Long|Верхняя временная граница для поиска счетов, Unix-time
-next_id|Number|Начальный идентификатор счета для поиска, чтобы возврат списка выполнялся начиная с этого значения
-next_creation_datetime|Long|Начальное время для поиска (возвращаются только счета, выставленные ранее этого времени), Unix-time.
+statuses|String| Unpaid invoice status. Only `READY_FOR_PAY`. Required parameter.
+rows | Integer | Maximum number of invoices to be returned, for list pagination. Integer number from 1 to 50. Default value is 50.
+min_creation_datetime|Long| Lower time limit for invoice search, Unix-time
+max_creation_datetime|Long| Greater time limit for invoice search, Unix-time
+next_id|Number| Starting invoice identifier for invoice search. Only invoices with IDs equal or smaller than this ID are returned. Use it for obtaining next invoices in the paginated list.
+next_creation_datetime|Long| Starting date for invoice search, Unix-time. Only invoices created before this date are returned. Use it for obtaining next invoices in the paginated list.
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -2032,36 +2059,40 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный JSON-ответ содержит список неоплаченных счетов вашего кошелька, соответствующих заданному фильтру:
+Successful JSON response includes a list of unpaid invoices according to the conditions of the request:
 
 <a name="invoice_data"></a>
 
-Параметр|Тип|Описание
+Parameter| Type| Description
 --------|----|----
-bills|Array[Object]|Список платежей. <br>Число платежей равно параметру `rows` из запроса, или максимально 50, если параметр не указан
-bills[].id|Integer|Идентификатор счета в QIWI Кошельке
-bills[].external_id|String| Идентификатор счета у мерчанта
-bills[].creation_datetime|Long|Дата/время создания счета, Unix-time
-bills[].expiration_datetime|Long|Дата/время окончания срока действия счета, Unix-time
-bills[].sum|Object|Сведения о сумме счета
-sum.currency|Integer|Валюта суммы счета
-sum.amount|Number|Сумма счета
-bills[].status|String | Константа, `READY_FOR_PAY`
-bills[].type|String|Константа, `MERCHANT`
-bills[].repetitive|Boolean|Служебное поле
-bills[].provider|Object|Информация о мерчанте
-provider.id|Integer|Идентификатор мерчанта в QIWI
-provider.short_name|String|Сокращенное название мерчанта
-provider.long_name|String|Полное название мерчанта
-provider.logo_url|String|Ссылка на логотип мерчанта
-bills[].comment|String|Комментарий к счету
-bills[].pay_url|String|Ссылка для оплаты счета в интерфейсе QIWI
+bills|Array[Object]|List of invoices.<br>List length is `rows` parameter from the original request, or 50, if it is absent
+bills[].id|Integer| QIWI Wallet invoice ID 
+bills[].external_id|String| Merchant's invoice ID
+bills[].creation_datetime|Long| Date/time of the invoice creation, Unix-time
+bills[].expiration_datetime|Long| Date/time of the invoice expiration, Unix-time
+bills[].sum|Object| Invoice amount data
+---|----|----
+sum.currency|Integer| Invoice currency
+sum.amount|Number| Invoice amount
+---|----|----
+bills[].status|String | Constant, `READY_FOR_PAY`
+bills[].type|String| Cinstant, `MERCHANT`
+bills[].repetitive|Boolean|Service data
+bills[].provider|Object| Merchant information
+---|----|----
+provider.id|Integer| QIWI identifier
+provider.short_name|String| Short name
+provider.long_name|String| Full name
+provider.logo_url|String| Logo URL
+---|----|----
+bills[].comment|String| Invoce comment
+bills[].pay_url|String| URL to pay for the invoice on QIWI Payment Form
 
 ## Invoice payment {#paywallet_invoice}
 
-Выполнение безусловной оплаты счета без SMS-подтверждения.
+The request makes invoice payment immediately without SMS confirmation.
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST --header 'Content-Type: application/json;charset=UTF-8' \
@@ -2088,7 +2119,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/invoice/pay/wallet</span></h3></li>
+    <li><h3>URL <span>/checkout-api/invoice/pay/wallet</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -2096,23 +2127,23 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f</li>
+             <li>Authorization: Bearer XXX</li>
         </ul>
     </li>
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в теле запроса в формате JSON. Все параметры обязательны.</span>
+    <li><h3>Parameters</h3><span>Send JSON in the request body. All parameters are required.</span>
     </li>
 </ul>
 
-Параметр|Тип|Описание
+Parameter|Type|Description
 --------|----|----
-invoice_uid | String |ID счета в QIWI (берется из значения `bills[].id` [данных о счете](#invoice_data)
-currency|String| Валюта суммы счета (берется из значения `bills[].sum.currency` [данных о счете](#invoice_data))
+invoice_uid | String |QIWI invoice ID (take it from `bills[].id` field of [invoice data](#invoice_data)
+currency|String| Invoice currency (take it from `bills[].sum.currency` field of [invoice data](#invoice_data))
 
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -2125,19 +2156,20 @@ Content-Type: application/json
 }
 ~~~
 
-Успешный JSON-ответ содержит статус оплаченного счета:
+Successful response contains JSON with paid invoice status:
 
-Параметр|Тип|Описание
+Field|Type|Description
 --------|----|----
-invoice_status|String|Строка кода статуса оплаты счета, `PAID_STATUS`. Любой другой статус означает неуспех платежной транзакции.
-is_sms_confirm|String|Признак подтверждения по SMS
+invoice_status|String|Invoice payment status, `PAID_STATUS`. Any other status means unsuccessful transaction.
+is_sms_confirm|String|SMS confirmation flag
 
 ## Unpaid invoice cancelling {#cancel_invoice}
 
-Метод отклоняет неоплаченный счет. При этом счет становится недоступным для оплаты.
+The method rejects an unpaid invoice. 
+This makes the account unavailable for payment.
 
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 ~~~shell
 user@server:~$ curl -X POST --header 'Accept: application/json' \
@@ -2160,7 +2192,7 @@ User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://edge.qiwi.com/checkout-api/api/bill/reject</span></h3></li>
+    <li><h3>URL <span>/checkout-api/api/bill/reject</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
@@ -2168,26 +2200,26 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f</li>
+             <li>Authorization: Bearer XXX</li>
         </ul>
     </li>
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Данный обязательный параметр передается в теле запроса в формате JSON:</span>
+    <li><h3>Parameter</h3><span>Required, send it in JSON body:</span>
     </li>
 </ul>
 
 
-Параметр|Тип|Описание
+Parameter|Type|Description
 --------|----|----
-id | Integer |ID счета для отмены (берется из значения `bills[].id` [данных о счете](#invoice_data)
+id | Integer |Invoice ID to reject (take it from `bills[].id` field of [invoice data](#invoice_data)
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
 ~~~
 
-Успешный ответ содержит HTTP-код 200.
+Successful response has HTTP code 200.
