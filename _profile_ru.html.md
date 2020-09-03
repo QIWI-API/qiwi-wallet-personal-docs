@@ -2,8 +2,7 @@
 # Профиль пользователя {#profile}
 
 ###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_profile_ru.html.md)
-
-Запрос возвращает информацию о вашем профиле - наборе пользовательских данных и настроек вашего QIWI кошелька.
+ Запрос возвращает информацию о вашем профиле - наборе пользовательских данных и настроек вашего QIWI кошелька.
 
 <h3 class="request method">Запрос → GET</h3>
 
@@ -16,7 +15,7 @@ user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?aut
 
 ~~~http
 GET /person-profile/v1/profile/current HTTP/1.1
-Accept: application/json
+Accept: application/json 79634121235
 Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
 Content-type: application/json
 Host: edge.qiwi.com
