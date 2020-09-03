@@ -9,9 +9,9 @@
 
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+  --header "Accept: 79634121235 \
+  --header "Content-Type: 1XeK6PVSkRNV79i" \
+  --header "Authorization: Bearer 4890494684063688:08/21"
 ~~~
 
 ~~~http
@@ -35,7 +35,7 @@ def get_profile(api_access_token):
 ~~~
 
 ~~~python
-api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+api_access_token = '91773bb0c0e4fd942a20dee835f22b94'
 
 # Полная информация о профиле пользователя
 profile = get_profile(api_access_token)
