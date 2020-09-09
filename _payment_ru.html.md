@@ -1328,87 +1328,103 @@ fields.toServiceId|String|Служебная информация, конста�
 
 Поиск провайдера может понадобиться, если вы не знаете значения ID провайдера услуг для оплаты по идентификатору пользователя, либо для определения провайдера мобильной связи по номеру телефона или перевода на карту по номеру карты.
 
-### Поиск провайдера по строке
+### Определение провайдера перевода на карту {#card_check}
 
-Используйте API для поиска идентификатора провайдера.
+Определение провайдера перевода на карту выполняется данным запросом. В ответе возвращается идентификатор провайдера для [запроса перевода на карту](#cards).
+
+Запрос не требует авторизации.
 
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
-  --header "Accept: application/json"
+user@server:~$ curl -X POST "https://qiwi.com/card/detect.action" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/x-www-form-urlencoded" \
+  -d "cardNumber=4256********1231"
 ~~~
 
 ~~~http
-POST /search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
-Accept: application/json
+POST /card/detect.action HTTP/1.1
 Host: qiwi.com
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+Cache-Control: no-cache
+
+cardNumber=4256********1231
 ~~~
 
 ~~~python
 import requests
 
-# поиск на qiwi.com - определение id провайдера по названию
-def qiwi_com_search(search_phrase):
+def card_system(card_number):
     s = requests.Session()
-    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
-    return search.json()['data']['items']
+    res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
+    return res.json()['message']
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3>
-        <ul>
-             <li><strong>searchPhrase</strong> - строка ключевых слов для поиска провайдера.</li>
-        </ul>
-    </li>
+    <li><h3>URL <span>https://qiwi.com/card/detect.action</span></h3></li>
 </ul>
 
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
+             <li>Content-type: application/x-www-form-urlencoded</li>
         </ul>
     </li>
 </ul>
 
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как <code>formdata</code>.</span>
+    </li>
+</ul> 
+
+Параметр|Тип|Описание
+--------|----|----
+cardNumber | String |Немаскированный номер карты (без пробелов). Обязательный параметр
 
 <h3 class="request">Ответ ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
-  
+
 {
-  "data": {
-    ...
-    "items": [
-      {
-        "item": {
-          "id": {
-            "id": "120",
-            ...
-          },
-          ...
-        },
-        ...
-      }
-    ]
-  }
+  "code": {
+    "value": "0",
+    "_name": "NORMAL"
+  },
+  "data": null,
+  "message": "1963",
+  "messages": null
 }
 ~~~
 
 ~~~python
-# Поиск провайдера
-prv = qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
-print(prv)
+print(card_system(4890xxxxxxxx1698))
 ~~~
 
-Успешный JSON-ответ содержит идентификаторы найденных провайдеров:
+> Не удалось определить платежную систему карты
 
-Параметр | Тип | Описание
------|----|-----
-data.items | Array | Список провайдеров
-items[].item.id.id | String | Идентификатор провайдера
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "code": {
+        "value": "2",
+        "_name": "ERROR"
+    },
+    "data": null,
+    "message": "Неверно введен номер банковской карты. Попробуйте ввести номер еще раз.",
+    "messages": {}
+}
+~~~
+
+Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор [платежной системы](#cards) находится в параметре `message`.
+
+Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка или платежная система не определена.
 
 ### Определение мобильного оператора {#mnp}
 
@@ -1508,103 +1524,87 @@ print(mobile_operator(79652468447))
 
 Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что невозможно определить оператора.
 
-### Определение провайдера перевода на карту {#card_check}
+### Поиск провайдера по строке
 
-Определение провайдера перевода на карту выполняется данным запросом. В ответе возвращается идентификатор провайдера для [запроса перевода на карту](#cards).
-
-Запрос не требует авторизации.
+Используйте API для поиска идентификатора провайдера.
 
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/card/detect.action" \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  -d "cardNumber=4256********1231"
+user@server:~$ curl -X POST "https://qiwi.com/search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
+  --header "Accept: application/json"
 ~~~
 
 ~~~http
-POST /card/detect.action HTTP/1.1
-Host: qiwi.com
+POST /search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
 Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-Cache-Control: no-cache
-
-cardNumber=4256********1231
+Host: qiwi.com
 ~~~
 
 ~~~python
 import requests
 
-def card_system(card_number):
+# поиск на qiwi.com - определение id провайдера по названию
+def qiwi_com_search(search_phrase):
     s = requests.Session()
-    res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
-    return res.json()['message']
+    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
+    return search.json()['data']['items']
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/card/detect.action</span></h3></li>
+    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3>
+        <ul>
+             <li><strong>searchPhrase</strong> - строка ключевых слов для поиска провайдера.</li>
+        </ul>
+    </li>
 </ul>
 
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Content-type: application/x-www-form-urlencoded</li>
         </ul>
     </li>
 </ul>
 
-<ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметр передается в теле запроса как <code>formdata</code>.</span>
-    </li>
-</ul> 
-
-Параметр|Тип|Описание
---------|----|----
-cardNumber | String |Немаскированный номер карты (без пробелов). Обязательный параметр
 
 <h3 class="request">Ответ ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
-
+  
 {
-  "code": {
-    "value": "0",
-    "_name": "NORMAL"
-  },
-  "data": null,
-  "message": "1963",
-  "messages": null
+  "data": {
+    ...
+    "items": [
+      {
+        "item": {
+          "id": {
+            "id": "120",
+            ...
+          },
+          ...
+        },
+        ...
+      }
+    ]
+  }
 }
 ~~~
 
 ~~~python
-print(card_system(4890xxxxxxxx1698))
+# Поиск провайдера
+prv = qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
+print(prv)
 ~~~
 
-> Не удалось определить платежную систему карты
+Успешный JSON-ответ содержит идентификаторы найденных провайдеров:
 
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "code": {
-        "value": "2",
-        "_name": "ERROR"
-    },
-    "data": null,
-    "message": "Неверно введен номер банковской карты. Попробуйте ввести номер еще раз.",
-    "messages": {}
-}
-~~~
-
-Ответ с HTTP Status 200 и параметром `code.value` = 0 является признаком успешной проверки. Идентификатор [платежной системы](#cards) находится в параметре `message`.
-
-Ответ с HTTP Status 200 и параметром `code.value` = 2 означает, что в номере карты ошибка или платежная система не определена.
+Параметр | Тип | Описание
+-----|----|-----
+data.items | Array | Список провайдеров
+items[].item.id.id | String | Идентификатор провайдера
 
 ## Модели данных API {#payments_model}
 
