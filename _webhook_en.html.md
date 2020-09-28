@@ -3,7 +3,7 @@
 
 ###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_webhook_en.html.md)
 
-> Исходящие платежи - платеж в проведении
+> Outgoing payments - notification of payment in process
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -31,7 +31,7 @@ Host: falcon.com
  "version": "1.0.0"}
 ~~~
 
-> Исходящие платежи - успешный платеж
+> Outgoing payment - notification of successful payment
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -59,7 +59,7 @@ Host: falcon.com
  "version": "1.0.0"}
 ~~~
 
-> Исходящие платежи - неуспешный платеж
+> Outgoing payments - notification of unsuccessful payment
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -87,7 +87,7 @@ Host: falcon.com
  "version": "1.0.0"}
 ~~~
 
-> Входящие платежи - успешный платеж
+> Incoming payment - notification of successful payment
 
 ~~~http
 POST /some-hook.php HTTP/1.1
@@ -119,38 +119,37 @@ Host: falcon.com
  "version": "1.0.0"}
 ~~~
 
+Webhook allows you to receive real-time HTTP notifications of events (outgoing / incoming payments). You need to implement a web service to receive and processing of POST-requests according to the [requests format](#hook_format).
 
-Хуки или уведомления с данными о событии (платеже/пополнении) отправляются на ваш сервер. В настоящее время поддерживаются только вебхуки (webhook) - сообщения, адресованные веб-сервисам. Для приема вебхуков вам необходимо настроить свой сервер на прием и обработку POST-запросов ([Формат запросов](#hook_format)).
+**You need to respond the notification with HTTP 200 OK within 1-2 sec. If QIWI service has no response, it sends next notification in 10 min, then in 1 hour.**
 
-**От вашего сервера успешный ответ 200 OK на входящий запрос должен поступить в течение 1-2 сек. Не дождавшись ответа, сервис КИВИ отправляет еще одно уведомление через 10 минут, потом еще одно через 1 час.**
-
-Пулы IP-адресов, с которых сервисы QIWI отправляют webhook:
+Pools of IP-addresses from which QIWI service sends notifications:
 
 * 79.142.16.0/20
 * 195.189.100.0/22
 * 91.232.230.0/23
 * 91.213.51.0/24
 
-Если ваш сервер обработки вебхуков работает за брандмауэром, необходимо добавить эти IP-адреса в список разрешенных адресов входящих TCP-пакетов.
+If your web service works behinds the firewall, you need to add these IP-addresses to the list of allowed addresses for incoming TCP packets.
 
-## Быстрый старт {#quick_hook}
+## Quick start {#quick_hook}
 
-0. Реализуйте веб-сервис обработки [запросов](#hook_format). Особое внимание обратите на реализацию проверки подписи.
-1. Зарегистрируйте свой обработчик [PUT-запросом](#hook_reg). **Внимание! Длина адреса сервиса обработчика не должна превышать 100 символов.**
-2. Запросите [ключ проверки подписи](#hook_key).
-3. Протестируйте прием запросов вашим обработчиком с помощью [тестового запроса](#hook_test). На зарегистрированный в п.1 сервис придет пустой вебхук.
+0. Implement web service for [webhook requests](#hook_format). Make sure to implement correctly the digital signature verification.
+1. [Register your service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
+2. Request for [signature key](#hook_key).
+3. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 1.
 
-Чтобы сменить адрес сервера для обработки вебхуков:
+To change webhook service URL:
 
-1. Удалите обработчик вебхуков [DELETE-запросом](#hook_remove).
-2. Зарегистрируйте новый обработчик [PUT-запросом](#hook_reg). **Внимание! Длина адреса сервиса обработчика не должна превышать 100 символов.**
-3. Запросите [ключ проверки подписи](#hook_key) для нового обработчика.
-4. Протестируйте прием запросов новым обработчиком с помощью [тестового запроса](#hook_test). На зарегистрированный в п.2 сервис придет пустой вебхук.
+1. [Remove current webhook service](#hook_remove).
+2. [Register new webhook service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
+3. Request for new [signature key](#hook_key).
+4. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 1.
 
 
-## Обработка вебхука {#hook_format}
+## Processing notification {#hook_format}
 
-Каждый вебхук - входящий POST-запрос с JSON-объектом, содержащий данные об одном платеже. Схема объекта:
+Each notification is an incoming POST-request with single payment data in JSON body. JSON scheme is as followed:
 
 
 ~~~http
@@ -186,7 +185,7 @@ Host: falcon.com
 ~~~php
 <?php
 
-//Функция возвращает упорядоченную строку значений параметров webhook и хэш подписи webhook для проверки
+//Procedure returns string of sorted values from notification parameters and signature hash for verification
 function getReqParams(){
 
     //Make sure that it is a POST request.
@@ -210,9 +209,9 @@ function getReqParams(){
       throw new Exception('Test!');
     }
 
-    // Строка параметров
+    // String of parameters
     $reqparams = $decoded['payment']['sum']['currency'] . '|' . $decoded['payment']['sum']['amount'] . '|'. $decoded['payment']['type'] . '|' . $decoded['payment']['account'] . '|' . $decoded['payment']['txnId'];
-    // Подпись из запроса
+    // Signature
     foreach ($decoded as $name=>$value) {
        if ($name == 'hash') {
             $SIGN_REQ = $value;
@@ -222,26 +221,26 @@ function getReqParams(){
     return [$reqparams, $SIGN_REQ];
 }
 
-// Список параметров и подпись
+// Resulted data
 
 $Request = getReqParams();
 
-// Base64 encoded ключ для дешифровки вебхуков (метод /hook/{hookId}/key)
+// Base64 encoded key for decryption (method /hook/{hookId}/key)
 
 $NOTIFY_PWD = "JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=";
 
-// Вычисляем хэш SHA-256 строки параметров и шифруем с ключом для веб-хуков
+// Get SHA-256 hash of the string and encrypt with your webhook key
 
 $reqres = hash_hmac("sha256", $Request[0], base64_decode($NOTIFY_PWD));
 
-// Проверка подписи вебхука
+// Verify signature
 
 if (hash_equals($reqres, $Request[1])) {
     $error = array('response' => 'OK');
 }
 else $error = array('response' => 'error');
 
-//Ответ
+//Response
 
 header('Content-Type: application/json');
 $jsonres = json_encode($error);
@@ -255,10 +254,10 @@ import base64
 import hmac
 import hashlib
 
-# Base64 encoded ключ для расшифровки вебхука (/hook/{hookId}/key)
+# Base64 encoded key (get it with /hook/{hookId}/key request)
 webhook_key_base64 = 'JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc='
 
-# строка параметров
+# notification parameters
 data = '643|1|IN|+79165238345|13353941550'
 
 webhook_key = base64.b64decode(bytes(webhook_key_base64,'utf-8'))
@@ -266,44 +265,64 @@ print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest())
 ~~~
 
 
-Поле | Тип | Описание
+Field | Type | Descirption
 ----|------|-------
-hookId | String (UUID) | Уникальный id хука
-messageId | String (UUID) | Уникальный id отправленного вебхука
-payment | Object | Данные платежа
-payment.txnId | String | ID транзакции в процессинге QIWI Wallet
-payment.account | String | Для платежей - номер счета получателя. Для пополнений - номер отправителя, терминала или название агента пополнения кошелька
-payment.signFields | String | Список полей объекта `payments` (через `,`), которые хешируются алгоритмом HmacSHA256 для проверки хука (см. параметр `hash`)
-payment.personId | Integer | Номер кошелька
-payment.date | String DateTime | Дата/время платежа, в московской временной зоне. Формат даты `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`
-payment.errorCode | String | [Код ошибки платежа](#errorCode)
-payment.type | String | Тип платежа. Возможные значения:<br>`IN` - пополнение, <br>`OUT` - платеж
-payment.status|String|Статус платежа. Возможные значения:<br>`WAITING` - платеж проводится,<br>`SUCCESS` - успешный платеж,<br>`ERROR` - ошибка платежа.
-payment.provider | Integer| ID провайдера QIWI Wallet
-payment.comment | String | Комментарий к транзакции
-payment.sum | Object | Данные о сумме платежа или пополнения. Параметры:
-sum.amount|Number(Decimal)|Сумма
-sum.currency|Integer|Код валюты
-payment.commission|Object| Данные о комиссии для платежа или пополнения. Параметры:
-commission.amount|Number(Decimal)|Сумма
-commission.currency|Integer|Код валюты
-payment.total|Object|Данные об итоговой сумме платежа или пополнения. Параметры:
-total.amount|Number(Decimal)|Сумма
-total.currency|Integer|Код валюты
-test|Boolean|Признак тестового сообщения
-version|String|Версия API
-hash|String| Хэш цифровой подписи вебхука. Как проверить хэш: берутся значения полей из списка payment.signFields (**в том же порядке**) в формате String, конкатенируются с разделителем `|` и шифруются алгоритмом SHA-256 с [ключом проверки подписи](#hook_key). Полученное значение сравнивается с тем, что пришло в поле `hash`.
+hookId | String (UUID) | Unique webhook id
+messageId | String (UUID) | Unique notification id
+payment | Object | Payment data
+payment.txnId | String | QIWI Wallet transaction ID
+payment.account | String | For outgoing payments - recipients account number. For incoming payments - sender number, self-service kiosk number, or top-up agent name
+payment.signFields | String | A list of fields in `payment` object (separated by comma) to use for HmacSHA256 hash calculation of notification signature (see `hash` field)
+payment.personId | Integer | Your wallet number
+payment.date | String DateTime | Payment date/time, in Moscow time zone, as `YYYY-MM-DD'T'hh:mm:ss+03:00`
+payment.errorCode | String | [Payment error code](#errorCode)
+payment.type | String | Payment type:<br>`IN` - wallet topup, <br>`OUT` - payment
+payment.status|String|Payment status:<br>`WAITING` - payment in process,<br>`SUCCESS` - successful payment,<br>`ERROR` - payment error.
+payment.provider | Integer| Provider ID in QIWI Wallet
+payment.comment | String | Transaction comment
+payment.sum | Object | Payment amount data
+----|----|---
+sum.amount|Number(Decimal)|Amount
+sum.currency|Integer|Currency code
+----|----|----
+payment.commission|Object| Payment commission
+----|----|----
+commission.amount|Number(Decimal)|Commission amount
+commission.currency|Integer|Currency code
+----|----|----
+payment.total|Object|Total payment amount
+----|----|----
+total.amount|Number(Decimal)|Amount
+total.currency|Integer|Currency code
+----|----|----
+test|Boolean|Flag indicating test notification
+version|String|Webhook API version
+hash|String| Hash of the notification's digital signature
 
-Пример расшифровки подписи (см. также функцию PHP на вкладке справа):
+### Notification signature verification 
 
-1. По запросу пользователь получает свой ключ, закодированный в Base64: `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
-2. Приходит вебхук `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79165238345","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
-3. Склеиваются требуемые поля платежных данных: `643|1|IN|+79165238345|13353941550`
-4. Поля шифруются методом SHA-256 с раскодированным ключом из п.1. Результат `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0` совпадает с параметром `hash` из запроса.
+To verify signature of a notification, proceed with the following:
+  
+1. Take values of fields specified in  `payment.signFields` field of the notification JSON (**in the same order**) as Strings.
+2. Join them with `|` separator.
+3. Encode the resulted string with SHA-256 and [signature key](#hook_key). 
+4. Compare obtained value with `hash` field of the notification.
 
-## Регистрация обработчика вебхуков {#hook_reg}
+Example of signature verification (see also PHP procedure on the right tab):
 
-<h3 class="request method">Запрос → PUT</h3>
+1. You get [signature key](#hook_key), encoded in Base64: 
+    `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
+2. You get notification:
+    `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79165238345","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
+3. Join values of the fields specified in `signFields` field (`sum.currency,sum.amount,type,account,txnId`):  
+    `643|1|IN|+79165238345|13353941550`
+4. The obtained string is encoded with SHA-256 and the Base64-decoded key from step 1:
+    `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0`
+    Result coincides with `hash` field from the notification. The verification is successful.
+
+## Webhook service registration {#hook_reg}
+
+<h3 class="request method">Request → PUT</h3>
 
 ~~~shell
 curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fecho.fjfalcon.ru%2F&txnType=2" \
@@ -333,17 +352,17 @@ User-Agent: ****
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Параметры передаются в query запроса. Все параметры обязательны.</span>
+    <li><h3>Parameters</h3><span>Send parameters in the request query. All parameters are required.</span>
     </li>
 </ul>
 
-Название|Тип|Описание
+Parameter|Type|Description
 ----|-----|------
-hookType|Integer|Тип хука. Только 1 - вебхук.
-param|URL-encoded|Адрес сервера обработки вебхуков. **Внимание! Длина исходного (не URL-encoded) адреса сервиса обработчика не должна превышать 100 символов.**
-txnType|String|Тип транзакций, по которым будут включены уведомления. Возможные значения:<br>0 - только входящие транзакции (пополнения)<br>1 - только исходящие транзакции (платежи)<br>2 - все транзакции
+hookType|Integer|Webhook type. Only `1`.
+param|URL-encoded| Service URL. **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**
+txnType|String| Choose type of transactions for notifications:<br>0 - only incoming transactions (wallet topup);<br>1 - only outgoing transactions (payments);<br>2 - all transactions
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -359,18 +378,19 @@ Content-Type: application/json
 }
 ~~~
 
-Ответ в формате JSON.
+Response in JSON.
 
-Название|Тип|Описание
+Field|Type|Description
 -----|------|------
-hookId|String|UUID созданного вебхука
-hookParameters|Object|Набор параметров вебхука (только URL)
-hookType|String|Тип вебхука (только WEB)
-txnType|String|Тип транзакций, по которым отсылаются вебхуки (`IN` - входящие, `OUT` - исходящие, `BOTH` - все)
+hookId|String|Webhook service UUID
+hookParameters|Object|Webhook service parameters
+hookParameters.url|String| Webhook service URL
+hookType|String|Webhook type (only `WEB`)
+txnType|String|Transactions type for notifications (`IN` - incoming, `OUT` - outgoing, `BOTH` - all)
 
-## Удаление обработчика вебхуков  {#hook_remove}
+## Remove webhook service registration {#hook_remove}
 
-<h3 class="request method">Запрос → DELETE</h3>
+<h3 class="request method">Request → DELETE</h3>
 
 ~~~shell
 curl -X DELETE "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc" \
@@ -388,7 +408,7 @@ User-Agent: ****
 <ul class="nestedList url">
         <li><h3>URL <span>/payment-notifier/v1/hooks/<a>hookId</a></span></h3></li>
         <ul>
-             <li><strong>hookId</strong> - UUID вебхука</li>
+             <li><strong>hookId</strong> - webhook UUID</li>
         </ul>
 </ul>
 
@@ -403,7 +423,7 @@ User-Agent: ****
 </ul>
 
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -414,17 +434,17 @@ Content-Type: application/json
 }
 ~~~
 
-Формат ответа JSON.
+Response in JSON.
 
-Название|Тип|Описание
+Field|Type|Description
 -----|------|------
-response|String|Описание результата операции
+response|String| Operation result
 
-## Получение секретного ключа {#hook_key}
+## Secret key provision {#hook_key}
 
-Каждый вебхук содержит цифровую подпись сообщения, зашифрованную ключом. Для получения ключа проверки подписи используйте данный запрос.
+Each notification contains digital signature encoded by secret key. Use this request to get the key.
 
-<h3 class="request method">Запрос → GET</h3>
+<h3 class="request method">Request → GET</h3>
 
 
 ~~~shell
@@ -445,7 +465,7 @@ User-Agent: ****
 <ul class="nestedList url">
     <li><h3>URL <span>/payment-notifier/v1/hooks/<a>hookId</a>/key</span></h3></li>
     <ul>
-    <li><strong>hookId</strong> - UUID вебхука</li>
+    <li><strong>hookId</strong> -webhook UUID</li>
     </ul>
 </ul>
 
@@ -458,7 +478,7 @@ User-Agent: ****
     </li>
 </ul>
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 201 Created
@@ -469,17 +489,17 @@ Content-Type: application/json
 }
 ~~~
 
-Формат ответа JSON.
+Response in JSON.
 
-Название|Тип|Описание
+Field|Type|Description
 -----|------|------
-key|String|Base64-закодированный ключ
+key|String| Base64-encoded key 
 
-## Изменение секретного ключа  {#hook_secret}
+## Secret key change {#hook_secret}
 
-Для смены ключа шифрования сообщений вебхука используйте данный запрос.
+Use this request to change the secret key for notifications signature.
 
-<h3 class="request method">Запрос → POST</h3>
+<h3 class="request method">Request → POST</h3>
 
 
 ~~~shell
@@ -499,7 +519,7 @@ User-Agent: ****
 <ul class="nestedList url">
     <li><h3>URL <span>/payment-notifier/v1/hooks/<a>hookId</a>/newkey</span></h3></li>
     <ul>
-    <li><strong>hookId</strong> - UUID вебхука</li>
+    <li><strong>hookId</strong> - webhook UUID</li>
     </ul>
 </ul>
 
@@ -512,7 +532,7 @@ User-Agent: ****
     </li>
 </ul>
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 201 Created
@@ -523,19 +543,17 @@ Content-Type: application/json
 }
 ~~~
 
-Формат ответа JSON.
+Response in JSON.
 
-Название|Тип|Описание
+Field|Type|Description
 -----|------|------
-key|String|Base64-закодированный новый ключ
+key|String|Base64-encoded new key
 
-## Данные об обработчике вебхуков  {#hook_active}
+## Webhook service data  {#hook_active}
 
-Список действующих (активных) обработчиков вебхуков, связанных с вашим кошельком, можно получить данным запросом.
+Use this request to get the active webhook service linked to your wallet.
 
-Так как сейчас используется только один тип хуков - вебхуки, то в ответе содержится только один объект данных.
-
-<h3 class="request method">Запрос → GET</h3>
+<h3 class="request method">Request → GET</h3>
 
 ~~~shell
 curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/active" \
@@ -564,7 +582,7 @@ User-Agent: ****
     </li>
 </ul>
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -580,20 +598,21 @@ Content-Type: application/json
 }
 ~~~
 
-Формат ответа JSON.
+Response in JSON.
 
-Название|Тип|Описание
+Field|Type|Description
 -----|------|------
-hookId|String|UUID действующего обработчика вебхуков
-hookParameters|Object|Набор параметров обработчика (только URL)
-hookType|String|Тип вебхука (только WEB)
-txnType|String|Тип транзакций, по которым отсылаются уведомления (`IN` - входящие, `OUT` - исходящие, `BOTH` - все)
+hookId|String|Active webhook UUID
+hookParameters|Object|Webhook service parameters
+hookParameters.url | String| Webhook URL
+hookType|String|Webhook type (only `WEB`)
+txnType|String|Transactions type for notifications (`IN` - incoming (wallet topup), `OUT` - outgoing (payments), `BOTH` - all)
 
-## Отправка тестового вебхука  {#hook_test}
+## Test webhook service {#hook_test}
 
-Для проверки вашего обработчика вебхуков используйте данный запрос. Запрос отправляется на адрес, указанный в [параметрах действующего обработчика](#hook_active).
+Use this request to test your webhook service. As a result of the request, empty notification is sent to the URL of the [active webhook service](#hook_active).
 
-<h3 class="request method">Запрос → GET</h3>
+<h3 class="request method">Request → GET</h3>
 
 
 ~~~shell
@@ -617,12 +636,12 @@ User-Agent: ****
     <li><h3>HEADERS</h3>
         <ul>
              <li>Authorization: Bearer ***</li>
-             <li>CAccept: application/json</li>
+             <li>Accept: application/json</li>
         </ul>
     </li>
 </ul>
 
-<h3 class="request">Ответ ←</h3>
+<h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
@@ -633,8 +652,8 @@ Content-Type: application/json
 }
 ~~~
 
-Формат ответа JSON.
+Response in JSON.
 
-Название|Тип|Описание
+Field|Type|Description
 -----|------|------
-response|String|Результат запроса
+response|String| Notification on the request

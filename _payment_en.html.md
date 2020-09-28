@@ -73,7 +73,7 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
              <ul><li>99 - QIWI Wallet transfer</li>
              <li>1963 - Visa card transfer (issued by only Russian banks)</li>
              <li>21013 - MasterCard card transfer (issued by only Russian banks)</li>
-             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Georgia, Kazakhstan, Kyrgyzstan, Moldova, Tajikistan, Turkmenistan, Ukraine, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
+             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
              <li>31652 - national payment system MIR card transer</li>
              <li>466 - Tinkoff bank</li>
              <li>464 - Alpha bank</li>
@@ -183,7 +183,7 @@ Host: qiwi.com
 <li>99999 - QIWI Wallet nickname transfer</li>
 <li>1963 - Visa card transfer (issued by only Russian banks)</li>
 <li>21013 - MasterCard card transfer (issued by only Russian banks)</li>
-<li>For credit card issued by Azerbaijan, Armenia, Belarus, Georgia, Kazakhstan, Kyrgyzstan, Moldova, Tajikistan, Turkmenistan, Ukraine, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
+<li>For credit card issued by Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
 <li>31652 - national payment system MIR card transer</li>
 <li>22351 - <a href="https://qiwi.com/cards/qvc">QIWI Virtual card</a> transfer</li>
 <li><a href="#banks">Transfer to bank account</a></li>
@@ -890,7 +890,7 @@ def send_card(api_access_token, payment_data):
              <li>21013 - MasterCard card money transfer (issued by only Russian banks)</li>
              <li>31652 - national payment system MIR card money transfer</li>
              <li>22351 - money transfer to <a href="https://qiwi.com/cards/qvc">QIWI Virtual Card</a></li>
-             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Georgia, Kazakhstan, Kyrgyzstan, Moldova, Tajikistan, Turkmenistan, Ukraine, Uzbekistan:
+             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan:
              <ul><li>1960 – Visa card money transfer</li>
              <li>21012 – MasterCard card money transfer</li>
              </ul>
@@ -914,16 +914,24 @@ def send_card(api_access_token, payment_data):
 </li>
 </ul>
 
+### For ID 1963, 21013, 31652, 22351
+
 Parameter | Type | Description
 --------|----|----
 fields.account| String| Recipient's card number (no spaces)
-fields.rem_name|String| Sender's first name. Required for ID  `1960`, `21012` only
+
+### For ID 1960, 21012
+
+Parameter | Type | Description
+--------|----|----
+fields.account| String| Recipient's card number (no spaces)
+fields.rem_name|String| Sender's first name
 fields.rem_name_f|String| Sender's last name. Required for ID  `1960`, `21012` only
-fields.rec_address|String| Sender's address (no zip code, only text). Required for ID  `1960`, `21012` only
-fields.rec_city|String| Sender's city. Required for ID  `1960`, `21012` only
-fields.rec_country|String| Sender's country. Required for ID  `1960`, `21012` only
-fields.reg_name|String| Recipient's first name. Required for ID  `1960`, `21012` only
-fields.reg_name_f|String| Recipient's last name. Required for ID  `1960`, `21012` only
+fields.rec_address|String| Sender's address (no zip code, only text)
+fields.rec_city|String| Sender's city
+fields.rec_country|String| Sender's country
+fields.reg_name|String| Recipient's first name
+fields.reg_name_f|String| Recipient's last name
 
 <h3 class="request">Response ←</h3>
 
