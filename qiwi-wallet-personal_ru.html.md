@@ -84,7 +84,8 @@ API QIWI Кошелька использует открытый протокол
     * Запрос баланса кошелька - выполнение запросов [баланса](#balance)
     * Просмотр истории платежей - выполнение запросов [истории платежей](#payments_history)
     * Проведение платежей без SMS - выполнение [платежных запросов](#payments) без подтверждения по SMS, [оплата счетов](#pay_invoice), использование [уведомлений](#webhook)
-    ![Token Scopes](/images/apiwallet_token_scopes.jpg)
+    
+     ![Token Scopes](/images/apiwallet_token_scopes.jpg)
 3. Подтвердите согласие на выпуск токена и нажмите **Продолжить**.
     
    ![Token Scopes](/images/apiwallet_confirm.jpg)
