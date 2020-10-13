@@ -104,7 +104,7 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
 </ul>
 
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 rows | Integer | The number of payments in response to break down the report into chunks. It must be from 1 to 50. The request returns a specified number of payments in reverse chronological order, starting from the current date or date in the `startDate` option. **Required**
 operation|String| The type of operations in the report, for selection. Acceptable values:<br>`ALL` - all transactions, <br>`IN` - only top-ups, <br>`OUT` - only payments, <br>`QIWI_CARD` - only payments from QIWI cards (QVC, QVP). <br>By default, `ALL` is used
@@ -248,7 +248,7 @@ def payment_history_summ_dates(my_login, api_access_token, start_Date, end_Date)
     </li>
 </ul>
 
-Parameter| Type | Description
+Name| Type | Description
 --------|----|-------
 startDate|DateTime URL-encoded | Start date of the period, in any time zone `TZD` (date format `YYYY-MM-DD'T'hh:mm:ssTZD`). Time zone must coincide with `endDate` time zone. Designation `TZD`: `+hh:mm` or -`hh:mm` (time shift from GMT). **Required**
 endDate|DateTime URL-encoded| Final date of th period, in any time zone `TZD` (date format `YYYY-MM-DD'T'hh:mm:ssTZD`). Time zone must coincide with `startDate` time zone. Designation `TZD`: `+hh:mm` or -`hh:mm` (time shift from GMT). **Required**
@@ -563,7 +563,7 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
 </ul>
 
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 email|String| Email address
 
@@ -595,7 +595,7 @@ Successful JSON-response contains HTTP result code of file sending operation.
 
 Object contains information about existing QIWI Wallet transaction.
 
-Parameter| Type | Description
+Name| Type | Description
 --------|----|-------
 txnId | Integer | Transaction ID in QIWI Wallet processing
 personId|Integer| Wallet number

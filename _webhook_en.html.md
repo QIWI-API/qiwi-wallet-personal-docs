@@ -356,7 +356,7 @@ User-Agent: ****
     </li>
 </ul>
 
-Parameter|Type|Description
+Name|Type|Description
 ----|-----|------
 hookType|Integer|Webhook type. Only `1`.
 param|URL-encoded| Service URL. **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**

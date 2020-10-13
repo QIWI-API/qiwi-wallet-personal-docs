@@ -102,7 +102,7 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
     </li>
 </ul>
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 account| String| User's identifier (phone number, card/account number, and other entity depending on provider)
 paymentMethod | Object| Object defining payment processing by QIWI Wallet. Includes the following parameters:
@@ -196,7 +196,7 @@ Host: qiwi.com
     <li><h3>Parameters</h3><span>Send in URL query to fill the form fields.</span></li>
 </ul>
 
-Parameter | Type | Description | Form field | Required
+Name | Type | Description | Form field | Required
 ---------|--------|---|----|----
 amountInteger|Integer | Integer part of the payment amount (in rubles). If absent, "Amount" field will be empty. **The number not greater than 99 999 (payment amount limit)** | Anmount | -
 amountFraction|Integer | Fractional part of the payment amount (kopeks). If absent,  Дробная часть суммы платежа (копейки). Если параметр не указан, "Amount" field will be empty.|Сумма | -
@@ -347,7 +347,7 @@ def send_p2p(api_access_token, to_qw, comment, sum_p2p):
     </li>
 </ul>
 
-Parameter|Type|Description|Required
+Name|Type|Description|Required
 --------|----|----|------
 fields.account| String|Wallet number of the recipient |+
 
@@ -392,9 +392,9 @@ print(send_p2p(mylogin,api_access_token,'+79261112233','comment',99.01))
 
 Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-## Conversion {#CCY}
+## Conversion {#exchange}
 
-API method to transfer funds to currency account in QIWI wallet with conversion from your QIWI wallet ruble account. Two transactions are created: conversion between accounts of your QIWI wallet, and transfer to another wallet. You can get currency rates from [another API method](#exchange).
+API method to transfer funds to currency account in QIWI wallet with conversion from your QIWI wallet ruble account. Two transactions are created: conversion between accounts of your QIWI wallet, and transfer to another wallet. You can get currency rates from [another API method](#CCY).
 
 <h3 class="request method">Request → POST</h3>
 
@@ -487,7 +487,7 @@ def exchange(api_access_token, sum_exchange, currency, to_qw):
 </li>
 </ul>
 
-Parameter|Type|Description|Required
+Name|Type|Description|Required
 --------|----|----|------
 fields.account| String|Wallet number for the conversion|+
 
@@ -520,7 +520,7 @@ Content-Type: application/json
 
 Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-## Currency rates {#exchange}
+## Currency rates {#CCY}
 
 API method returns current QIWI Bank currency rates and cross-rates.
 
@@ -612,7 +612,7 @@ Content-Type: application/json
 
 Successful response containt JSON array of currency rates in `result` field. An element of the list corresponds to currency pair:
 
-Parameter|Type|Description
+Response field|Type|Description
 --------|----|----
 from|String| Base currency
 to|String| Quote currency
@@ -709,7 +709,7 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 </li>
 </ul>
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 fields.account| String|Cell phone number to topup (without `8` prefix)
 
@@ -916,13 +916,13 @@ def send_card(api_access_token, payment_data):
 
 ### For ID 1963, 21013, 31652, 22351
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 fields.account| String| Recipient's card number (no spaces)
 
 ### For ID 1960, 21012
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 fields.account| String| Recipient's card number (no spaces)
 fields.rem_name|String| Sender's first name
@@ -1058,7 +1058,7 @@ Host: edge.qiwi.com
 </li>
 </ul>
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 fields.account| String| Recipient's card number (no spaces)
 fields.exp_date| String| Card expiry date, as `MMYY` (for example, `0218`). **Parameter is required for ID 464 and 821.**
@@ -1199,7 +1199,7 @@ Host: edge.qiwi.com
 </li>
 </ul>
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 fields.account| String| Recipient's bank account number
 fields.urgent | String | Quick transfer flag. For `0` - not used; for `1` - make quick transfer by Urgent transfer service of Central Bank of Russia. **Extra commission is paid for quick transfer**
@@ -1337,7 +1337,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
 </li>
 </ul>
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 fields.account| String| User identifier
 
@@ -1474,7 +1474,7 @@ User-Agent: ****
 </li>
 </ul>
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 fields.name|String|Recipient's bank name (escape quotes with `\`)
 fields.extra_to_bik|String| Recipient's bank MFO (BIK)
@@ -1620,7 +1620,7 @@ print(prv)
 
 Successful JSON-response contains IDs of the found QIWI providers:
 
-Parameter | Type | Description
+Response field | Type | Description
 -----|----|-----
 data.items | Array | List of providers
 items[].item.id.id | String | Provider's ID in the array's element
@@ -1677,7 +1677,7 @@ def mobile_operator(phone_number):
     </li>
 </ul>
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 phone | String URL-encoded | Client's mobile phone number, international format without `+`. Required.
 
@@ -1775,7 +1775,7 @@ def card_system(card_number):
     </li>
 </ul> 
 
-Parameter | Type | Description
+Name | Type | Description
 --------|----|----
 cardNumber | String | Full card number (no spaces). Required
 
@@ -1861,7 +1861,7 @@ Response with HTTP Status 200 and `code.value` = 2 means that ID determination i
 
 Object describes payment data for QIWI Wallet provider.
 
-Parameter|Type|Description|Required
+Name|Type|Description|Required
 --------|----|----|------
 id | String | Client transaction ID (max 20 digits). Must be unique for each transaction. Increment with each following transaction. To satisfy these requirements, set it to 1000*(Standard Unix time in seconds).|+
 sum|Object| Payment amount data
@@ -1904,7 +1904,7 @@ comment|String| Payment comment. Used for [QIWI wallet transfer](#p2p) or  [conv
 
 Object describes QIWI wallet transaction data and returns in response from Payment API.
 
-Parameter|Type|Description
+Name|Type|Description
 -----|----|-----
 id | Number | `id` parameter from the original request
 terms | String | QIWI provider ID used for the payment
@@ -1979,7 +1979,7 @@ User-Agent: ****
     </li>
 </ul> 
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 keysPairName| String| Name for the couple of P2P tokens
 serverNotificationsUrl|String | [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) (optional)
@@ -2025,7 +2025,7 @@ User-Agent: ****
     </li>
 </ul>
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 statuses|String| Unpaid invoice status. Only `READY_FOR_PAY`. Required parameter.
 rows | Integer | Maximum number of invoices to be returned, for list pagination. Integer number from 1 to 50. Default value is 50.
@@ -2071,7 +2071,7 @@ Successful JSON response includes a list of unpaid invoices according to the con
 
 <a name="invoice_data"></a>
 
-Parameter| Type| Description
+Response field| Type| Description
 --------|----|----
 bills|Array[Object]|List of invoices.<br>List length is `rows` parameter from the original request, or 50, if it is absent
 bills[].id|Integer| QIWI Wallet invoice ID 
@@ -2145,7 +2145,7 @@ User-Agent: ****
     </li>
 </ul>
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 invoice_uid | String |QIWI invoice ID (take it from `bills[].id` field of [invoice data](#invoice_data)
 currency|String| Invoice currency (take it from `bills[].sum.currency` field of [invoice data](#invoice_data))
@@ -2219,7 +2219,7 @@ User-Agent: ****
 </ul>
 
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 id | Integer |Invoice ID to reject (take it from `bills[].id` field of [invoice data](#invoice_data)
 

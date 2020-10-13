@@ -109,6 +109,15 @@ rubAlias = [x for x in balances if x['alias'] == 'qw_wallet_rub']
 rubBalance = rubAlias[0]['balance']['amount']
 ~~~
 
+> Repeated request when you got empty "balance" object and "hasBalance": true in response
+
+~~~http
+GET /funding-sources/v2/persons/79115221133/accounts?timeout=1000&alias=qw_wallet_rub HTTP/1.1
+Accept: application/json
+Authorization: Bearer YUu2qw048gtdsvlk3iu
+Host: edge.qiwi.com
+~~~
+
 Successful response is JSON array of all active balances of your QIWI wallet used for payment funding:
 
 Response field | Type | Description
@@ -122,7 +131,7 @@ accounts[].hasBalance|Boolean|Flag of actual QIWI Wallet balance (not a linked c
 accounts[].currency | Number| Currency of the balance (number-3 ISO-4217). Only balances in following currencies are returned: 643 - Russian ruble, 840 - USD, 978 - Euro
 accounts[].type|Object| Account information
 type.id, type.title| String| Account title
-accounts[].balance|Object | Balance data.<br>If `null` is returned and  `accounts[].hasBalance` is `true`, repeat the request with additional parameters:<br>`timeout=1000` and `alias="accounts[].alias"` (alias of that balance).<br>For example<br>`GET /funding-sources/v2/persons/79115221133/accounts?timeout=1000&alias=qw_wallet_rub`
+accounts[].balance|Object | Balance data.<br>If `null` is returned and  `accounts[].hasBalance` is `true`, repeat the request with additional parameters:<br>`timeout=1000` and `alias="accounts[].alias"` (alias of that balance)
 balance.amount|Number|Текущий баланс данного счета
 balance.currency | Number| Код валюты баланса (number-3 ISO-4217)
 
@@ -176,7 +185,7 @@ Host: edge.qiwi.com
 </ul>
 
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 alias|String| Alias of the new account (taken from [Available accounts](#funding_offer))
 
@@ -295,7 +304,7 @@ Host: edge.qiwi.com
 </ul>
 
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 defaultAccount|Boolean| Flag of default account
 

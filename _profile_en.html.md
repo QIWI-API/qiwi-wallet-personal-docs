@@ -69,7 +69,7 @@ profile['authInfo']['boundEmail']
     </li>
 </ul>
 
-Parameter|Type |Description
+Name|Type |Description
 --------|----|-------
 authInfoEnabled|Boolean | Flag to get authorization settings.<br>By default, `true`
 contractInfoEnabled|Boolean | Flag to get your QIWI wallet data.<br>By default, `true`
@@ -262,7 +262,7 @@ def get_identification(api_access_token, my_login):
 </ul>
 
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 birthDate|String| Date of birth (in "YYYY-MM-DD" format)
 firstName|String| User's first name
@@ -312,7 +312,7 @@ print(get_identification(api_access_token, mylogin))
 
 Successful JSON response confirms wallet identification data:
 
-Parameter|Type|Description
+Response field|Type|Description
 --------|----|----
 id|  Number  | User's QIWI wallet number
 type | String | Current identification level of the wallet:<br>`SIMPLE` - no identification, wallet status "MINIMAL".<br>`VERIFIED` - wallet status "MAIN"  (identification data has been successfully verified).<br>`FULL` – the wallet already got "FULL" status by the provided personally verified name, passport and date of birth.
@@ -391,7 +391,7 @@ Content-Type: application/json
 
 Successful JSON response contains masked data used for the wallet identification:
 
-Parameter|Type|Description
+Response field|Type|Description
 --------|----|----
 id|  Number  | User's QIWI wallet number
 type | String | Current identification level of the wallet:<br>`SIMPLE` - no identification, status "MINIMAL".<br>`VERIFIED` - status "MAIN" (identification data has been successfully verified).<br>`FULL` – "FULL" status, the wallet already got full identification by the provided name, passport and date of birth.
@@ -462,7 +462,7 @@ def limits(login, api_access_token):
 </ul>
 
 
-Parameter|Type|Description
+Name|Type|Description
 --------|----|----
 types|Array[String]| A list of the types of operations that limits are requested for. Each type is numbered by an array element, starting from zero (`types[0]`, `types[1]`, etc.). Acceptable types of transactions:<br>`REFILL` - balance in the account<br>`TURNOVER` - turnover per month<br>`PAYMENTS_P2P` - transfers to other wallets per month<br>`PAYMENTS_PROVIDER_INTERNATIONALS` - payments to foreign companies per month<br>`PAYMENTS_PROVIDER_PAYOUT` - transfers to bank accounts and cards, wallets of other systems<br>`WITHDRAW_CASH` - cash withdrawals per month.<br>At least one type of operation must be specified.
 
@@ -507,7 +507,7 @@ turnoverLimit = turnoverInfo[0]['rest']
 
 Successful JSON response contains an array of limits for your QIWI wallet operations:
 
-Parameter|Type|Description
+Response field|Type|Description
 --------|----|----
 limits|Object| Limits data
 limits[].'RU'|Array[Object]| An array of limits for operations
