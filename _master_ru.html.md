@@ -4,7 +4,7 @@
 
 API предоставляет доступ к управлению пакетом QIWI Мастер. Данный пакет услуг позволяет выпускать до пяти бесплатных виртуальных карт QIWI и перевыпускать карты неограниченное число раз.
 
-Для вызова методов API вам потребуется токен API QIWI Wallet с правами *Управление виртуальными картами*, *Запрос информации о профиле кошелька*, *Проведение платежей без SMS*. Отметьте данные опции при [выпуске токена API QIWI Wallet](#auth_data). 
+Для вызова методов API вам потребуется токен API QIWI Wallet с разрешениями на действия *Управление виртуальными картами*, *Запрос информации о профиле кошелька*, *Просмотр истории платежей*, *Проведение платежей без SMS*. Отметьте данные разрешения при [выпуске токена API QIWI Wallet](#auth_data). 
 
 ![Token Scopes](/images/apiwallet_token_scopes_qiwi-master.jpg)
 
@@ -127,10 +127,11 @@ print(buy_qiwi_master(mylogin,api_access_token,'+79261112233','comment',99.01))
 ### Создание заказа {#order-card}
 
 ~~~http
-POST https://edge.qiwi.com/cards/v2/persons/78000008024/orders HTTP/1.1
+POST /cards/v2/persons/78000008024/orders HTTP/1.1
 Accept: application/json
 Authorization: Bearer f80f0875d8e45af7bdd244c7df3f1a3f
 Content-Type: application/json
+Host: edge.qiwi.com
 
 {
  "cardAlias": "qvc-cpa"
@@ -151,7 +152,7 @@ Content-Type: application/json
 
 Отправьте POST-запрос с токеном API QIWI кошелька на адрес 
 
-`https://edge.qiwi.com/cards/v2/persons/<номер кошелька>/orders`
+`/cards/v2/persons/<номер кошелька>/orders`
 
 В ссылке запроса укажите номер кошелька с пакетом QIWI Мастер. В теле запроса укажите JSON с параметром:
 
@@ -173,10 +174,11 @@ cardId|String|Не заполняется
 ### Подтверждение заказа
 
 ~~~http
-PUT https://edge.qiwi.com/cards/v2/persons/78000008024/orders/920fa383-6209-4743-a5d1-883f473f7f95/submit HTTP/1.1
+PUT /cards/v2/persons/78000008024/orders/920fa383-6209-4743-a5d1-883f473f7f95/submit HTTP/1.1
 Accept: application/json
 Authorization: Bearer f80f0875d8e45af7bdd244c7df3f1a3f
 Content-Type: application/json
+Host: edge.qiwi.com
 
 ~~~
 
@@ -212,11 +214,11 @@ Content-Type: application/json
 
 Отправьте PUT-запрос с токеном API QIWI кошелька  на адрес:
 
-`https://edge.qiwi.com/cards/v2/persons/<номер кошелька>/orders/<номер заказа из ответа предыдущего шага>/submit`
+`/cards/v2/persons/<номер кошелька>/orders/<номер заказа из ответа предыдущего шага>/submit`
 
 В ссылке запроса укажите номер кошелька с пакетом QIWI Мастер и номер заказа из ответа предыдущего шага (поле `id`). В теле запроса ничего не указывайте.
 
-В ответе придет номер карты (если карта бесплатная) или информация о платеже (если карта платная). Формат ответа - JSON:
+В ответе придет статус заказа. Формат ответа - JSON:
 
 Поле ответа|Тип|Описани
 --------|----|----
@@ -234,10 +236,11 @@ cardId|String|Номер карты. **Не заполняется, если к�
 ### Покупка карты
 
 ~~~http
-POST https://edge.qiwi.com/sinap/api/v2/terms/32064/payments HTTP/1.1
+POST /sinap/api/v2/terms/32064/payments HTTP/1.1
 Accept: application/json
 Authorization: Bearer 68944212761e25f6fce457661cabba6c
 Content-Type: application/json
+Host: edge.qiwi.com
 
 {
  "id": "1600884290004",
@@ -259,7 +262,7 @@ Content-Type: application/json
 
 Отправьте POST-запрос с токеном API QIWI кошелька  на адрес 
 
-`https://edge.qiwi.com/sinap/api/v2/terms/32064/payments`
+`/sinap/api/v2/terms/32064/payments`
 
 В теле запроса передается JSON-объект <a href="#payment_obj">Payment</a>. Набор реквизитов платежа в поле `fields`:
 
@@ -274,12 +277,17 @@ fields.order_id| String| Номер заказа карты из ответа н
 ## Список карт QIWI Мастер {#qiwi-master-list}
 
 ~~~http
-GET https://edge.qiwi.com/cards/v1/cards?vas-alias=qvc-master HTTP/1.1
+GET /cards/v1/cards?vas-alias=qvc-master HTTP/1.1
 Accept: application/json
 Authorization: Bearer b15ba2d82db883697e8a35877e60e680
+Host: edge.qiwi.com
 ~~~
 
 Запрос позволяет вам получить список всех ваших карт, выпущенных в QIWI по тарифу QIWI Мастер.
+
+Отправьте GET-запрос с токеном API QIWI Кошелька на адрес
+
+`/cards/v1/cards/?vas-alias=qvc-master`
 
 ~~~json
 [
@@ -316,50 +324,6 @@ Authorization: Bearer b15ba2d82db883697e8a35877e60e680
       "details": {
         "info": "99 ₽, действует 1 год",
         "description": "",
-        "metaTitle": "Виртуальная карта QIWI — виртуальная карта с привязкой к кошельку",
-        "metaDescription": "",
-        "clearDescription": "Подходит для покупок в интернете. При оплате укажите свое имя английскими буквами или «QIWI CARD».",
-        "orderTitle": "Виртуальная карта QIWI",
-        "design": "PURPLE",
-        "iosLandingUrl": "https://static.qiwi.com/mobile/cards/v1/offer_landings/ios/qvc-paid/index.html",
-        "androidLandingUrl": "qiwi://promo.web?url=https://static.qiwi.com/mobile/cards/showcase/android/v2/landing/qvc-identification/index.html",
-        "images": [
-          {
-            "url": "https://static.qiwi.com/img/qiwi_com/cards/preview/qvc_qm.svg",
-            "width": 76,
-            "height": 48,
-            "ratio": "1x"
-          },
-          ...
-        ],
-        "imagesMin": [
-          {
-            "url": "https://static.qiwi.com/mobile/cards/list/android/v2/qiwi_qvc_cpa.png",
-            "width": 176,
-            "height": 120,
-            "ratio": "1x"
-          }
-        ],
-        "imagesDet": [
-          {
-            "url": "http://static.qiwi.com/mobile/cards/detail/android/v2/1.0x/qiwi_qvc_glitch_front.png",
-            "width": 264,
-            "height": 160,
-            "ratio": "1x"
-          },
-          ...
-        ],
-        "imagesDetBack": [
-          {
-            "url": "http://static.qiwi.com/mobile/cards/detail/android/v2/1.0x/qiwi_qvc_glitch_back.png",
-            "width": 264,
-            "height": 160,
-            "ratio": "1x"
-          }
-        ],
-        "imagesDetIsDarkText": false,
-        "tariffs": [
-        ],
         "tariffLink": "https://static.qiwi.com/qcms/files/1582791401478_5_JJ5vJe1L0szXzKb.pdf",
         "offerLink": "https://static.qiwi.com/ru/doc/qvc.pdf",
         "features": [
@@ -417,7 +381,7 @@ maskedPan | String | Маскированный номер карты (отоб�
 status | String | Текущий статус карты. Возможные значения: "ACTIVE", "SENDED_TO_BANK", "SENDED_TO_USER", "BLOCKED", "UNKNOWN"
 cardExpire |String | Срок действия карты
 cardType | String | Тип карты: "VIRTUAL" (виртуальная), "PLASTIC" (обычная)
-cardAlias | String | Пользовательский псевдоним карты
+cardAlias | String | Пользовательское имя карты
 cardLimit | Object | Лимиты на карту
 -----|-----|------
 value | Number | Значение лимита 
@@ -451,16 +415,19 @@ requisites | Array | Список пар "ключ-значение" с данн
 ## Выписка по карте {#card-payments}
 
 ~~~http
-GET https://edge.qiwi.com/payment-history/v1/persons/78000008024/cards/158618787/statement?from=2020-01-01T00%3A00%3A00%2B03%3A00&till=2020-09-23T23%3A59%3A59%2B03%3A00 HTTP/1.1
+GET /payment-history/v1/persons/78000008024/cards/158618787/statement?from=2020-01-01T00%3A00%3A00%2B03%3A00&till=2020-09-23T23%3A59%3A59%2B03%3A00 HTTP/1.1
 Accept: application/json
 Authorization: Bearer b15ba2d82db883697e8a35877e60e680
+Host: edge.qiwi.com
 ~~~
 
 Запрос позволяет вам получить операции по определенной карте за указанный период в тарифе QIWI Мастер.
 
+<aside class="notice">Выписку можно запросить за период не более 90 дней</aside>
+
 Отправьте GET-запрос с токеном API QIWI Кошелька на адрес:
 
-`https://edge.qiwi.com/payment-history/v1/persons/<номер пользователя>/cards/<ID карты>/statement?from=<дата начала>&till=<дата окончания>`
+`/payment-history/v1/persons/<номер пользователя>/cards/<ID карты>/statement?from=<дата начала>&till=<дата окончания>`
 
 В ссылке укажите номер кошелька, ID карты, полученный при выпуске или из ответа на запрос списка карт, и интервал дат для выписки.
 
@@ -469,16 +436,17 @@ Authorization: Bearer b15ba2d82db883697e8a35877e60e680
 ## Блокировка карты {#card-block}
 
 ~~~http
-PUT https://edge.qiwi.com/cards/v1/cards/158619365/block HTTP/1.1
+PUT /cards/v1/cards/158619365/block HTTP/1.1
 Accept: application/json
 Authorization: Bearer 68944212761e25f6fce457661cabba6c
+Host: edge.qiwi.com
 ~~~
 
 Запрос позволяет вам заблокировать выбранную карту тарифа QIWI Мастер. 
  
 Отправьте PUT-запрос с токеном API QIWI Кошелька на адрес:
 
-`https://edge.qiwi.com/cards/v1/cards/<ID карты>/block`
+`/cards/v1/cards/<ID карты>/block`
 
  В ссылке укажите ID карты, полученный при выпуске или из ответа на запрос списка карт.
  
@@ -493,10 +461,11 @@ Authorization: Bearer 68944212761e25f6fce457661cabba6c
 ## Получение реквизитов карты {#card-details}
 
 ~~~http
-PUT https://edge.qiwi.com/cards/v1/cards/158619365/details HTTP/1.1
+PUT /cards/v1/cards/158619365/details HTTP/1.1
 Accept: application/json
 Authorization: Bearer 68944212761e25f6fce457661cabba6c
 Content-Type: application/json
+Host: edge.qiwi.com
 
 {
    "operationId": "43555447-a026-4c17-b56d-6956a09249c9"
@@ -506,7 +475,7 @@ Content-Type: application/json
 
 Отправьте PUT-запрос с токеном API QIWI Кошелька на адрес
 
-`https://edge.qiwi.com/cards/v1/cards/<ID карты>/details`
+`/cards/v1/cards/<ID карты>/details`
 
 В теле запроса укажите JSON с параметром:
 
@@ -521,4 +490,38 @@ operationId| String|Произвольный UUID|+
 status | String | Статус операции ("OK", "FAIL", "CONFIRMATION_REQUIRED", "CONFIRMATION_LIMIT_EXCEED")
 cvv	| String | CVV карты
 pan | String | PAN карты	
+errorCode	| String | Код ошибки
+
+
+## Переименование карты {#qvc-rename}
+
+
+~~~http
+PUT /cards/v1/cards/158619365/alias HTTP/1.1
+Accept: application/json
+Authorization: Bearer 68944212761e25f6fce457661cabba6c
+Content-Type: application/json
+Host: edge.qiwi.com
+
+{
+   "alias": "new card name"
+}
+~~~
+
+Отправьте PUT-запрос с токеном API QIWI Кошелька на адрес
+
+`/cards/v1/cards/<ID карты>/alias`
+
+В теле запроса укажите JSON с параметром:
+
+Название|Тип|Описание|Обяз.
+--------|----|----|------
+alias| String|Новое пользовательское имя карты|+
+
+В ответ придет JSON со статусом операции.
+
+Поле ответа | Тип | Описание
+----|-----|-----
+status | String | Статус операции ("OK", "FAIL")
+error	| String | Текстовое описание ошибки
 errorCode	| String | Код ошибки
