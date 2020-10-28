@@ -171,7 +171,7 @@ price|Object|Не заполняется
 cardId|String|Не заполняется
 
 
-### Подтверждение заказа
+### Подтверждение заказа {#card-order-confirm}
 
 ~~~http
 PUT /cards/v2/persons/78000008024/orders/920fa383-6209-4743-a5d1-883f473f7f95/submit HTTP/1.1
@@ -233,7 +233,7 @@ currency|Number|Валюта платежа
 cardId|String|Номер карты. **Не заполняется, если карта платная**.
 
 
-### Покупка карты
+### Покупка карты {#card-buy}
 
 ~~~http
 POST /sinap/api/v2/terms/32064/payments HTTP/1.1

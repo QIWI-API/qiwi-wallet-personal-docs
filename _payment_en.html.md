@@ -689,7 +689,7 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
         <ul>
-             <li><strong>ID</strong> - QIWI provider identifier. <a href="#mnp">Get provider ID</a></li>
+             <li><strong>ID</strong> - QIWI provider identifier. <a href="#mnp">How to get provider ID</a></li>
         </ul>
     </li>
 </ul>
@@ -971,7 +971,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 To make money transfer to bank cards/accounts of persons opened in Russian banks, use the following methods.
 
-### Card nunmber transfer
+### Transfer to card number {#card-transfer-bank}
 
 The request makes money transfer to cards issued by Russian banks.
 
@@ -1100,7 +1100,7 @@ Content-Type: application/json
 Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
 
-### Bank account transfer
+### Transfer to bank account {#transfer-bank-account}
 
 The request makes money transfer to personal accounts opened in Russian banks. You can use quick transfer service (within an hour if transaction is made from 9:00 until 19:30).
 
@@ -1316,7 +1316,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
              <li>Other Internet providers</li>
              <li>1239 - Podari zhizn Charitable Foundation</li>
              <li>Other charitable foundations identifiers</li>
-             <li><a href="#search">How to find a service provider identifier</a></li>
+             <li><a href="#provider-search">How to find a service provider identifier</a></li>
              </ul></li>
         </ul>
     </li>
@@ -1543,9 +1543,9 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## QIWI provider search {#search}
 
-## Search by string
+### Search by string {#provider-search}
 
-Use API for searching QIWI provider's ID in [payment methods](#services).
+Use this API method for searching QIWI provider's ID in [payment methods](#services).
 
 <h3 class="request method">Request → POST</h3>
 
