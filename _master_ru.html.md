@@ -389,7 +389,7 @@ currencyCode | Number | Код валюты по ISO
 ----|---|---
 activated | String | Дата активации карты
 smsResended | String | Дата высылки СМС с реквизитами
-postNumber | String | Номер почтового отправления (для обычных карт)
+postNumber | String | Номер почтового отправления (для пластиковых карт)
 blockedDate | String | Дата блокировки
 txnId | String | ID транзакции заказа карты
 cardExpireMonth | String | Месяц окончания действия карты
@@ -431,12 +431,12 @@ Host: edge.qiwi.com
 
 В ссылке укажите номер кошелька, ID карты, полученный при выпуске или из ответа на запрос списка карт, и интервал дат для выписки.
 
-Успешный JSON-ответ содержит файл с выпиской формата PDF в бинарном виде.
+Успешный ответ содержит файл с выпиской формата PDF в бинарном виде в формате (application/pdf).
 
 ## Блокировка карты {#card-block}
 
 ~~~http
-PUT /cards/v1/cards/158619365/block HTTP/1.1
+PUT /cards/v2/persons/78000006047/cards/70590106/block HTTP/1.1
 Accept: application/json
 Authorization: Bearer 68944212761e25f6fce457661cabba6c
 Host: edge.qiwi.com
@@ -446,18 +446,49 @@ Host: edge.qiwi.com
  
 Отправьте PUT-запрос с токеном API QIWI Кошелька на адрес:
 
-`/cards/v1/cards/<ID карты>/block`
+`/cards/v2/persons/<номер пользователя>/cards/<ID карты>/block`
 
- В ссылке укажите ID карты, полученный при выпуске или из ответа на запрос списка карт.
+В ссылке укажите номер кошелька, ID карты, полученный при выпуске или из ответа на запрос списка карт.
  
- В ответе придет JSON с результатом операции:
+<h3 class="request">Ответ ←</h3>
  
- Поле ответа | Тип | Описание
- ----|-----|-----
- status | String | Статус выполнения запроса (OK, FAIL)
- error | String | Описание ошибки
+ ~~~http
+ HTTP/1.1 202 Accepted
+ Content-Type: application/json
+ ~~~
+
+Успешный ответ содержит HTTP-код 202.
 
  
+## Разблокировка карты {#card-unblock}
+
+~~~http
+PUT /cards/v2/persons/78000006047/cards/111887288/unblock HTTP/1.1
+Accept: application/json
+Authorization: Bearer 68944212761e25f6fce457661cabba6c
+Host: edge.qiwi.com
+~~~
+
+Запрос позволяет вам разблокировать выбранную карту.
+
+<aside class="notice">Разблокировка доступна в течение 90 дней с момента блокировки карты по v2 версии API</aside>
+
+Отправьте PUT-запрос с токеном API QIWI Кошелька на адрес:
+
+`/cards/v2/persons/<номер пользователя>/cards/<ID карты>/unblock`
+
+В ссылке укажите номер кошелька, ID карты, полученный при выпуске или из ответа на запрос списка карт.
+
+В ответ придет JSON со статусом операции.
+
+Поле ответа | Тип | Описание
+----|-----|-----
+status | String | Статус операции ("OK", "FAIL", "CONFIRMATION_REQUIRED", "CONFIRMATION_LIMIT_EXCEED")
+confirmationId	| String | ID подтверждения (null для API)
+operationId | String | ID операции (null для API)
+nextConfirmationRequest	| String | Дата следующей возможности запросить подтверждение (null для API)
+
+
 ## Получение реквизитов карты {#card-details}
 
 ~~~http
