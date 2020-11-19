@@ -65,7 +65,7 @@ API QIWI Кошелька позволяет автоматизировать п
 
 Для успешного вызова методов API необходимы:
 
-* Корректные заголовки `Accept` и `Content-Type`. API QIWI Кошелька поддерживает только один MIME-тип: `application/json`. Любое другое значение приведет к [ошибке формата данных](#errors).
+* Корректные значения HTTP-заголовков `Accept` и `Content-Type` в запросе. API QIWI Кошелька поддерживает только один MIME-тип: `application/json`. Любое другое значение приведет к [ошибке формата данных](#errors).
 * URL, составленный согласно требованиям к нужному запросу.
 * OAuth-токен, выданный вам для доступа к вашему QIWI кошельку. Для некоторых запросов его не потребуется.
 
@@ -103,7 +103,9 @@ API QIWI Кошелька использует открытый протокол
 ## Пример вызова API {#auth_ex}
 
 ~~~shell
-user@server:~$ curl "адрес сервера"
+user@server:~$ curl "адрес сервера" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
   --header "Authorization: Bearer jMyN22DQxMjM6NDUzRmRnZDQ0Mw11212e"
 ~~~
 
