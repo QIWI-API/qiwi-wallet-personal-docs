@@ -7,6 +7,8 @@ metatitle: API QIWI Кошелька
 
 metadescription: API QIWI Кошелька позволяет автоматизировать выполнение платежей и получение отчетов о платежах, информации о счёте, идентификации.
 
+category: apiqiwiwallet
+
 language_tabs:
   - shell: cURL
   - php: PHP

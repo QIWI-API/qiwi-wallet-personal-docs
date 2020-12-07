@@ -7,6 +7,8 @@ metatitle: QIWI Wallet API
 
 metadescription: QIWI Wallet API  allows you to access your QIWI Wallet account information and make payment operations as well as get payment reports and many more.
 
+category: apiqiwiwallet
+
 language_tabs:
   - shell: cURL
   - php: PHP
