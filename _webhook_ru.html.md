@@ -611,7 +611,7 @@ txnType|String|Тип транзакций, по которым отсылают
 
 ## Отправка тестового уведомления  {#hook_test}
 
-Для проверки вашего обработчика вебхуков используйте данный запрос. Уведомление отправляется на адрес, указанный в [параметрах действующего обработчика](#hook_active).
+Для проверки вашего обработчика вебхуков используйте данный запрос. Тестовое уведомление отправляется на адрес, указанный в [параметрах действующего обработчика](#hook_active).
 
 <h3 class="request method">Запрос → GET</h3>
 
@@ -623,7 +623,7 @@ curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
 ~~~
 
 ~~~http
-POST /payment-notifier/v1/hooks/test HTTP/1.1
+GET /payment-notifier/v1/hooks/test HTTP/1.1
 Host: edge.qiwi.com
 Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
 User-Agent: ****

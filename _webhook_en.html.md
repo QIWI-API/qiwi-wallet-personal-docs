@@ -610,7 +610,7 @@ txnType|String|Transactions type for notifications (`IN` - incoming (wallet topu
 
 ## Test webhook service {#hook_test}
 
-Use this request to test your webhook service. As a result of the request, empty notification is sent to the URL of the [active webhook service](#hook_active).
+Use this request to test your webhook service. As a result of the request, empty test notification is sent to the URL of the [active webhook service](#hook_active).
 
 <h3 class="request method">Request → GET</h3>
 
@@ -622,7 +622,7 @@ curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
 ~~~
 
 ~~~http
-POST /payment-notifier/v1/hooks/test HTTP/1.1
+GET /payment-notifier/v1/hooks/test HTTP/1.1
 Host: edge.qiwi.com
 Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
 User-Agent: ****
