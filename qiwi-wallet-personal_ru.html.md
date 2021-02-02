@@ -10,10 +10,10 @@ metadescription: API QIWI Кошелька позволяет автоматиз
 category: apiqiwiwallet
 
 language_tabs:
+  - http: Запрос/ответ
   - shell: cURL
   - php: PHP
   - python: Python
-  - http: Запрос/ответ
 
 toc_footers:
  - <a href='/ru/qiwi-wallet-api-release-notes/index.html'>Список изменений</a>
