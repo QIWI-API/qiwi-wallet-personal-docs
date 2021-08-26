@@ -158,7 +158,7 @@ contractInfo.identificationInfo|Array[Object]|User's [identification data](https
 identificationInfo[].bankAlias|String|String's acronym of the system, in which the user has received the identification::<br> `QIWI` - QIWI Wallet.
 identificationInfo[].identificationLevel|String|Current level of the wallet identification. Possible values:<br>`ANONYMOUS` - no identification;<br> `SIMPLE`, `VERIFIED` - simplified identification;<br> `FULL` - full identification.
 userInfo|Object|Other user data. The object may be missing, depending on the `userInfoEnabled` parameter in the request.
-userInfo.defaultPayCurrency|Number|Default wallet balance currency code (number-3 ISO-4217)
+userInfo.defaultPayCurrency|Number(3)|Default wallet balance currency code (ISO-4217)
 userInfo.defaultPaySource|Number|Service info
 userInfo.email|String|User's e-mail
 userInfo.firstTxnId|Number|Identifier of the first transaction after registration

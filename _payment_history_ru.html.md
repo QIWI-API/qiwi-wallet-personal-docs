@@ -134,15 +134,15 @@ Content-Type: application/json
     "account":"0003***",
     "sum":{
         "amount":70,
-        "currency":"RUB"
+        "currency":643
         },
     "commission":{
         "amount":0,
-        "currency":"RUB"
+        "currency":643
         },
     "total":{
         "amount":70,
-        "currency":"RUB"
+        "currency":643
         },
     "provider":{
       ...
@@ -266,12 +266,12 @@ Content-Type: application/json
  "incomingTotal":[
   {
   "amount":3500,
-  "currency":"RUB"
+  "currency":643
   }],
  "outgoingTotal":[
   {
   "amount":3497.5,
-  "currency":"RUB"
+  "currency":643
   }]
 }
 ~~~
@@ -294,12 +294,12 @@ print(payment_history_summ_dates(mylogin, api_access_token, '2019-04-12T00:00:00
 
 Поле ответа|Тип|Описание
 --------|----|----
-incomingTotal|Array[Object]|Данные о входящих платежах (пополнениях), отдельно по каждой валюте
+incomingTotal|Array[Object]|Массив данных о суммах входящих платежей (пополнениях) по каждой валюте
 incomingTotal[].amount | Number(Decimal) |Сумма пополнений за период
-incomingTotal[].currency|String|Валюта пополнений
-outgoingTotal|Array[Object]|Данные об исходящих платежах, отдельно по каждой валюте
+incomingTotal[].currency|Number(3)|Код валюты пополнений (ISO-4217)
+outgoingTotal|Array[Object]|Массив данных о суммах исходящих платежей по каждой валюте
 outgoingTotal[].amount | Number(Decimal) |Сумма платежей за период
-outgoingTotal[].currency|String|Валюта платежей
+outgoingTotal[].currency|Number(3)|Код валюты платежей (ISO-4217)
 
 ## Информация о транзакции {#txn_info}
 
@@ -668,17 +668,17 @@ account| String|Для платежей - номер счета получате
 sum|Object| Данные о сумме платежа или пополнения.
 -----|-----|-----
 sum.amount|Number(Decimal)|сумма платежа
-sum.currency|String|валюта платежа
+sum.currency|Number(3)|валюта платежа (код по ISO-4217)
 -----|-----|-----
 commission|Object| Данные о комиссии платежа
 -----|-----|-----
 commission.amount|Number(Decimal)|сумма
-commission.currency|String|валюта
+commission.currency|Number(3)|валюта (код по ISO-4217)
 -----|-----|-----
 total|Object| Данные о фактической сумме платежа или пополнения.
 -----|-----|-----
 total.amount|Number(Decimal)|сумма (равна сумме платежа `sum.amount` и комиссии `commission.amount`)
-total.currency|String|валюта
+total.currency|Number(3)|валюта (код по ISO-4217)
 -----|-----|-----
 provider|Object| Данные о провайдере.
 -----|-----|-----

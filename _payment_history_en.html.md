@@ -134,15 +134,15 @@ Content-Type: application/json
     "account":"0003***",
     "sum":{
         "amount":70,
-        "currency":"RUB"
+        "currency":643
         },
     "commission":{
         "amount":0,
-        "currency":"RUB"
+        "currency":643
         },
     "total":{
         "amount":70,
-        "currency":"RUB"
+        "currency":643
         },
     "provider":{
       ...
@@ -266,12 +266,12 @@ Content-Type: application/json
  "incomingTotal":[
   {
   "amount":3500,
-  "currency":"RUB"
+  "currency":643
   }],
  "outgoingTotal":[
   {
   "amount":3497.5,
-  "currency":"RUB"
+  "currency":643
   }]
 }
 ~~~
@@ -293,12 +293,12 @@ Successful JSON-response contains statistics data for a specified period:
 
 Field| Type | Description
 --------|----|----
-incomingTotal|Array[Object]| Incoming payments (top-ups) data. Each object corresponds to a specific currency
+incomingTotal|Array[Object]| Array of total amounts of incoming payments (top-up payments) separated by payment's currency
 incomingTotal[].amount | Number(Decimal) |Top-ups amount for the period
-incomingTotal[].currency|String| Currency of the operations
-outgoingTotal|Array[Object]| Payments data. Each object corresponds to a specific currency
+incomingTotal[].currency|Number(3)| Currency of the operations (ISO-4217)
+outgoingTotal|Array[Object]| Array of total amounts of payments separated by payment's currency
 outgoingTotal[].amount | Number(Decimal) | Payments amount for the period
-outgoingTotal[].currency|String| Currency of the operations
+outgoingTotal[].currency|Number(3)| Currency of the operations (ISO-4217)
 
 ## Transaction details {#txn_info}
 
@@ -610,17 +610,17 @@ account| String| For payments, recipient's account number. For top-ups, sender's
 sum|Object| Payment's amount data.
 -----|-----|-----
 sum.amount|Number(Decimal)|amount,
-sum.currency|String| currency
+sum.currency|Number(3)| currency (ISO-4217)
 -----|-----|-----
 commission|Object| Payment's commission data
 -----|-----|-----
 commission.amount|Number(Decimal)|amount,
-commission.currency|String| currency
+commission.currency|Number(3)| currency (ISO-4217)
 -----|-----|-----
 total|Object| Total amount of transaction.
 -----|-----|-----
 total.amount|Number(Decimal)|amount, it is `sum.amount` plus `commission.amount`,
-total.currency|String| currenc
+total.currency|Number(3)| currency  (ISO-4217)
 -----|-----|-----
 provider|Object| Provider's data
 -----|-----|-----

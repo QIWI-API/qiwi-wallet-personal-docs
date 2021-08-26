@@ -128,12 +128,12 @@ accounts[].fsAlias | String |  Bank account alias
 accounts[].bankAlias | String | Bank alias
 accounts[].title|String| Wallet account name
 accounts[].hasBalance|Boolean|Flag of actual QIWI Wallet balance (not a linked card or cell phone balance or something like that)
-accounts[].currency | Number| Currency of the balance (number-3 ISO-4217). Only balances in following currencies are returned: 643 - Russian ruble, 840 - USD, 978 - Euro
+accounts[].currency | Number(3)| Currency of the balance (ISO-4217). Only balances in following currencies are returned: `643` - Russian ruble, `840` - USD, `978` - Euro
 accounts[].type|Object| Account information
 type.id, type.title| String| Account title
 accounts[].balance|Object | Balance data.<br>If `null` is returned and  `accounts[].hasBalance` is `true`, repeat the request with additional parameters:<br>`timeout=1000` and `alias="accounts[].alias"` (alias of that balance)
 balance.amount|Number|Текущий баланс данного счета
-balance.currency | Number| Код валюты баланса (number-3 ISO-4217)
+balance.currency | Number(3)| Код валюты баланса (ISO-4217)
 
 ## Creating balance {#balance_create}
 
@@ -251,7 +251,7 @@ Response field|Type|Description
 --------|----|----
 {} | Object | List of accounts
 Object.alias|String|Alias of the account
-Object.currency|Integer|Account's currency ID
+Object.currency|Number(3)|Account's currency code (ISO-4217)
 
 ## Default balance  {#default_balance}
 

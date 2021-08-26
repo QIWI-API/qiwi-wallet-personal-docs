@@ -283,13 +283,13 @@ payment.provider | Integer| ID провайдера QIWI Wallet
 payment.comment | String | Комментарий к транзакции
 payment.sum | Object | Данные о сумме платежа или пополнения. Параметры:
 sum.amount|Number(Decimal)|Сумма
-sum.currency|Integer|Код валюты
+sum.currency|Number(3)|Код валюты
 payment.commission|Object| Данные о комиссии для платежа или пополнения. Параметры:
 commission.amount|Number(Decimal)|Сумма
-commission.currency|Integer|Код валюты
+commission.currency|Number(3)|Код валюты
 payment.total|Object|Данные об итоговой сумме платежа или пополнения. Параметры:
 total.amount|Number(Decimal)|Сумма
-total.currency|Integer|Код валюты
+total.currency|Number(3)|Код валюты
 test|Boolean|Признак тестового сообщения
 version|String|Версия API
 hash|String| Хэш цифровой подписи уведомления

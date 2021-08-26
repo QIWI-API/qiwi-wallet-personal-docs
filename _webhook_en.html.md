@@ -283,17 +283,17 @@ payment.comment | String | Transaction comment
 payment.sum | Object | Payment amount data
 ----|----|---
 sum.amount|Number(Decimal)|Amount
-sum.currency|Integer|Currency code
+sum.currency|Number(3)|Currency code
 ----|----|----
 payment.commission|Object| Payment commission
 ----|----|----
 commission.amount|Number(Decimal)|Commission amount
-commission.currency|Integer|Currency code
+commission.currency|Number(3)|Currency code
 ----|----|----
 payment.total|Object|Total payment amount
 ----|----|----
 total.amount|Number(Decimal)|Amount
-total.currency|Integer|Currency code
+total.currency|Number(3)|Currency code
 ----|----|----
 test|Boolean|Flag indicating test notification
 version|String|Webhook API version
