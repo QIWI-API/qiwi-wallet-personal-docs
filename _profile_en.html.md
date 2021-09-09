@@ -112,7 +112,8 @@ Content-Type: application/json
     "identificationInfo": [
       {
         "bankAlias": "QIWI",
-        "identificationLevel": "SIMPLE"
+        "identificationLevel": "SIMPLE",
+        "passportExpired": false
       }
     ]
   },
@@ -157,6 +158,7 @@ contractInfo.features|Array[Object]|Service info
 contractInfo.identificationInfo|Array[Object]|User's [identification data](https://qiwi.com/settings/identification)
 identificationInfo[].bankAlias|String|String's acronym of the system, in which the user has received the identification::<br> `QIWI` - QIWI Wallet.
 identificationInfo[].identificationLevel|String|Current level of the wallet identification. Possible values:<br>`ANONYMOUS` - no identification;<br> `SIMPLE`, `VERIFIED` - simplified identification;<br> `FULL` - full identification.
+identificationInfo[].passportExpired|Boolean|Validity of passport data of the wallet' owner (`true` means that the passport data is invalid).
 userInfo|Object|Other user data. The object may be missing, depending on the `userInfoEnabled` parameter in the request.
 userInfo.defaultPayCurrency|Number(3)|Default wallet balance currency code (ISO-4217)
 userInfo.defaultPaySource|Number|Service info

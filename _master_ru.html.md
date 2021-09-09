@@ -20,6 +20,8 @@ API предоставляет доступ к управлению пакето
 
 ![Token Scopes](/images/apiwallet_token_scopes_qiwi-master.jpg)
 
+[Пошаговое руководство по интеграции API QIWI Мастер](/ru/qiwi-wallet-api-master-guide/#how-to-use)
+
 ## Покупка пакета QIWI Мастер {#buy-qiwi-master}
 
 <h3 class="request method">Запрос → POST</h3>

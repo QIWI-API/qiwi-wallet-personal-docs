@@ -114,7 +114,8 @@ Content-Type: application/json
     "identificationInfo": [
       {
         "bankAlias": "QIWI",
-        "identificationLevel": "SIMPLE"
+        "identificationLevel": "SIMPLE",
+        "passportExpired": false
       }
     ]
   },
@@ -159,6 +160,7 @@ contractInfo.features|Array[Object]|Служебная информация
 contractInfo.identificationInfo|Array[Object]|Данные об [идентификации](https://qiwi.com/settings/identification#ru) пользователя.
 identificationInfo[].bankAlias|String|Акроним системы, в которой пользователь получил идентификацию:<br> `QIWI` - QIWI Кошелек.
 identificationInfo[].identificationLevel|String|Текущий уровень идентификации кошелька. Возможные значения:<br>`ANONYMOUS` - без идентификации;<br> `SIMPLE`, `VERIFIED` - упрощенная идентификация;<br> `FULL` - полная идентификация.
+identificationInfo[].passportExpired|Boolean|Информация об актуальности паспортных данных владельца кошелька (`true` означает, что паспортные данные недействительны).
 userInfo|Object|Прочие пользовательские данные. Объект может отсутствовать, в зависимости от признака `userInfoEnabled` в запросе.
 userInfo.defaultPayCurrency|Number(3)|Код валюты баланса кошелька по умолчанию (ISO-4217)
 userInfo.defaultPaySource|Number|Служебная информация
