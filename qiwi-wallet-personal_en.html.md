@@ -35,7 +35,7 @@ includes:
 
 # Introduction
 
-###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/qiwi-wallet-personal_en.html.md)
+###### Last update: 2020-07-28 | [Propose corrections on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/)
 
 QIWI Wallet API makes it easy to automate getting info on your account's state in [QIWI Wallet service](https://qiwi.com) and making financial operations.
 
