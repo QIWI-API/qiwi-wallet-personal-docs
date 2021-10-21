@@ -265,7 +265,7 @@ print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest())
 ~~~
 
 
-Field | Type | Descirption
+Field | Type | Description
 ----|------|-------
 hookId | String (UUID) | Unique webhook id
 messageId | String (UUID) | Unique notification id
@@ -276,7 +276,7 @@ payment.signFields | String | A list of fields in `payment` object (separated by
 payment.personId | Integer | Your wallet number
 payment.date | String DateTime | Payment date/time, in Moscow time zone, as `YYYY-MM-DD'T'hh:mm:ss+03:00`
 payment.errorCode | String | [Payment error code](#errorCode)
-payment.type | String | Payment type:<br>`IN` - wallet topup, <br>`OUT` - payment
+payment.type | String | Payment type:<br>`IN` - wallet top-up, <br>`OUT` - payment
 payment.status|String|Payment status:<br>`WAITING` - payment in process,<br>`SUCCESS` - successful payment,<br>`ERROR` - payment error.
 payment.provider | Integer| Provider ID in QIWI Wallet
 payment.comment | String | Transaction comment
@@ -497,7 +497,7 @@ key|String| Base64-encoded key
 
 ## Secret key change {#hook_secret}
 
-Use this request to change the secret key for notifications signature.
+Changes the secret key for notifications signature.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -551,7 +551,7 @@ key|String|Base64-encoded new key
 
 ## Webhook service data  {#hook_active}
 
-Use this request to get the active webhook service linked to your wallet.
+Gets the active webhook service linked to your wallet.
 
 <h3 class="request method">Request → GET</h3>
 

@@ -330,7 +330,7 @@ oms|String| User's medical insurance number (OMS)
 
 ## Identification data {#ident_data}
 
-Use the request to get masked private data and identification status of your QIWI Wallet.
+Gets masked private data and identification status of your QIWI Wallet.
 
 <h3 class="request method">Request → GET</h3>
 
@@ -408,7 +408,7 @@ oms|String| User's medical insurance number (OMS) (first and last two digits)
 
 # QIWI Wallet Limits API {#limits}
 
-By using this API, you can get current limits for operations in your QIWI wallet. Limits apply on amount of the operations.
+By using this API, you can get current limits for operations in your QIWI wallet. Limits apply on accessible amount of the operations.
 
 <h3 class="request method">Request → GET</h3>
 

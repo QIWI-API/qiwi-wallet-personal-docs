@@ -181,7 +181,7 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    <li><h3>Параметры</h3><span>Параметр передается в JSON-теле запроса:</span>
     </li>
 </ul>
 
@@ -300,7 +300,7 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметры</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    <li><h3>Параметры</h3><span>Параметр передается в JSON-теле запроса:</span>
     </li>
 </ul>
 

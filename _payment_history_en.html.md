@@ -7,7 +7,7 @@ The API gives access to the history of transactions in your QIWI wallet.
 
 ## List of payments {#payments_list}
 
-The request provides a list of payments and top-ups of your wallet. You can use the filter by number, ID and date (date interval) of transactions.
+Provides a list of payments and top-ups of your wallet. You can use the filter by number, ID and date (date interval) of transactions.
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByUserUsingGET_1)
 
@@ -192,7 +192,7 @@ nextTxnDate|DateTime| Next transaction date/time, in the complete list of your t
 
 ## Statistics {#stat}
 
-This request is used to obtain aggregate statistics on the amount of payments for a given period.
+Provides aggregate statistics on the amount of payments for a given period.
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryTotalByUserUsingGET_1)
 
@@ -302,7 +302,7 @@ outgoingTotal[].currency|Number(3)| Currency of the operations (ISO-4217)
 
 ## Transaction details {#txn_info}
 
-The request returns details on a specific transaction from your payments history.
+Returns details on a specific transaction from your payments history.
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryByTransactionUsingGET_1)
 
@@ -432,7 +432,7 @@ Successful JSON-response contains [Transaction object](#txnid).
 
 ## Payment receipt {#payment_receipt}
 
-The request returns electronic receipt for a certain transaction in PDF/JPEG format, either as binary file or via e-mail to specified address.
+Returns electronic receipt for a certain transaction in PDF/JPEG format, either as binary file or via e-mail to specified address.
 
 ### Receipt file {#receipt_file}
 

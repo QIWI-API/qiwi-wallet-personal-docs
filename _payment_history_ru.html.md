@@ -193,7 +193,7 @@ nextTxnDate|DateTime|Дата/время следующей транзакции
 
 ## Статистика платежей {#stat}
 
-Данный запрос используется для получения сводной статистики по суммам платежей за заданный период.
+Запрос используется для получения сводной статистики по суммам платежей за указанный период.
 
 [Потестировать](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryTotalByUserUsingGET_1)
 
@@ -338,7 +338,7 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
     <li><h3>URL <span>/payment-history/v2/transactions/<a>transactionId</a>?<a>type=value</a></span></h3>
         <ul>
              <li><strong>transactionId</strong> - номер транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].txnId</i> в ответе)</li>
-             <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе). Данный параметр является необязательным</li>
+             <li><strong>type</strong> - тип транзакции из <a href="#history_data">истории платежей</a> (параметр <i>data[].type</i> в ответе). Параметр является необязательным</li>
         </ul>
     </li>
 </ul>
@@ -434,7 +434,7 @@ transactionInfo = payment_history_transaction(api_access_token, str(last_txn_id)
 
 ## Квитанция платежа {#payment_receipt}
 
-Данный запрос используется для получения электронной квитанции (чека) по определенной транзакции из вашей истории платежей в формате PDF/JPEG в виде файла или почтовым сообщением на заданный e-mail.
+Запрос используется для получения электронной квитанции (чека) по определенной транзакции из вашей истории платежей в формате PDF/JPEG в виде файла или почтовым сообщением на указанный e-mail.
 
 ### Файл квитанции {#receipt_file}
 
@@ -560,7 +560,7 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Параметр</h3><span>Данный параметр передается в JSON-теле запроса:</span>
+    <li><h3>Параметр</h3><span>Параметр передается в JSON-теле запроса:</span>
     </li>
 </ul>
 

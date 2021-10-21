@@ -7,7 +7,7 @@ API provides methods to control balances of your QIWI wallet.
 
 ## List of balances {#balances_list}
 
-The request provides current balances of your QIWI Wallet.
+Provides current balances of your QIWI Wallet.
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/getByAliasUsingGET_1)
 
@@ -137,7 +137,7 @@ balance.currency | Number(3)| Код валюты баланса (ISO-4217)
 
 ## Creating balance {#balance_create}
 
-The request creates a new account and its balance in your QIWI wallet. List of account types which you can create is provided by [other request](#funding_offer).
+Creates a new account and its balance in your QIWI wallet. List of account types which you can create is provided by [other request](#funding_offer).
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/createAccountUsingPOST)
 
@@ -200,7 +200,7 @@ Successful response contains HTTP code 201.
 
 ## Available accounts {#funding_offer}
 
-The request provides all possible account aliases for your QIWI wallet.
+Provides all possible account aliases for your QIWI wallet.
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/getAccountsOfferUsingGET)
 
@@ -255,7 +255,7 @@ Object.currency|Number(3)|Account's currency code (ISO-4217)
 
 ## Default balance  {#default_balance}
 
-The request sets up default account in your QIWI wallet for funding all payments. The account must be in the list of  [available accounts](#balances_list)
+Sets up default account in your QIWI wallet for funding all payments. The account must be in the list of  [available accounts](#balances_list)
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/account-controller-v-2/saveAccountAttributesUsingPATCH)
 

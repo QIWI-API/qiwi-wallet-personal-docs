@@ -4,7 +4,7 @@
 
 ## Commission rates {#rates}
 
-Use the method to get total commission amount for the payment by the given payment requisites.
+Gets total commission amount for the payment by the given payment requisites.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -155,9 +155,9 @@ Commission rate returns in `qwCommission.amount` field of the JSON response.
 
 <a name="payform"></a>
 
-## Payment form autofilling {#autocomplete}
+## Payment form auto-filling {#autocomplete}
 
-The request provides autofilled payment form on qiwi.com site.
+Provides auto-filled payment form on qiwi.com site.
 
 [Link example (click to see the form)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643&blocked[0]=account)
 
@@ -394,7 +394,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Conversion {#exchange}
 
-API method to transfer funds to currency account in QIWI wallet with conversion from your QIWI wallet ruble account. Two transactions are created: conversion between accounts of your QIWI wallet, and transfer to another wallet. You can get currency rates from [another API method](#CCY).
+Transfers funds to currency account in QIWI wallet with conversion from your QIWI wallet ruble account. Two transactions are created: conversion between accounts of your QIWI wallet, and transfer to another wallet. You can get currency rates from [another API method](#CCY).
 
 <h3 class="request method">Request → POST</h3>
 
@@ -522,7 +522,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Currency rates {#CCY}
 
-API method returns current QIWI Bank currency rates and cross-rates.
+Returns current QIWI Bank currency rates and cross-rates.
 
 <h3 class="request method">Request → GET</h3>
 
@@ -610,7 +610,7 @@ Content-Type: application/json
 }
 ~~~
 
-Successful response containt JSON array of currency rates in `result` field. An element of the list corresponds to currency pair:
+Successful response contains JSON array of currency rates in `result` field. An element of the list corresponds to currency pair:
 
 Response field|Type|Description
 --------|----|----
@@ -671,7 +671,7 @@ Host: edge.qiwi.com
 import requests
 import time
 
-# Cell phone topup
+# Cell phone top-up
 def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
     s = requests.Session()
     s.headers['Accept'] = 'application/json'
@@ -747,7 +747,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Card money transfer {#cards}
 
-This request makes money transfer to Visa, MasterCard, or MIR credit cards. Preliminary check [card system provider ID](#card_check).
+Makes money transfer to Visa, MasterCard, or MIR credit cards. Preliminary check [card system provider ID](#card_check).
 
 <h3 class="request method">Request → POST</h3>
 
@@ -857,7 +857,7 @@ Host: edge.qiwi.com
 import requests
 import time
 
-# Card money transer
+# Card money transfer
 def send_card(api_access_token, payment_data):
     # payment_data - dictionary with all payment data
     s = requests.Session()
@@ -969,11 +969,11 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Bank money transfer {#banks}
 
-To make money transfer to bank cards/accounts of persons opened in Russian banks, use the following methods.
+Makes money transfer to personal bank cards/accounts opened in Russian banks.
 
 ### Transfer to card number {#card-transfer-bank}
 
-The request makes money transfer to cards issued by Russian banks.
+Makes money transfer to cards issued by Russian banks.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -1102,7 +1102,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ### Transfer to bank account {#transfer-bank-account}
 
-The request makes money transfer to personal accounts opened in Russian banks. You can use quick transfer service (within an hour if transaction is made from 9:00 until 19:30).
+Makes money transfer to personal accounts opened in Russian banks. You can use quick transfer service (within an hour if transaction is made from 9:00 until 19:30).
 
 <h3 class="request method">Request → POST</h3>
 
@@ -1241,7 +1241,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Other services {#services}
 
-You can pay for services by user identifier. This request applies for QIWI providers with one user identifier and without account number online check.
+You can pay for services by user identifier. This request applies for QIWI providers with one user identifier and without requirement of account number online check.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -1371,7 +1371,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Payment by any requisites {#freepay}
 
-This method makes payments for commercial services by their bank details.
+Makes payments for commercial services by their bank details.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -1545,7 +1545,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ### Search by string {#provider-search}
 
-Use this API method for searching QIWI provider's ID in [payment methods](#services).
+Performs search of QIWI provider's ID for [payment methods](#services).
 
 <h3 class="request method">Request → POST</h3>
 
@@ -1627,7 +1627,7 @@ items[].item.id.id | String | Provider's ID in the array's element
 
 ### Mobile network operator {#mnp}
 
-Use the method for mobile network operator determination by the client's mobile number. Response returns QIWI provider ID for using in the API method of the client's [mobile phone replenishment](#cell).
+Determines mobile network operator ID by the client's mobile number. Response returns QIWI provider ID for using in the API method of the client's [mobile phone replenishment](#cell).
 
 <h3 class="request method">Request → POST</h3>
 
@@ -1725,7 +1725,7 @@ Response with HTTP Status 200 and `code.value` = 2 means that operator determina
 
 ### Card transfer provider {#card_check}
 
-To get QIWI provider ID for [money transfer to credit card](#cards), use the following method.
+Gets QIWI provider ID for [money transfer to credit card](#cards).
 
 No authorization is required.
 
@@ -1800,7 +1800,7 @@ Content-Type: application/json
 print(card_system(4890xxxxxxxx1698))
 ~~~
 
-> Cannot get provider ID for credit card money tranfser
+> Cannot get provider ID for credit card money transfer
 
 ~~~http
 HTTP/1.1 200 OK
@@ -1933,7 +1933,7 @@ You can issue invoices to any QIWI wallet by using [P2P invoices API](https://de
 
 ### How to get P2P token
 
-To get P2P token, authorize on [p2p.qiwi.com](https://p2p.qiwi.com), or use the given request. You may also specify [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) in this request.
+Authorize on [p2p.qiwi.com](https://p2p.qiwi.com), or use the given request. You may also specify [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) in this request.
 
 The method returns P2P tokens for using with Payment form and with P2P API in `PublicKey` and `SecretKey` fields of the response. 
 
@@ -2098,7 +2098,7 @@ bills[].pay_url|String| URL to pay for the invoice on QIWI Payment Form
 
 ## Invoice payment {#paywallet_invoice}
 
-The request makes invoice payment immediately without SMS confirmation.
+Makes invoice payment immediately without SMS confirmation.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -2173,8 +2173,8 @@ is_sms_confirm|String|SMS confirmation flag
 
 ## Unpaid invoice cancelling {#cancel_invoice}
 
-The method rejects an unpaid invoice. 
-This makes the account unavailable for payment.
+Rejects an unpaid invoice. 
+This makes the invoice unavailable for payment.
 
 
 <h3 class="request method">Request → POST</h3>
