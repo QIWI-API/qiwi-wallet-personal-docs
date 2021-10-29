@@ -1,6 +1,6 @@
 # API QIWI Мастер {#qiwi-master}
 
-###### Последнее обновление: 2021-01-27 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_master_ru.html.md)
+###### Последнее обновление: 2021-10-28 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_master_ru.html.md)
 
 API предоставляет доступ к управлению пакетом услуг QIWI Мастер. Пакет услуг позволяет выпускать до пяти бесплатных виртуальных карт QIWI и перевыпускать карты неограниченное число раз. Выпуск карт сверх указанного количества оплачивается по [тарифу](https://static.qiwi.com/qcms/files/1582791401478_5_JJ5vJe1L0szXzKb.pdf).
 
@@ -250,7 +250,7 @@ price|Object|Сведения о платеже
 amount|Number(Decimal)| Сумма покупки
 currency|Number(3)|Валюта платежа (ISO-4217)
 -----|---|----
-cardId|String|Номер карты. **Не заполняется, если карта платная**.
+cardId|String|Номер выпущенной карты. **Не заполняется, если карта платная**.
 
 
 ### Шаг 3. Покупка карты {#card-buy}
@@ -279,6 +279,9 @@ Host: edge.qiwi.com
 }
 ~~~
 
+<aside class="notice">
+Этот шаг необходим только при выпуске платной карты.
+</aside>
 
 Отправьте POST-запрос на адрес:
 
@@ -289,7 +292,7 @@ Host: edge.qiwi.com
 Название|Тип|Описание|Обяз.
 --------|----|----|------
 fields.account| String|Номер кошелька |+
-fields.order_id| String| Номер заказа карты из ответа на [запрос](#order-card) |+
+fields.order_id| String| Номер заказа из ответа на [запрос](#order-card) |+
 
 Успешный JSON-ответ содержит [объект PaymentInfo](#payment_info) с данными о принятом платеже. 
 
