@@ -1928,13 +1928,13 @@ API provides operations of [invoice creation](#invoice) (only P2P invoices for m
 
 ## Invoice creation and P2P token {#invoice}
 
-You can issue invoices to any QIWI wallet by using [P2P invoices API](https://developer.qiwi.com/ru/p2p-payments/#create). Use [special P2P token](#p2p-token) for authorization in P2P invoices API.
+You can issue invoices to any QIWI wallet by using [P2P invoices API](/en/p2p-payments/#create). Use [special P2P token](#p2p-token) for authorization in P2P invoices API.
 
 ### How to get P2P token {#p2p-token}
 
-Authorize on [p2p.qiwi.com](https://p2p.qiwi.com), or use the given request. You may also specify [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) in this request.
+Authorize on [p2p.qiwi.com](https://p2p.qiwi.com), or use the given request. You may also specify [Invoice payment callbacks URL](/en/p2p-payments/#notification) in this request.
 
-The method returns P2P tokens for using with Payment form and with P2P API in `PublicKey` and `SecretKey` fields of the response. 
+The method returns P2P tokens for using with [Payment form](/en/p2p-payments/#http) and with P2P API in `PublicKey` and `SecretKey` fields of the response, respectively.
 
 Use [QIWI Wallet API token](#auth_data) for authorization.
 
@@ -1981,7 +1981,7 @@ User-Agent: ****
 Name|Type|Description
 --------|----|----
 keysPairName| String| Name for the couple of P2P tokens
-serverNotificationsUrl|String | [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) (optional)
+serverNotificationsUrl|String | [Invoice payment callbacks URL](/en/p2p-payments/#notification) (optional)
 
 ## List of invoices  {#list_invoice}
 
