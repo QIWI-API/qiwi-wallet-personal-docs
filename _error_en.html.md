@@ -12,7 +12,7 @@ HTTP code | API | Description
 404 | [Balances](#balance), [User's profile](#profile), [Identification](#identification) | Wallet not found
 404 | [Callbacks](#webhook) | Active webhook not found
 404 | [Pay/Cancel invoice](#paywallet_invoice) | Invoice not found
-422 | [Webhook registration](#hook_reg) | Wrong domain/subnet/host in new webhook URL, wrong webhook type or transactions type, webhook already exists and is active
+422 | [Webhook registration](#hook_reg) | Wrong domain/subnet/host in new webhook URL, wrong webhook type or transactions type, or webhook already exists and is active
 423 | All | Too many requests, service temporary unavailable
 500 | All | Internal service error (webhook URL too long, infrastructure maintenance, resource is unavailable and so on)
 

@@ -137,14 +137,14 @@ If your web service works behinds the firewall, you need to add these IP-address
 0. Implement web service for [webhook requests](#hook_format). Make sure to implement correctly the digital signature verification.
 1. [Register your service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
 2. Request for [signature key](#hook_key).
-3. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 1.
+3. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 2.
 
 To change webhook service URL:
 
 1. [Remove current webhook service](#hook_remove).
 2. [Register new webhook service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
 3. Request for new [signature key](#hook_key).
-4. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 1.
+4. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 2.
 
 
 ## Processing notification {#hook_format}

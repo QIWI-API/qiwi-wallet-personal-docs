@@ -1924,14 +1924,13 @@ state.code | String| Current status of the transaction. Only `Accepted` is retur
 
 Invoice is the universal request for payment or money transfer in QIWI Wallet system.
 
-API provides operations of invoice creation (only P2P invoices for money transfer to another QIWI wallet), payment, rejection, and
-also method for requesting list of unpaid invoices issued to your QIWI wallet.
+API provides operations of [invoice creation](#invoice) (only P2P invoices for money transfer to another QIWI wallet), [payment](#paywallet_invoice), [rejection](#cancel_invoice), and also [method for requesting list of unpaid invoices](#list_invoice) issued to your QIWI wallet.
 
-## Invoice issue and P2P token {#invoice}
+## Invoice creation and P2P token {#invoice}
 
-You can issue invoices to any QIWI wallet by using [P2P invoices API](https://developer.qiwi.com/ru/p2p-payments/#create). Use special P2P token for authorization in P2P invoices API.
+You can issue invoices to any QIWI wallet by using [P2P invoices API](https://developer.qiwi.com/ru/p2p-payments/#create). Use [special P2P token](#p2p-token) for authorization in P2P invoices API.
 
-### How to get P2P token
+### How to get P2P token {#p2p-token}
 
 Authorize on [p2p.qiwi.com](https://p2p.qiwi.com), or use the given request. You may also specify [Invoice payment callbacks URL](https://developer.qiwi.com/ru/p2p-payments/#notification) in this request.
 
@@ -1986,8 +1985,8 @@ serverNotificationsUrl|String | [Invoice payment callbacks URL](https://develope
 
 ## List of invoices  {#list_invoice}
 
-API provides the method for getting unpaid invoices issued to your wallet.
-Invoices are placed in the list in reverse chronological order. 
+Returns unpaid invoices issued to your wallet. Invoices are placed in the list in reverse chronological order.
+
 By default, the list is paginated on 50 elements on each page. You can specify the number of elements on each page.
 You may use filters: invoice creation period of dates and starting invoice ID.
 
