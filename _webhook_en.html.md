@@ -14,8 +14,8 @@ Host: falcon.com
 {"hash": "50779a03d90c4fa60ac44dfd158dbceec0e9c57fa4cf4f5298450fdde1868945",
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
  "messageId": "f9a197a8-26b6-4d42-aac4-d86b789c373c",
- "payment": {"account": "thedandod",
-             "comment": "",
+ "payment": {"account": "myAccount",
+             "comment": "My comment",
              "commission": Null,
              "date": "2018-05-18T16:05:15+03:00",
              "errorCode": "0",
@@ -43,7 +43,7 @@ Host: falcon.com
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
  "messageId": "6e2a0e32-4c8d-4fe2-9eed-fe3b6a726ff4",
  "payment": {"account": "thedandod",
-             "comment": "",
+             "comment": "My comment",
              "commission": {"amount": 0.0, "currency": 643},
              "date": "2018-05-18T16:05:15+03:00",
              "errorCode": "0",
@@ -99,11 +99,7 @@ Host: falcon.com
  "hookId": "8c79f60d-0272-476b-b120-6e7629467328",
  "messageId": "bba24947-ab5f-4b33-881b-738fc3a4c9e1",
  "payment": {"account": "79042426915",
-             "comment": "Order i_4769798 Счет №65361451. Пополнение аккаунта "
-                        "P11689160 (garik3315@gmail.com) в платежной системе "
-                        "Payeer. Внимание! Не меняйте сумму, валюту и "
-                        "комментарий к переводу, не делайте повторный перевод, "
-                        "в ином случае Ваш платеж зачислен НЕ будет!",
+             "comment": "Replenishing wallet",
              "commission": {"amount": 0.0, "currency": 643},
              "date": "2018-03-25T13:16:48+03:00",
              "errorCode": "0",
@@ -146,41 +142,9 @@ To change webhook service URL:
 3. Request for new [signature key](#hook_key).
 4. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 2.
 
-
 ## Processing notification {#hook_format}
 
 Each notification is an incoming POST-request with single payment data in JSON body. JSON scheme is as followed:
-
-
-~~~http
-POST /some-hook.php HTTP/1.1
-Accept: application/json
-Content-type: application/json
-Host: falcon.com
-
-{"hash": "a56ed0090fa3fd2fd0b002ed80f85a120037a6a85f840938888275e1631da96f",
- "hookId": "8c79f60d-0272-476b-b120-6e7629467328",
- "messageId": "bba24947-ab5f-4b33-881b-738fc3a4c9e1",
- "payment": {"account": "79042426915",
-             "comment": "Order i_4769798 Счет №65361451. Пополнение аккаунта "
-                        "P11689160 (garik3315@gmail.com) в платежной системе "
-                        "Payeer. Внимание! Не меняйте сумму, валюту и "
-                        "комментарий к переводу, не делайте повторный перевод, "
-                        "в ином случае Ваш платеж зачислен НЕ будет!",
-             "commission": {"amount": 0.0, "currency": 643},
-             "date": "2018-03-25T13:16:48+03:00",
-             "errorCode": "0",
-             "personId": 79645265240,
-             "provider": 7,
-             "signFields": "sum.currency,sum.amount,type,account,txnId",
-             "status": "SUCCESS",
-             "sum": {"amount": 1.09, "currency": 643},
-             "total": {"amount": 1.09, "currency": 643},
-             "txnId": "12565018935",
-             "type": "IN"},
- "test": false,
- "version": "1.0.0"}
-~~~
 
 ~~~php
 <?php
@@ -258,7 +222,7 @@ import hashlib
 webhook_key_base64 = 'JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc='
 
 # notification parameters
-data = '643|1|IN|+79165238345|13353941550'
+data = '643|1|IN|+79161112233|13353941550'
 
 webhook_key = base64.b64decode(bytes(webhook_key_base64,'utf-8'))
 print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest())
@@ -313,9 +277,9 @@ Example of signature verification (see also PHP procedure on the right tab):
 1. You get [signature key](#hook_key), encoded in Base64: 
     `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
 2. You get notification:
-    `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79165238345","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
+    `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79161112233","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
 3. Join values of the fields specified in `signFields` field (`sum.currency,sum.amount,type,account,txnId`):  
-    `643|1|IN|+79165238345|13353941550`
+    `643|1|IN|+79161112233|13353941550`
 4. The obtained string is encoded with SHA-256 and the Base64-decoded key from step 1:
     `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0`
     Result coincides with `hash` field from the notification. The verification is successful.

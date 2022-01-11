@@ -41,7 +41,7 @@ user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/28004/paym
           "type":"Account", \
           "accountId":"643" \
         },
-        "comment":"test", \
+        "comment":"Оплата", \
         "fields": { \
           "account":"79121112233", \
           "vas_alias":"qvc-master" \
@@ -66,7 +66,7 @@ Host: edge.qiwi.com
   "type":"Account",
   "accountId":"643"
  },
- "comment":"test",
+ "comment":"Оплата",
  "fields": {
    "account":"79121112233",
    "vas_alias":"qvc-master"

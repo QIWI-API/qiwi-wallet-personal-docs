@@ -282,7 +282,7 @@ user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/99/payment
           "type":"Account", \
           "accountId":"643" \
         },
-        "comment":"test", \
+        "comment":"Комментарий", \
         "fields": { \
           "account":"+79121112233" \
         } \
@@ -306,7 +306,7 @@ Host: edge.qiwi.com
   "type":"Account",
   "accountId":"643"
  },
- "comment":"test",
+ "comment":"Комментарий",
  "fields": {
 	"account":"+79121112233"
  }
@@ -393,7 +393,7 @@ user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/1099/payme
           "type":"Account", \
           "accountId":"643" \
         }, \
-        "comment":"test", \
+        "comment":"Комментарий", \
         "fields": { \
           "account":"+79121112233" \
         } \
@@ -410,14 +410,14 @@ Host: edge.qiwi.com
 {
   "id":"11111111111111",
   "sum": {
-		"amount":10.00,
-		"currency":"398"
-	},
+    "amount":10.00,
+    "currency":"398"
+  },
 	"paymentMethod": {
 		"type":"Account",
 		"accountId":"643"
 	},
-	"comment":"test",
+	"comment":"Комментарий",
 	"fields": {
 	 	"account":"+79121112233"
 	}
@@ -1848,7 +1848,7 @@ comment|String|Комментарий к платежу. Используетс�
         }
     },
     "source": "account_643",
-    "comment": "test"
+    "comment": "Комментарий"
 }
 ~~~
 
@@ -2030,11 +2030,11 @@ Content-Type: application/json
       "repetitive": false,
       "provider": {
         "id": 480706,
-        "short_name": "Букмекерская контора ФОНБЕТ",
-        "long_name": "ООО «Ф.О.Н.»",
+        "short_name": "Интернет-магазин цветов",
+        "long_name": "ООО «Ромашка»",
         "logo_url":"https://static.qiwi.com/img/providers/logoBig/480706_l.png"
       },
-      "comment": "Deposit to FON 13515573",
+      "comment": "Пополнение счета 13515573",
       "pay_url":"https://oplata.qiwi.com/form?shop=480706&transaction=102263702405"
     }
   ]

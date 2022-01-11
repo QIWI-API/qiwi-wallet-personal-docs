@@ -14,8 +14,8 @@ Host: falcon.com
 {"hash": "50779a03d90c4fa60ac44dfd158dbceec0e9c57fa4cf4f5298450fdde1868945",
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
  "messageId": "f9a197a8-26b6-4d42-aac4-d86b789c373c",
- "payment": {"account": "thedandod",
-             "comment": "",
+ "payment": {"account": "myAccount",
+             "comment": "Комментарий",
              "commission": Null,
              "date": "2018-05-18T16:05:15+03:00",
              "errorCode": "0",
@@ -42,8 +42,8 @@ Host: falcon.com
 {"hash": "50779a03d90c4fa60ac44dfd158dbceec0e9c57fa4cf4f5298450fdde1868945",
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
  "messageId": "6e2a0e32-4c8d-4fe2-9eed-fe3b6a726ff4",
- "payment": {"account": "thedandod",
-             "comment": "",
+ "payment": {"account": "masterDre",
+             "comment": "Комментарий",
              "commission": {"amount": 0.0, "currency": 643},
              "date": "2018-05-18T16:05:15+03:00",
              "errorCode": "0",
@@ -71,7 +71,7 @@ Host: falcon.com
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
  "messageId": "1133873b-9bb6-4adb-9bfe-7be3a9aa999f",
  "payment": {"account": "borya241203",
-             "comment": "",
+             "comment": "Комментарий",
              "commission": None,
              "date": "2018-05-20T05:19:16+03:00",
              "errorCode": "5",
@@ -99,11 +99,7 @@ Host: falcon.com
  "hookId": "8c79f60d-0272-476b-b120-6e7629467328",
  "messageId": "bba24947-ab5f-4b33-881b-738fc3a4c9e1",
  "payment": {"account": "79042426915",
-             "comment": "Order i_4769798 Счет №65361451. Пополнение аккаунта "
-                        "P11689160 (garik3315@gmail.com) в платежной системе "
-                        "Payeer. Внимание! Не меняйте сумму, валюту и "
-                        "комментарий к переводу, не делайте повторный перевод, "
-                        "в ином случае Ваш платеж зачислен НЕ будет!",
+             "comment": "Пополнение кошелька",
              "commission": {"amount": 0.0, "currency": 643},
              "date": "2018-03-25T13:16:48+03:00",
              "errorCode": "0",
@@ -118,7 +114,6 @@ Host: falcon.com
  "test": false,
  "version": "1.0.0"}
 ~~~
-
 
 Хуки или уведомления с данными о событии (платеже/пополнении) отправляются на ваш сервер. В настоящее время поддерживаются только вебхуки (webhook) - сообщения, адресованные веб-сервисам. Для приема вебхуков вам необходимо настроить свой сервер на прием и обработку POST-запросов ([Формат запросов](#hook_format)).
 
@@ -147,41 +142,9 @@ Host: falcon.com
 3. Запросите [ключ проверки подписи](#hook_key) для нового обработчика.
 4. Протестируйте прием запросов новым обработчиком с помощью [тестового запроса](#hook_test). На зарегистрированный в п.2 сервис придет пустое уведомление.
 
-
 ## Обработка вебхука {#hook_format}
 
 Каждый вебхук посылает уведомления - входящие POST-запросы с JSON-объектом, содержащим данные об одном платеже. Схема объекта:
-
-
-~~~http
-POST /some-hook.php HTTP/1.1
-Accept: application/json
-Content-type: application/json
-Host: falcon.com
-
-{"hash": "a56ed0090fa3fd2fd0b002ed80f85a120037a6a85f840938888275e1631da96f",
- "hookId": "8c79f60d-0272-476b-b120-6e7629467328",
- "messageId": "bba24947-ab5f-4b33-881b-738fc3a4c9e1",
- "payment": {"account": "79042426915",
-             "comment": "Order i_4769798 Счет №65361451. Пополнение аккаунта "
-                        "P11689160 (garik3315@gmail.com) в платежной системе "
-                        "Payeer. Внимание! Не меняйте сумму, валюту и "
-                        "комментарий к переводу, не делайте повторный перевод, "
-                        "в ином случае Ваш платеж зачислен НЕ будет!",
-             "commission": {"amount": 0.0, "currency": 643},
-             "date": "2018-03-25T13:16:48+03:00",
-             "errorCode": "0",
-             "personId": 79645265240,
-             "provider": 7,
-             "signFields": "sum.currency,sum.amount,type,account,txnId",
-             "status": "SUCCESS",
-             "sum": {"amount": 1.09, "currency": 643},
-             "total": {"amount": 1.09, "currency": 643},
-             "txnId": "12565018935",
-             "type": "IN"},
- "test": false,
- "version": "1.0.0"}
-~~~
 
 ~~~php
 <?php
@@ -259,12 +222,11 @@ import hashlib
 webhook_key_base64 = 'JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc='
 
 # строка параметров
-data = '643|1|IN|+79165238345|13353941550'
+data = '643|1|IN|+79161112233|13353941550'
 
 webhook_key = base64.b64decode(bytes(webhook_key_base64,'utf-8'))
 print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest())
 ~~~
-
 
 Поле | Тип | Описание
 ----|------|-------
@@ -297,26 +259,26 @@ hash|String| Хэш цифровой подписи уведомления
 ### Как проверить подпись уведомления
 
  Реализуйте следующие шаги:
- 
+
  1. Возьмите значения полей из списка в `payment.signFields` уведомления (**в том же порядке**) в формате String.
  2. Объедините значения в строку с разделителями `|`.
  3. Зашифруйте строку п.2 алгоритмом SHA-256 с [ключом проверки подписи](#hook_key).
  4. Сравните полученное значение со значением поля `hash` уведомления.
- 
+
 Пример расшифровки подписи (см. также функцию PHP на вкладке справа):
 
 1. По [запросу](#hook_key) пользователь получает ключ вебхука, закодированный в Base64: 
     `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
 2. Приходит уведомление 
    `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22",
-   "payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79165238345","comment":"","provider":7,
+   "payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79161112233","comment":"","provider":7,
    "sum":{"amount":1,"currency":643},
    "commission":{"amount":0,"currency":643},
    "total":{"amount":1,"currency":643},
    "signFields":"sum.currency,sum.amount,type,account,txnId"},
    "hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
 3. Склеиваются требуемые поля платежных данных (указаны в `payment.signFields` - `sum.currency,sum.amount,type,account,txnId`):
-   `643|1|IN|+79165238345|13353941550`
+   `643|1|IN|+79161112233|13353941550`
 4. Поля шифруются методом SHA-256 с Base64-раскодированным ключом из п.1. Результат 
    `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0`
    совпадает с параметром `hash` из запроса.

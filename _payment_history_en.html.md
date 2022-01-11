@@ -148,7 +148,7 @@ Content-Type: application/json
       ...
     },
     "source": {},
-    "comment":null,
+    "comment":"",
     "currencyRate":1,
     "extras":null,
     "chequeReady":true,
@@ -400,7 +400,7 @@ Content-Type: application/json
         "siteUrl": null,
         "extras": []
     },
-    "comment": null,
+    "comment": "",
     "currencyRate": 1,
     "extras": [],
     "chequeReady": false,

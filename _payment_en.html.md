@@ -1877,7 +1877,6 @@ paymentMethod.accountId|String| Constant, `643`|+
 fields|Object| Payment requisites. Object fields depend on provider ID.
 comment|String| Payment comment. Used for [QIWI wallet transfer](#p2p) or  [conversion](#CCY) only |-
 
-
 ### PaymentInfo class {#payment_info}
 
 ~~~json
@@ -1898,7 +1897,7 @@ comment|String| Payment comment. Used for [QIWI wallet transfer](#p2p) or  [conv
         }
     },
     "source": "account_643",
-    "comment": "test"
+    "comment": "My comment"
 }
 ~~~
 
@@ -2055,11 +2054,11 @@ Content-Type: application/json
       "repetitive": false,
       "provider": {
         "id": 480706,
-        "short_name": "Букмекерская контора ФОНБЕТ",
-        "long_name": "ООО «Ф.О.Н.»",
+        "short_name": "Интернет-магазин цветов",
+        "long_name": "ООО «Цветы»",
         "logo_url":"https://static.qiwi.com/img/providers/logoBig/480706_l.png"
       },
-      "comment": "Deposit to FON 13515573",
+      "comment": "Пополнение счета 13515573",
       "pay_url":"https://oplata.qiwi.com/form?shop=480706&transaction=102263702405"
     }
   ]
