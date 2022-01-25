@@ -1,13 +1,12 @@
 # Payments API {#payments}
 
-###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_en.html.md)
+###### Last update: 2022-01-20 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_en.html.md)
 
 ## Commission rates {#rates}
 
-Gets total commission amount for the payment by the given payment requisites.
+Returns total commission amount for the payment by the given payment requisites.
 
 <h3 class="request method">Request → POST</h3>
-
 
 ~~~shell
 user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/providers/99/onlineCommission' \
@@ -70,19 +69,21 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
     <li><h3>URL <span>/sinap/providers/<a>id</a>/onlineCommission</span></h3>
         <ul>
              <li><strong>id</strong> - provider's identifier. Possible values:
-             <ul><li>99 - QIWI Wallet transfer</li>
-             <li>1963 - Visa card transfer (issued by only Russian banks)</li>
-             <li>21013 - MasterCard card transfer (issued by only Russian banks)</li>
-             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
-             <li>31652 - national payment system MIR card transer</li>
-             <li>466 - Tinkoff bank</li>
-             <li>464 - Alpha bank</li>
-             <li>821 - Promsvyazbank</li>
-             <li>815 - Russkiy Standard</li>
-             <li><a href="#banks">Other banks</a></li>
-             <li><a href="#mnp">Mobile network operators</a></li>
-             <li><a href="#search">Other providers</a></li>
-             <li>1717 - payment by bank requisites</li></ul></li>
+             <ul><li>99 — QIWI Wallet transfer.</li>
+             <li>1963 — Visa money transfer to cards issued by Russian banks only.</li>
+             <li>21013 — MasterCard money transfer to cards issued by Russian banks only.</li>
+             <li>1960 — Visa money transfer to credit cards issued by banks in Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan.</li>
+             <li>21012 — MasterCard money transfer to credit cards issued by banks in
+             Albania, Argentina, Armenia, Australia, Austria, Azerbaijan, Bangladesh, Barbados, Belarus, Belgium, Benin, Bosnia and Herzegovina, Burkina Faso, Brazil, Bulgaria, Cameroon, Cameroon United Republic, Chile, China, Colombia, Congo, Costa Rica, Croatia, Cyprus, Czech Republic, Democratic Republic of the Congo, Denmark, Dominican Republic, Ecuador, El Salvador, Egypt, Estonia, Finland, France, Georgia, Germany, Ghana, Greece, Guatemala, Hong Kong, Hungary, India, Indonesia, Ireland, Israel, Italy, Japan, Jordan, Kazakhstan, Kenya, Korea, Kuwait, Kyrgyzstan, Latvia, Lebanon, Lithuania, Luxembourg, Macao, Macedonia, Madagascar, Malaysia, Maldives, Malta, Mexico, Moldova, Monaco, Mongolia, Montenegro, Morocco, Namibia, Nigeria, Nepal, Netherlands, New Zealand, Nigeria, Norway, Oman, Panama, Paraguay, Peru, Philippines, Poland, Portugal, Romania, Qatar, Russian Federation, Saudi Arabia, Senegal, Serbia Republic, Singapore, Slovakia, Slovenia, South Africa, Spain, Sri Lanka, Sweden, Switzerland, Tajikistan, Tanzania, Thailand, Tunisia, Turkey, Turkmenistan, United Arab Emirates, UK, Uzbekistan, Vietnam, Zambia.</li>
+             <li>31652 — tranfer to national payment system MIR cards.</li>
+             <li>466 — Tinkoff bank.</li>
+             <li>464 — Alpha bank.</li>
+             <li>821 — Promsvyazbank.</li>
+             <li>815 - Russkiy Standard.</li>
+             <li><a href="#banks">Other banks</a>.</li>
+             <li><a href="#mnp">Mobile network operators</a>.</li>
+             <li><a href="#provider-search">Other providers</a>.</li>
+             <li>1717 — payment by bank requisites.</li></ul></li>
         </ul>
     </li>
 </ul>
@@ -98,9 +99,11 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send in JSON body. All parameters are required.</span>
+    <li><h3>Parameters</h3>
     </li>
 </ul>
+
+Required parameters in JSON body:
 
 Name|Type|Description
 --------|----|----
@@ -114,7 +117,6 @@ total.amount|Number | Amount (rubles and kopeks, divided by `.`). Positive numbe
 total.currency|String|Currency (`643` only, that is rubles)
 
 <h3 class="request">Response ←</h3>
-
 
 ~~~http
 HTTP/1.1 200 OK
@@ -172,7 +174,6 @@ To get payments to your QIWI Wallet, you can use also [P2P-form](https://qiwi.co
 ~~~http
 GET /payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643 HTTP/1.1
 Host: qiwi.com
-
 ~~~
 
 <ul class="nestedList url">
@@ -183,18 +184,19 @@ Host: qiwi.com
 <li>99999 - QIWI Wallet nickname transfer</li>
 <li>1963 - Visa card transfer (issued by only Russian banks)</li>
 <li>21013 - MasterCard card transfer (issued by only Russian banks)</li>
-<li>For credit card issued by Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan:<ul><li>1960 – Visa card transfer</li><li>21012 – MasterCard card transfer</li></ul></li>
 <li>31652 - national payment system MIR card transer</li>
 <li>22351 - <a href="https://qiwi.com/cards/qvc">QIWI Virtual card</a> transfer</li>
 <li><a href="#banks">Transfer to bank account</a></li>
 <li><a href="#mnp">Mobile network operators</a></li>
-<li><a href="#search">Other providers</a></li>
-<li>1717 - payment by bank requisites</li></ul></li>
+<li><a href="#provider-search">Other providers</a></li>
+<li>1717 - payment by bank requisites</li>
 </ul></li></ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send in URL query to fill the form fields.</span></li>
+    <li><h3>Parameters</h3></li>
 </ul>
+
+Parameters in URL query to fill the form fields:
 
 Name | Type | Description | Form field | Required
 ---------|--------|---|----|----
@@ -206,9 +208,7 @@ extra['account'] |URL-encoded string |  Field format is the same as `fields.acco
 blocked|Array[String]|Name of blocked (inactive) form field. User will not be able to change this field. Each parameter corresponds to respective form field and should be numbered starting from zero (`blocked[0]`, `blocked[1]`, and so on). If absent, user can change all form fields. Possible values:<br>`sum` - "Payment amount" field, <br>`account` - "Phone number/Account number" field,<br>`comment` - "Comment" field.<br> Example (for payment amount field): `blocked[0]=sum` |-|-
 extra['accountType'] | URL-encoded string | **Use only for ID=99999**. The value determines transfer to QIWI wallet by nickname or wallet number. If you don't want to show your wallet number, use transfer to wallet nickname.<br>`phone` - for transfer to wallet number<br>`nickname` - for transfer to wallet nickname. 
 
-### How to get your wallet nickname {#nickname}
-
-Use the following request:
+### How to retrieve your wallet nickname {#nickname}
 
 <h3 class="request method">Request → GET</h3>
 
@@ -343,9 +343,11 @@ def send_p2p(api_access_token, to_qw, comment, sum_p2p):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send JSON object <a href="#payment_obj">Payment</a> in the request's body. Payment requisites in <code>fields</code> field:</span>
+    <li><h3>Parameters</h3>
     </li>
 </ul>
+
+Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
 Name|Type|Description|Required
 --------|----|----|------
@@ -483,9 +485,11 @@ def exchange(api_access_token, sum_exchange, currency, to_qw):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Parameters</h3><span>Send JSON-object <a href="#payment_obj">Payment</a> in the request's body. Payment's requisites in <code>fields</code> JSON field:</span>
+<li><h3>Parameters</h3>
 </li>
 </ul>
+
+Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
 Name|Type|Description|Required
 --------|----|----|------
@@ -618,7 +622,6 @@ from|String| Base currency
 to|String| Quote currency
 rate|Number|Rate
 
-
 ## Mobile network payment {#cell}
 
 <h3 class="request method">Request → POST</h3>
@@ -705,9 +708,11 @@ def send_mobile(api_access_token, prv_id, to_account, comment, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Parameters</h3><span>Send JSON-object <a href="#payment_obj">Payment</a> in the request's body. Payments requisites in JSON-field <code>fields</code>:</span>
+<li><h3>Parameters</h3>
 </li>
 </ul>
+
+Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
 Name|Type|Description
 --------|----|----
@@ -884,17 +889,15 @@ def send_card(api_access_token, payment_data):
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
         <ul>
-             <li><strong>ID</strong> - QIWI provider identifier. Possible values:
+             <li><strong>ID</strong> — QIWI provider identifier. Possible values:
              <ul>
-             <li>1963 - Visa card money transfer (issued by only Russian banks)</li>
-             <li>21013 - MasterCard card money transfer (issued by only Russian banks)</li>
-             <li>31652 - national payment system MIR card money transfer</li>
-             <li>22351 - money transfer to <a href="https://qiwi.com/cards/qvc">QIWI Virtual Card</a></li>
-             <li>For credit card issued by Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan:
-             <ul><li>1960 – Visa card money transfer</li>
-             <li>21012 – MasterCard card money transfer</li>
-             </ul>
-             </li></ul></li>
+             <li>1963 — Visa money transfer to cards issued by Russian banks only.</li>
+             <li>21013 — MasterCard money transfer to cards issued by Russian banks only.</li>
+             <li>31652 — Transfer to national payment system MIR cards.</li>
+             <li>22351 — Transfer to <a href="https://qiwi.com/cards/qvc">QIWI Virtual Card.</a></li>
+             <li>1960 — Visa money transfer to credit cards issued by banks in Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan.</li>
+             <li>21012 — MasterCard money transfer to credit cards issued by banks in
+             Albania, Argentina, Armenia, Australia, Austria, Azerbaijan, Bangladesh, Barbados, Belarus, Belgium, Benin, Bosnia and Herzegovina, Burkina Faso, Brazil, Bulgaria, Cameroon, Cameroon United Republic, Chile, China, Colombia, Congo, Costa Rica, Croatia, Cyprus, Czech Republic, Democratic Republic of the Congo, Denmark, Dominican Republic, Ecuador, El Salvador, Egypt, Estonia, Finland, France, Georgia, Germany, Ghana, Greece, Guatemala, Hong Kong, Hungary, India, Indonesia, Ireland, Israel, Italy, Japan, Jordan, Kazakhstan, Kenya, Korea, Kuwait, Kyrgyzstan, Latvia, Lebanon, Lithuania, Luxembourg, Macao, Macedonia, Madagascar, Malaysia, Maldives, Malta, Mexico, Moldova, Monaco, Mongolia, Montenegro, Morocco, Namibia, Nigeria, Nepal, Netherlands, New Zealand, Nigeria, Norway, Oman, Panama, Paraguay, Peru, Philippines, Poland, Portugal, Romania, Qatar, Russian Federation, Saudi Arabia, Senegal, Serbia Republic, Singapore, Slovakia, Slovenia, South Africa, Spain, Sri Lanka, Sweden, Switzerland, Tajikistan, Tanzania, Thailand, Tunisia, Turkey, Turkmenistan, United Arab Emirates, UK, Uzbekistan, Vietnam, Zambia.</li>
         </ul>
     </li>
 </ul>
@@ -910,9 +913,11 @@ def send_card(api_access_token, payment_data):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Parameters</h3><span>Send JSON-object <a href="#payment_obj">Payment</a> in the request' body. Payment requisites in <code>fields</code> parameter:</span>
+<li><h3>Parameters</h3>
 </li>
 </ul>
+
+Send JSON-object [Payment](#payment_obj) in the request' body. Payment requisites in `fields` object depend on the provider ID.
 
 ### For ID 1963, 21013, 31652, 22351
 
@@ -1054,9 +1059,11 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Parameters</h3><span>Send JSON-object <a href="#payment_obj">Payment</a> in the request' body. Payment requisites in <code>fields</code> parameter:</span>
+<li><h3>Parameters</h3>
 </li>
 </ul>
+
+Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
 Name | Type | Description
 --------|----|----
@@ -1067,7 +1074,6 @@ fields.mfo| String| Bank MFO (BIK)
 fields.lname|String| Recipient's last name
 fields.fname|String| Recipient's first name
 fields.mname|String| Recipient's middle name
-
 
 <h3 class="request">Response ←</h3>
 
@@ -1098,7 +1104,6 @@ Content-Type: application/json
 ~~~
 
 Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
-
 
 ### Transfer to bank account {#transfer-bank-account}
 
@@ -1195,9 +1200,11 @@ Host: edge.qiwi.com
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Parameters</h3><span>Send JSON-object <a href="#payment_obj">Payment</a> in the request' body. Payment requisites in <code>fields</code> parameter:</span>
+<li><h3>Parameters</h3>
 </li>
 </ul>
+
+Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
 Name | Type | Description
 --------|----|----
@@ -1316,7 +1323,7 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
              <li>Other Internet providers</li>
              <li>1239 - Podari zhizn Charitable Foundation</li>
              <li>Other charitable foundations identifiers</li>
-             <li><a href="#provider-search">How to find a service provider identifier</a></li>
+             <li><a href="#provider-search">Find a service provider identifier</a></li>
              </ul></li>
         </ul>
     </li>
@@ -1333,9 +1340,11 @@ def pay_simple_prv(api_access_token, prv_id, to_account, sum_pay):
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Parameters</h3><span>Send JSON-object <a href="#payment_obj">Payment</a> in the request' body. Payment requisites in <code>fields</code> parameter:</span>
+<li><h3>Parameters</h3>
 </li>
 </ul>
+
+Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
 Name | Type | Description
 --------|----|----
@@ -1470,9 +1479,11 @@ User-Agent: ****
 </ul>
 
 <ul class="nestedList params">
-<li><h3>Parameters</h3><span>Send JSON-object <a href="#payment_obj">Payment</a> in the request' body. Payment requisites in <code>fields</code> parameter:</span>
+<li><h3>Parameters</h3>
 </li>
 </ul>
+
+Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
 Name | Type | Description
 --------|----|----
@@ -1540,7 +1551,6 @@ Content-Type: application/json
 
 Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-
 ## QIWI provider search {#search}
 
 ### Search by string {#provider-search}
@@ -1585,7 +1595,6 @@ def qiwi_com_search(search_phrase):
         </ul>
     </li>
 </ul>
-
 
 <h3 class="request">Response ←</h3>
 
@@ -1673,9 +1682,11 @@ def mobile_operator(phone_number):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send parameter in the request's body as <code>formdata</code>.</span>
+    <li><h3>Parameters</h3>
     </li>
 </ul>
+
+Send parameter in the request's body as `formdata`:
 
 Name | Type | Description
 --------|----|----
@@ -1716,7 +1727,7 @@ Content-Type: application/json
 ~~~
 
 ~~~python
-print(mobile_operator(79652468447))
+print(mobile_operator('79652468447'))
 ~~~
 
 Response with HTTP Status 200 and `code.value` = 0 means successful operator determination. QIWI provider ID is the value of `message` field.
@@ -1771,9 +1782,11 @@ def card_system(card_number):
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send parameter in the request's body as <code>formdata</code>.</span>
+    <li><h3>Parameters</h3>
     </li>
-</ul> 
+</ul>
+
+Send parameter in the request's body as `formdata`:
 
 Name | Type | Description
 --------|----|----
@@ -1797,7 +1810,7 @@ Content-Type: application/json
 ~~~
 
 ~~~python
-print(card_system(4890xxxxxxxx1698))
+print(card_system('4890xxxxxxxx1698'))
 ~~~
 
 > Cannot get provider ID for credit card money transfer
@@ -1918,7 +1931,6 @@ transaction.state|Object|Current state of the transaction
 ---|---|---
 state.code | String| Current status of the transaction. Only `Accepted` is returned (it means that the payment is accepted for processing). Actual transaction status can be obtained from [Payments history API](#payments_history).
 
-
 # Invoices {#invoices}
 
 Invoice is the universal request for payment or money transfer in QIWI Wallet system.
@@ -1971,11 +1983,12 @@ User-Agent: ****
     </li>
 </ul>
 
-
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send in JSON-body.</span>
+    <li><h3>Parameters</h3>
     </li>
-</ul> 
+</ul>
+
+Send parameters in JSON-body:
 
 Name|Type|Description
 --------|----|----
@@ -2019,9 +2032,11 @@ User-Agent: ****
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send them in the request query:</span>
+    <li><h3>Parameters</h3>
     </li>
 </ul>
+
+Send parameters in the request query URL:
 
 Name|Type|Description
 --------|----|----
@@ -2139,15 +2154,16 @@ User-Agent: ****
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameters</h3><span>Send JSON in the request body. All parameters are required.</span>
+    <li><h3>Parameters</h3>
     </li>
 </ul>
+
+Required parameters in JSON body:
 
 Name|Type|Description
 --------|----|----
 invoice_uid | String |QIWI invoice ID (take it from `bills[].id` field of [invoice data](#invoice_data)
 currency|String| Invoice currency (take it from `bills[].sum.currency` field of [invoice data](#invoice_data))
-
 
 <h3 class="request">Response ←</h3>
 
@@ -2171,9 +2187,7 @@ is_sms_confirm|String|SMS confirmation flag
 
 ## Unpaid invoice cancelling {#cancel_invoice}
 
-Rejects an unpaid invoice. 
-This makes the invoice unavailable for payment.
-
+Rejects an unpaid invoice. This makes the invoice unavailable for payment.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -2212,10 +2226,11 @@ User-Agent: ****
 </ul>
 
 <ul class="nestedList params">
-    <li><h3>Parameter</h3><span>Required, send it in JSON body:</span>
+    <li><h3>Parameter</h3>
     </li>
 </ul>
 
+Required parameter in JSON body:
 
 Name|Type|Description
 --------|----|----
