@@ -606,7 +606,7 @@ type | String| Payment type. Possible values:<br>`IN` - top-up, <br>`OUT` - paym
 status|String| Payment status. Possible values:<br>`WAITING` - payment is processing, <br>`SUCCESS` - successful payment, <br>`ERROR` - payment error.
 statusText|String | Text description of the status
 trmTxnId|String| Transaction's client ID (assigned on the client device)
-account| String| For payments, recipient's account number. For top-ups, sender's number, terminal's number or top-up agent name
+account| String| For payments, recipient's identifier (masked card number, phone number, account number etc.). For top-ups, sender's or terminal's identifier, or top-up agent name
 sum|Object| Payment's amount data.
 -----|-----|-----
 sum.amount|Number(Decimal)|amount,
