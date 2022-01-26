@@ -66,27 +66,19 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>/sinap/providers/<a>id</a>/onlineCommission</span></h3>
-        <ul>
-             <li><strong>id</strong> - provider's identifier. Possible values:
-             <ul><li>99 — QIWI Wallet transfer.</li>
-             <li>1963 — Visa money transfer to cards issued by Russian banks only.</li>
-             <li>21013 — MasterCard money transfer to cards issued by Russian banks only.</li>
-             <li>1960 — Visa money transfer to credit cards issued by banks in Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan.</li>
-             <li>21012 — MasterCard money transfer to credit cards issued by banks in
-             Albania, Argentina, Armenia, Australia, Austria, Azerbaijan, Bangladesh, Barbados, Belarus, Belgium, Benin, Bosnia and Herzegovina, Burkina Faso, Brazil, Bulgaria, Cameroon, Cameroon United Republic, Chile, China, Colombia, Congo, Costa Rica, Croatia, Cyprus, Czech Republic, Democratic Republic of the Congo, Denmark, Dominican Republic, Ecuador, El Salvador, Egypt, Estonia, Finland, France, Georgia, Germany, Ghana, Greece, Guatemala, Hong Kong, Hungary, India, Indonesia, Ireland, Israel, Italy, Japan, Jordan, Kazakhstan, Kenya, Korea, Kuwait, Kyrgyzstan, Latvia, Lebanon, Lithuania, Luxembourg, Macao, Macedonia, Madagascar, Malaysia, Maldives, Malta, Mexico, Moldova, Monaco, Mongolia, Montenegro, Morocco, Namibia, Nigeria, Nepal, Netherlands, New Zealand, Nigeria, Norway, Oman, Panama, Paraguay, Peru, Philippines, Poland, Portugal, Romania, Qatar, Russian Federation, Saudi Arabia, Senegal, Serbia Republic, Singapore, Slovakia, Slovenia, South Africa, Spain, Sri Lanka, Sweden, Switzerland, Tajikistan, Tanzania, Thailand, Tunisia, Turkey, Turkmenistan, United Arab Emirates, UK, Uzbekistan, Vietnam, Zambia.</li>
-             <li>31652 — tranfer to national payment system MIR cards.</li>
-             <li>466 — Tinkoff bank.</li>
-             <li>464 — Alpha bank.</li>
-             <li>821 — Promsvyazbank.</li>
-             <li>815 - Russkiy Standard.</li>
-             <li><a href="#banks">Other banks</a>.</li>
-             <li><a href="#mnp">Mobile network operators</a>.</li>
-             <li><a href="#provider-search">Other providers</a>.</li>
-             <li>1717 — payment by bank requisites.</li></ul></li>
-        </ul>
+    <li><h3>URL <span>/sinap/providers/<a>ID</a>/onlineCommission</span></h3>
     </li>
 </ul>
+
+**ID** — provider's identifier. Possible values:
+
+* 99 — QIWI Wallet transfer.
+* [Providers of money transfer to cards](#cards).
+* [Providers of bank wire transfer](#banks).
+* [Mobile network operators](#mnp).
+* 1717 — [Payment by bank requisites to commercial organization](#freepay).
+
+You can also search for a required identifier [through API by keywords](#provider-search).
 
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
@@ -163,7 +155,7 @@ Provides auto-filled payment form on qiwi.com site.
 
 [Link example (click to see the form)](https://qiwi.com/payment/form/99?extra%5B%27account%27%5D=79991112233&amountInteger=1&amountFraction=0&extra%5B%27comment%27%5D=test123&currency=643&blocked[0]=account)
 
-If you don't want to show your wallet number, use transfer to wallet nickname:
+If you don't want to show your wallet number, use transfer to the wallet nickname:
 
 [Link example for nickname transfer (click to see the form)](https://qiwi.com/payment/form/99999?extra%5B%27account%27%5D=NICKNAME&amountInteger=1&amountFraction=0&currency=643&blocked[0]=account&extra%5B%27accountType%27%5D=nickname)
 
@@ -177,20 +169,22 @@ Host: qiwi.com
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/<a>ID</a>?<a>parameter=value</a></span></h3>
-<ul>
-<li><strong>id</strong> - provider's identifier. Possible values:
-<ul><li>99 - QIWI Wallet transfer</li>
-<li>99999 - QIWI Wallet nickname transfer</li>
-<li>1963 - Visa card transfer (issued by only Russian banks)</li>
-<li>21013 - MasterCard card transfer (issued by only Russian banks)</li>
-<li>31652 - national payment system MIR card transer</li>
-<li>22351 - <a href="https://qiwi.com/cards/qvc">QIWI Virtual card</a> transfer</li>
-<li><a href="#banks">Transfer to bank account</a></li>
-<li><a href="#mnp">Mobile network operators</a></li>
-<li><a href="#provider-search">Other providers</a></li>
-<li>1717 - payment by bank requisites</li>
-</ul></li></ul>
+    <li><h3>URL <span>https://qiwi.com/<a>ID</a>?<a>{parameter}={value}</a></span></h3>
+    </li>
+</ul>
+
+**ID** — provider's identifier. Only providers with [payment requisites](#payments_model) limited to `fields.account` are accepted. Possible values:
+
+* 99 — QIWI Wallet transfer.
+* 99999 — QIWI Wallet nickname transfer.
+* 1963 — Visa card transfer (issued by only Russian banks).
+* 21013 — MasterCard card transfer (issued by only Russian banks).
+* 31652 — MIR national payment system card transfer.
+* 22351 — [QIWI Virtual card](https://qiwi.com/cards/qvc) transfer.
+* 1717 — [Payment by bank requisites to commercial organization](#freepay).
+* [Mobile network operators](#mnp).
+
+You can also search for a required identifier [through API by keywords](#provider-search).
 
 <ul class="nestedList params">
     <li><h3>Parameters</h3></li>
@@ -198,15 +192,15 @@ Host: qiwi.com
 
 Parameters in URL query to fill the form fields:
 
-Name | Type | Description | Form field | Required
----------|--------|---|----|----
-amountInteger|Integer | Integer part of the payment amount (in rubles). If absent, "Amount" field will be empty. **The number not greater than 99 999 (payment amount limit)** | Anmount | -
-amountFraction|Integer | Fractional part of the payment amount (kopeks). If absent,  Дробная часть суммы платежа (копейки). Если параметр не указан, "Amount" field will be empty.|Сумма | -
-currency|Constant string, `643` | Payment currency code. **Required if you send the payment amount in the link** |-|+
-extra['comment'] |URL-encoded string | Payment comment. **Use it only for ID=99** | Comment to the transfer | -
-extra['account'] |URL-encoded string |  Field format is the same as `fields.account` of the corresponding payment request: for provider `99` - recipient's wallet number; for mobile network operators - phone number for top-up (without international prefix); for card transfer - recipient's card number without spaces, for other providers - user's identifier. For provider `99999` use nickname or number of the wallet and use appropriate value of `extra['accountType']` parameter.| Wallet number, phone number, user ID.|-
-blocked|Array[String]|Name of blocked (inactive) form field. User will not be able to change this field. Each parameter corresponds to respective form field and should be numbered starting from zero (`blocked[0]`, `blocked[1]`, and so on). If absent, user can change all form fields. Possible values:<br>`sum` - "Payment amount" field, <br>`account` - "Phone number/Account number" field,<br>`comment` - "Comment" field.<br> Example (for payment amount field): `blocked[0]=sum` |-|-
-extra['accountType'] | URL-encoded string | **Use only for ID=99999**. The value determines transfer to QIWI wallet by nickname or wallet number. If you don't want to show your wallet number, use transfer to wallet nickname.<br>`phone` - for transfer to wallet number<br>`nickname` - for transfer to wallet nickname. 
+Name             | Type                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Form field                            | Required
+-----------------|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|---------
+amountInteger    | Integer                | Integer part of the payment amount (in rubles). If absent, the "Amount" field on the form will be empty. **The number not greater than 99 999 (payment amount limit)**                                                                                                                                                                                                                                                                                                  | Amount                                | -
+amountFraction   | Integer                | Fractional part of the payment amount (kopeks). If absent, the "Amount" field on the form will be empty.                                                                                                                                                                                                                                                                                                                                                                | Amount                                | -
+currency         | Constant string, `643` | Payment currency code. **Required if you send the payment amount in the link**                                                                                                                                                                                                                                                                                                                                                                                          | -                                     | +
+extra['comment'] | URL-encoded string     | Payment comment. **Use it only for ID=99**                                                                                                                                                                                                                                                                                                                                                                                                                              | Comment to the transfer               | -
+extra['account'] | URL-encoded string     | Field format is the same as `fields.account` of the corresponding payment request: for provider `99` - recipient's wallet number; for mobile network operators - phone number for top-up (without international prefix); for card transfer - recipient's card number without spaces, for other providers - user's identifier. For provider `99999` use [nickname](#nickname) or number of the wallet and use appropriate value of `extra['accountType']` parameter.                  | Wallet number, phone number, user ID. | -
+blocked          | Array[String]          | Name of blocked (inactive) form field. User will not be able to change this field. Each parameter corresponds to respective form field and should be numbered starting from zero (`blocked[0]`, `blocked[1]`, and so on). If absent, user can change all form fields. Possible values:<br>`sum` - "Payment amount" field, <br>`account` - "Phone number/Account number" field,<br>`comment` - "Comment" field.<br> Example (for payment amount field): `blocked[0]=sum` | -                                     | -
+extra['accountType'] | URL-encoded string | **Use only for ID=99999**. The value determines transfer to QIWI wallet by nickname or wallet number.<br>`phone` - for transfer to wallet number<br>`nickname` - for transfer to wallet nickname. If you don't want to show your wallet number on the form, use this value.
 
 ### How to retrieve your wallet nickname {#nickname}
 
@@ -716,7 +710,7 @@ Send JSON object [Payment](#payment_obj) in the request's body. Payment requisit
 
 Name|Type|Description
 --------|----|----
-fields.account| String|Cell phone number to topup (without `8` prefix)
+fields.account| String|Cell phone number to top-up (without `8` prefix)
 
 <h3 class="request">Response ←</h3>
 
@@ -752,7 +746,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Card money transfer {#cards}
 
-Makes money transfer to Visa, MasterCard, or MIR credit cards. Preliminary check [card system provider ID](#card_check).
+Makes money transfer to Visa, MasterCard, or MIR credit cards. To make sure you choose the correct identifier, check [provider ID by card number](#card_check) first.
 
 <h3 class="request method">Request → POST</h3>
 
@@ -888,19 +882,17 @@ def send_card(api_access_token, payment_data):
 
 <ul class="nestedList url">
     <li><h3>URL <span>/sinap/api/v2/terms/<a>ID</a>/payments</span></h3>
-        <ul>
-             <li><strong>ID</strong> — QIWI provider identifier. Possible values:
-             <ul>
-             <li>1963 — Visa money transfer to cards issued by Russian banks only.</li>
-             <li>21013 — MasterCard money transfer to cards issued by Russian banks only.</li>
-             <li>31652 — Transfer to national payment system MIR cards.</li>
-             <li>22351 — Transfer to <a href="https://qiwi.com/cards/qvc">QIWI Virtual Card.</a></li>
-             <li>1960 — Visa money transfer to credit cards issued by banks in Azerbaijan, Armenia, Belarus, Bulgaria, Brasil, China, Croatia, Cyprus, Czechia, Estonia, Hungary, Germany, Greece, Georgia, Egypt, India, Japan, Kazakhstan, Kyrgyzstan, Latvia, Lithuania, Malta, Moldova, New Zealand, United Arab Emirates, Romania, Saudi Arabia, Serbia, Singapore, Slovakia, Slovenia, South Korea, Tajikistan, Thailand, Turkmenistan, Turkey, Uzbekistan.</li>
-             <li>21012 — MasterCard money transfer to credit cards issued by banks in
-             Albania, Argentina, Armenia, Australia, Austria, Azerbaijan, Bangladesh, Barbados, Belarus, Belgium, Benin, Bosnia and Herzegovina, Burkina Faso, Brazil, Bulgaria, Cameroon, Cameroon United Republic, Chile, China, Colombia, Congo, Costa Rica, Croatia, Cyprus, Czech Republic, Democratic Republic of the Congo, Denmark, Dominican Republic, Ecuador, El Salvador, Egypt, Estonia, Finland, France, Georgia, Germany, Ghana, Greece, Guatemala, Hong Kong, Hungary, India, Indonesia, Ireland, Israel, Italy, Japan, Jordan, Kazakhstan, Kenya, Korea, Kuwait, Kyrgyzstan, Latvia, Lebanon, Lithuania, Luxembourg, Macao, Macedonia, Madagascar, Malaysia, Maldives, Malta, Mexico, Moldova, Monaco, Mongolia, Montenegro, Morocco, Namibia, Nigeria, Nepal, Netherlands, New Zealand, Nigeria, Norway, Oman, Panama, Paraguay, Peru, Philippines, Poland, Portugal, Romania, Qatar, Russian Federation, Saudi Arabia, Senegal, Serbia Republic, Singapore, Slovakia, Slovenia, South Africa, Spain, Sri Lanka, Sweden, Switzerland, Tajikistan, Tanzania, Thailand, Tunisia, Turkey, Turkmenistan, United Arab Emirates, UK, Uzbekistan, Vietnam, Zambia.</li>
-        </ul>
     </li>
 </ul>
+
+**ID** — QIWI provider identifier. Possible values:
+
+* 1963 — Visa money transfer to cards issued by Russian banks only.
+* 21013 — MasterCard money transfer to cards issued by Russian banks only.
+* 1960 — Visa money transfer to credit cards issued by banks in Albania, Andorra, Argentina, Armenia, Australia, Austria, Azerbaijan, Belarus, Belgium, Benin, Bosnia and Herzegovina, Brazil, Bulgaria, China, Croatia, Cyprus, Czech Republic, Denmark, Egypt, Estonia, Finland, France, Georgia, Germany , Greece, Hong Kong (China), Hungary, Iceland, India, Indonesia, Israel, Italy, Japan, Kazakhstan, Kenya, Korea Republic, Kuwait, Kyrgyzstan, Latvia, Lithuania, Luxembourg, Macao, China, Macedonia, Madagascar, Malaysia, Maldives , Malta, Republic of Moldova, Monaco, Mongolia, Montenegro, Namibia, Netherlands, New Zealand, Nigeria, Norway, Oman, Paraguay, Poland, Portugal, Qatar, Romania, Saudi Arabia, Republic of Serbia, Singapore, Slovakia, Slovenia, South Africa, Spain, Sri Lanka, Sweden, Tajikistan, Tanzania, Thailand, Turkey, Turkmenistan, United Arab Emirates, United Kingdom, Uzbekistan, Vietnam, Zambia.
+* 21012 — MasterCard money transfer to credit cards issued by banks in Albania, Argentina, Armenia, Australia, Austria, Azerbaijan, Bangladesh, Barbados, Belarus, Belgium, Benin, Bosnia and Herzegovina, Burkina Faso, Brazil, Bulgaria, Cambodia, Cameroon United Republic, Chile, China, Colombia, Congo, Costa Rica, Croatia, Cyprus, Czech Republic, Democratic Republic of the Congo, Denmark, Dominican Republic, Ecuador, El Salvador, Egypt, Estonia, Finland, France, Georgia, Germany, Ghana, Greece, Guatemala, Hong Kong, Hungary, India, Indonesia, Ireland, Israel, Italy, Japan, Jordan, Kazakhstan, Kenya, Korea, Kuwait, Kyrgyzstan, Latvia, Lebanon, Lithuania, Luxembourg, Macao, Macedonia, Madagascar, Malaysia, Maldives, Malta, Mexico, Moldova, Monaco, Mongolia, Montenegro, Morocco, Namibia, Nigeria, Nepal, Netherlands, New Zealand, Nigeria, Norway, Oman, Panama, Paraguay, Peru, Philippines, Poland, Portugal, Romania, Qatar, Russian Federation, Saudi Arabia, Senegal, Serbia Republic, Singapore, Slovakia, Slovenia, South Africa, Spain, W ri-Lanka, Sweden, Switzerland, Tajikistan, Tanzania, Thailand, Tunisia, Turkey, Turkmenistan, United Arab Emirates, United Kingdom, Uzbekistan, Vietnam, Zambia.
+* 31652 — Transfer to MIR national payment system cards.
+* 22351 — Transfer to [QIWI Virtual Card](https://qiwi.com/cards/qvc).
 
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
@@ -1000,7 +992,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/sinap/api/v2/terms/464/paymen
         "fields": { \
           "account_type": "1", \
           "account":"4256********1231", \
-          "exp_date": "MMYY" \
+          "exp_date": "0623" \
         } \
       }'
 ~~~
@@ -1025,7 +1017,7 @@ Host: edge.qiwi.com
   "fields": {
         "account":"4256********1231",
         "account_type": "1",
-        "exp_date": "MMYY"
+        "exp_date": "0623"
   }
 }
 ~~~
@@ -1087,7 +1079,7 @@ Content-Type: application/json
   "fields": {
       "account": "4256********1231",
       "account_type": "1",
-      "exp_date": "MMYY"
+      "exp_date": "0423"
   },
   "sum": {
       "amount": 1000,
@@ -1211,7 +1203,7 @@ Name | Type | Description
 fields.account| String| Recipient's bank account number
 fields.urgent | String | Quick transfer flag. For `0` - not used; for `1` - make quick transfer by Urgent transfer service of Central Bank of Russia. **Extra commission is paid for quick transfer**
 fields.mfo| String| Bank MFO (BIK)
-fields.account_type| String| Bank identifier type. For each bank specfic value applies:<br>ID 464 - `2`<br>ID 804 - `2`<br>ID 810 - `2`<br>ID 815 - `2`<br>ID 816 - `2`<br>ID 821 - `9`<br>ID 819 - `2`<br>ID 868 - `2`<br>ID 870 - `2`<br>ID 1134 - `2`<br>ID 27324 -`2`<br>ID 810 - `2`<br>ID 816 - `5`<br>ID 821 - `9`<br>ID 881 - `2`<br>ID 313 - `6`.
+fields.account_type| String| Bank identifier type. For each bank specific value applies:<br>ID 464 - `2`<br>ID 804 - `2`<br>ID 810 - `2`<br>ID 815 - `2`<br>ID 816 - `2`<br>ID 821 - `9`<br>ID 819 - `2`<br>ID 868 - `2`<br>ID 870 - `2`<br>ID 1134 - `2`<br>ID 27324 -`2`<br>ID 810 - `2`<br>ID 816 - `5`<br>ID 821 - `9`<br>ID 881 - `2`<br>ID 313 - `6`.
 fields.lname|String| Recipient's last name
 fields.fname|String| Recipient's first name
 fields.mname|String| Recipient's middle name
@@ -1555,7 +1547,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ### Search by string {#provider-search}
 
-Performs search of QIWI provider's ID for [payment methods](#services).
+Performs search of QIWI provider's ID for [payment methods](#services) by keywords (for example, provider's name).
 
 <h3 class="request method">Request → POST</h3>
 
@@ -1581,7 +1573,7 @@ def qiwi_com_search(search_phrase):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase=value</a></span></h3>
+    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase={value}</a></span></h3>
         <ul>
              <li><strong>searchPhrase</strong> - keywords for provider's searching.</li>
         </ul>
@@ -2097,7 +2089,7 @@ sum.currency|Integer| Invoice currency
 sum.amount|Number| Invoice amount
 ---|----|----
 bills[].status|String | Constant, `READY_FOR_PAY`
-bills[].type|String| Cinstant, `MERCHANT`
+bills[].type|String| Constant, `MERCHANT`
 bills[].repetitive|Boolean|Service data
 bills[].provider|Object| Merchant information
 ---|----|----
@@ -2106,7 +2098,7 @@ provider.short_name|String| Short name
 provider.long_name|String| Full name
 provider.logo_url|String| Logo URL
 ---|----|----
-bills[].comment|String| Invoce comment
+bills[].comment|String| Invoice comment
 bills[].pay_url|String| URL to pay for the invoice on QIWI Payment Form
 
 ## Invoice payment {#paywallet_invoice}
