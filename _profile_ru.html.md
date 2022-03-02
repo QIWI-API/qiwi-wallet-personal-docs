@@ -550,7 +550,7 @@ def get_restrictions(api_access_token, mylogin):
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>person-profile/v1/persons/<a>personId</a>/status/restrictions</span></h3>
+    <li><h3>URL <span>/person-profile/v1/persons/<a>personId</a>/status/restrictions</span></h3>
                      <ul>
                           <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
                      </ul>
@@ -575,8 +575,8 @@ Content-Type: application/json
 
 [
     {
-        "restrictionCode": "OUTGOING_PAYMENTS",
-        "restrictionDescription": "Исходящие платежи заблокированы"
+      "restrictionCode": "OUTGOING_PAYMENTS",
+      "restrictionDescription": "Исходящие платежи заблокированы"
     }
 ]
 ~~~
@@ -588,8 +588,8 @@ print(get_restrictions(api_access_token, mylogin))
 
 [
     {
-        "restrictionCode": "OUTGOING_PAYMENTS",
-        "restrictionDescription": "Исходящие платежи заблокированы"
+      "restrictionCode": "OUTGOING_PAYMENTS",
+      "restrictionDescription": "Исходящие платежи заблокированы"
     }
 ]
 ~~~
