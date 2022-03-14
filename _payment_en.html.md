@@ -748,6 +748,8 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 Makes money transfer to Visa, MasterCard, or MIR credit cards. To make sure you choose the correct identifier, check [provider ID by card number](#card_check) first.
 
+<span style="font-weight:bold;color:red;">Money transfers to Visa and MasterCard cards issued by foreign banks are suspended due to restrictions from the payment system</span>.
+
 <h3 class="request method">Request → POST</h3>
 
 ~~~shell
