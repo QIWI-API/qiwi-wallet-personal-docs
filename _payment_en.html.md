@@ -2020,7 +2020,7 @@ User-Agent: ****
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer XXX</li>
+             <li>Authorization: Bearer XXX (<a href="#p2p-token">P2P API Token</a>)</li>
         </ul>
     </li>
 </ul>
@@ -2081,7 +2081,7 @@ Successful JSON response includes a list of unpaid invoices according to the con
 Response field| Type| Description
 --------|----|----
 bills|Array[Object]|List of invoices.<br>List length is `rows` parameter from the original request, or 50, if it is absent
-bills[].id|Integer| QIWI Wallet invoice ID 
+bills[].id|Integer| QIWI Wallet invoice ID
 bills[].external_id|String| Merchant's invoice ID
 bills[].creation_datetime|Long| Date/time of the invoice creation, Unix-time
 bills[].expiration_datetime|Long| Date/time of the invoice expiration, Unix-time
@@ -2142,7 +2142,7 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer XXX</li>
+             <li>Authorization: Bearer XXX (<a href="#p2p-token">P2P API Token</a>)</li>
         </ul>
     </li>
 </ul>
@@ -2214,7 +2214,7 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer XXX</li>
+             <li>Authorization: Bearer XXX (<a href="#p2p-token">P2P API Token</a>)</li>
         </ul>
     </li>
 </ul>

@@ -1948,7 +1948,7 @@ Content-Type: application/json
 <ul class="nestedList params">
     <li><h3>Параметры</h3>
     </li>
-</ul> 
+</ul>
 
 Параметры передаются в теле запроса как JSON:
 
@@ -1985,7 +1985,7 @@ User-Agent: ****
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer XXX</li>
+             <li>Authorization: Bearer XXX (<a href="#p2p-token">Токен P2P API</a>)</li>
         </ul>
     </li>
 </ul>
@@ -2107,7 +2107,7 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer XXX</li>
+             <li>Authorization: Bearer XXX (<a href="#p2p-token">Токен P2P API</a>)</li>
         </ul>
     </li>
 </ul>
@@ -2179,7 +2179,7 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f</li>
+             <li>Authorization: Bearer XXX (<a href="#p2p-token">Токен P2P API</a>)</li>
         </ul>
     </li>
 </ul>
