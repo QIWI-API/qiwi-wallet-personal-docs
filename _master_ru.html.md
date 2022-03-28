@@ -7,7 +7,7 @@ API дает доступ к управлению пакетом услуг [QIW
 Доступны два типа карт:
 
 * QIWI Мастер Prepaid – для оплаты рекламы в сервисах Яндекс.Директ и myTarget;
-* QIWI Мастер Debit – для оплаты рекламы в сервисах Facebook и Google.
+* QIWI Мастер Debit – новый дебетовый БИН.
 
 Для вызова методов API вам потребуется токен API QIWI Wallet с разрешениями на следующие действия:
 
@@ -202,7 +202,7 @@ cardId|String|Не заполняется
 Название карты | Описание | cardAlias
 ---|----|-----
 QIWI Мастер Prepaid | Для оплаты рекламы в сервисах Яндекс.Директ и myTarget | "qvc-cpa"
-QIWI Мастер Debit | Для оплаты рекламы в сервисах Facebook и Google | "qvc-cpa-debit"
+QIWI Мастер Debit | Новый дебетовый БИН | "qvc-cpa-debit"
 
 ### Шаг 2. Подтверждение заказа {#card-order-confirm}
 
@@ -334,7 +334,7 @@ Host: edge.qiwi.com
       "status": "ACTIVE",
       "cardExpire": "2022-01-31T00:00:00+03:00",
       "cardType": "VIRTUAL",
-      "cardAlias": "Facebook",
+      "cardAlias": "Yandex",
       "cardLimit": null,
       "activated": "2020-01-29T11:10:59+03:00",
       "smsResended": "2020-01-29T11:35:01+03:00",
