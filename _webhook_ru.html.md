@@ -288,13 +288,13 @@ hash|String| Хэш цифровой подписи уведомления
 <h3 class="request method">Запрос → PUT</h3>
 
 ~~~shell
-curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fecho.fjfalcon.ru%2F&txnType=2" \
+curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fexample.com%2Fcallbacks%2F&txnType=2" \
      -H "accept: */*" \
      -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
 ~~~
 
 ~~~http
-PUT /payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fecho.fjfalcon.ru%2F&txnType=2 HTTP/1.1
+PUT /payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fexample.com%2Fcallbacks%2F&txnType=2 HTTP/1.1
 Host: edge.qiwi.com
 Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
 User-Agent: ****
@@ -334,7 +334,7 @@ Content-Type: application/json
 {
   "hookId":"d63a8729-f5c8-486f-907d-9fb8758afcfc",
   "hookParameters":{
-    "url":"http://echo.fjfalcon.ru/"
+    "url":"http://example.com/callbacks/"
   },
   "hookType":"WEB",
   "txnType":"BOTH"
@@ -555,7 +555,7 @@ Content-Type: application/json
 {
   "hookId":"d63a8729-f5c8-486f-907d-9fb8758afcfc",
   "hookParameters":{
-    "url":"http://echo.fjfalcon.ru/"
+    "url":"http://example.com/callbacks/"
   },
   "hookType":"WEB",
   "txnType":"BOTH"
