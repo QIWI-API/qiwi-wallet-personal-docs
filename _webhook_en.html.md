@@ -9,7 +9,7 @@
 POST /some-hook.php HTTP/1.1
 Accept: application/json
 Content-type: application/json
-Host: falcon.com
+Host: example.com
 
 {"hash": "50779a03d90c4fa60ac44dfd158dbceec0e9c57fa4cf4f5298450fdde1868945",
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
@@ -37,7 +37,7 @@ Host: falcon.com
 POST /some-hook.php HTTP/1.1
 Accept: application/json
 Content-type: application/json
-Host: falcon.com
+Host: example.com
 
 {"hash": "50779a03d90c4fa60ac44dfd158dbceec0e9c57fa4cf4f5298450fdde1868945",
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
@@ -65,7 +65,7 @@ Host: falcon.com
 POST /some-hook.php HTTP/1.1
 Accept: application/json
 Content-type: application/json
-Host: falcon.com
+Host: example.com
 
 {"hash": "0637b07b1018d76585db26b0f8077016b12996006429e22a7dc5b6982710a1ef",
  "hookId": "f57f95e2-149f-4278-b2cb-4114bc319727",
@@ -93,7 +93,7 @@ Host: falcon.com
 POST /some-hook.php HTTP/1.1
 Accept: application/json
 Content-type: application/json
-Host: falcon.com
+Host: example.com
 
 {"hash": "a56ed0090fa3fd2fd0b002ed80f85a120037a6a85f840938888275e1631da96f",
  "hookId": "8c79f60d-0272-476b-b120-6e7629467328",
