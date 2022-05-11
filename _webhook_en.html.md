@@ -323,8 +323,8 @@ User-Agent: ****
 Name|Type|Description
 ----|-----|------
 hookType|Integer|Webhook type. Only `1`.
-param|URL-encoded| Service URL. **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**
-txnType|String| Choose type of transactions for notifications:<br>0 - only incoming transactions (wallet topup);<br>1 - only outgoing transactions (payments);<br>2 - all transactions
+param|URL-encoded| Service URL. URL original length (before URL-encoding) must be within 100 symbols. **URL must be accessible from the Internet**.
+txnType|String| Choose type of transactions for notifications:<br>0 - only incoming transactions (wallet top-up);<br>1 - only outgoing transactions (payments);<br>2 - all transactions
 
 <h3 class="request">Response ←</h3>
 
