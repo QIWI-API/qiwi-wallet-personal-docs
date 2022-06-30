@@ -1,6 +1,6 @@
 # Payments API {#payments}
 
-###### Last update: 2022-01-20 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_en.html.md)
+###### Last update: 2022-06-30 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_en.html.md)
 
 ## Commission rates {#rates}
 
@@ -57,7 +57,7 @@ import requests
 def get_commission(api_access_token, to_account, prv_id, sum_pay):
     s = requests.Session()
     s.headers = {'content-type': 'application/json'}
-    s.headers['authorization'] = 'Bearer ' + api_access_token  
+    s.headers['authorization'] = 'Bearer ' + api_access_token
     postjson = {"account":"","paymentMethod":{"type":"Account","accountId":"643"}, "purchaseTotals":{"total":{"amount":"","currency":"643"}}}
     postjson['account'] = to_account
     postjson['purchaseTotals']['total']['amount'] = sum_pay
@@ -73,10 +73,8 @@ def get_commission(api_access_token, to_account, prv_id, sum_pay):
 **ID** — provider's identifier. Possible values:
 
 * 99 — QIWI Wallet transfer.
-* [Providers of money transfer to cards](#cards).
-* [Providers of bank wire transfer](#banks).
-* [Mobile network operators](#mnp).
 * 1717 — [Payment by bank requisites to commercial organization](#freepay).
+* [Providers of bank wire transfer](#banks).
 
 You can also search for a required identifier [through API by keywords](#provider-search).
 
@@ -182,7 +180,6 @@ Host: qiwi.com
 * 31652 — MIR national payment system card transfer.
 * 22351 — [QIWI Virtual card](https://qiwi.com/cards/qvc) transfer.
 * 1717 — [Payment by bank requisites to commercial organization](#freepay).
-* [Mobile network operators](#mnp).
 
 You can also search for a required identifier [through API by keywords](#provider-search).
 
@@ -746,7 +743,7 @@ Successful response contains JSON-object [PaymentInfo](#payment_info) with accep
 
 ## Card money transfer {#cards}
 
-Makes money transfer to Visa, MasterCard, or MIR credit cards. To make sure you choose the correct identifier, check [provider ID by card number](#card_check) first.
+Transfers money to Visa, MasterCard, or MIR credit cards.
 
 <span style="font-weight:bold;color:red;">Money transfers to Visa and MasterCard cards issued by foreign banks are suspended due to restrictions from the payment system</span>.
 
@@ -877,7 +874,7 @@ def send_card(api_access_token, payment_data):
         postjson['fields']['reg_name_f'] = payment_data.get('reg_name_f')
         postjson['fields']['rec_city'] = payment_data.get('rec_address')
         postjson['fields']['rec_address'] = payment_data.get('rec_address')
-        
+
     res = s.post('https://edge.qiwi.com/sinap/api/v2/terms/' + prv_id + '/payments', json = postjson)
     return res.json()
 ~~~
@@ -1545,23 +1542,21 @@ Content-Type: application/json
 
 Successful response contains JSON-object [PaymentInfo](#payment_info) with accepted payment data.
 
-## QIWI provider search {#search}
-
-### Search by string {#provider-search}
+## QIWI provider search {#provider-search}
 
 Performs search of QIWI provider's ID for [payment methods](#services) by keywords (for example, provider's name).
 
-<h3 class="request method">Request → POST</h3>
+<h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
+user@server:~$ curl -X GET "https://edge.qiwi.com/search/v1/search?query=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
   --header "Accept: application/json"
 ~~~
 
 ~~~http
-POST /search/results/json.action?searchPhrase=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
+GET /search/v1/search?query=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
 Accept: application/json
-Host: qiwi.com
+Host: edge.qiwi.com
 ~~~
 
 ~~~python
@@ -1570,14 +1565,14 @@ import requests
 # provider id by its name
 def qiwi_com_search(search_phrase):
     s = requests.Session()
-    search = s.post('https://qiwi.com/search/results/json.action', params={'searchPhrase':search_phrase})
+    search = s.get('https://edge.qiwi.com/search/v1/search', params={'query':search_phrase})
     return search.json()['data']['items']
 ~~~
 
 <ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/search/results/json.action?<a>searchPhrase={value}</a></span></h3>
+    <li><h3>URL <span>https://edge.qiwi.com/search/v1/search?<a>query={value}</a></span></h3>
         <ul>
-             <li><strong>searchPhrase</strong> - keywords for provider's searching.</li>
+             <li><strong>query</strong> - keywords for provider's searching separated by spaces.</li>
         </ul>
     </li>
 </ul>
@@ -1595,238 +1590,40 @@ def qiwi_com_search(search_phrase):
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
-  
+
 {
-  "data": {
-    ...
     "items": [
-      {
-        "item": {
-          "id": {
-            "id": "120",
-            ...
-          },
-          ...
+        {
+            "name": "МТС Домашний интернет, ТВ и Телефония РФ",
+            "description": "МТС Домашний интернет, ТВ и Телефония РФ",
+            "uri": null,
+            "data": {
+                "id": 23729,
+                "logoUrl": "https://static.qiwi.com/img/providers/logoBig/23729_l.png",
+                "siteUrl": "http://www.mts.ru/internet/mts_stream/",
+                "category": {
+                    "name": "Интернет, ТВ, IP-телефония"
+                },
+                "type": "PROVIDER"
+            }
         },
         ...
-      }
     ]
-  }
 }
 ~~~
 
 ~~~python
-# get Beeline Internet  provider ID
-prv = qiwi_com_search('Билайн домашний интернет')[0]['item']['id']['id']
-print(prv)
+# Provider search: response parsing
+prv = qiwi_com_search('Билайн домашний интернет')[0]['data']['id']
+print(str(prv))
 ~~~
 
 Successful JSON-response contains IDs of the found QIWI providers:
 
 Response field | Type | Description
 -----|----|-----
-data.items | Array | List of providers
-items[].item.id.id | String | Provider's ID in the array's element
-
-### Mobile network operator {#mnp}
-
-Determines mobile network operator ID by the client's mobile number. Response returns QIWI provider ID for using in the API method of the client's [mobile phone replenishment](#cell).
-
-<h3 class="request method">Request → POST</h3>
-
-~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/mobile/detect.action" \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  -d "phone=79651238341"
-~~~
-
-~~~http
-POST /mobile/detect.action HTTP/1.1
-Host: qiwi.com
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-Cache-Control: no-cache
-
-phone=79651238341
-~~~
-
-~~~python
-import requests
-
-def mobile_operator(phone_number):
-    s = requests.Session()
-    res = s.post('https://qiwi.com/mobile/detect.action', data = {'phone': phone_number })
-    s.headers['Accept'] = 'application/json'
-    s.headers['Content-Type'] = 'application/x-www-form-urlencoded'
-    return res.json()['message']
-~~~
-
-<ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/mobile/detect.action</span></h3></li>
-</ul>
-
-<ul class="nestedList header">
-    <li><h3>HEADERS</h3>
-        <ul>
-             <li>Accept: application/json</li>
-             <li>Content-type: application/x-www-form-urlencoded</li>
-        </ul>
-    </li>
-</ul>
-
-<ul class="nestedList params">
-    <li><h3>Parameters</h3>
-    </li>
-</ul>
-
-Send parameter in the request's body as `formdata`:
-
-Name | Type | Description
---------|----|----
-phone | String URL-encoded | Client's mobile phone number, international format without `+`. Required.
-
-<h3 class="request">Response ←</h3>
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "code": {
-    "value": "0",
-    "_name": "NORMAL"
-  },
-  "data": null,
-  "message": "3",
-  "messages": null
-}
-~~~
-
-> Cannot determine the mobile operator
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "code": {
-    "value": "2",
-    "_name": "ERROR"
-  },
- "data": null,
- "message": "По указанному номеру невозможно определить оператора сотовой связи. Воспользуйтесь поиском.",
- "messages": {}
-}
-~~~
-
-~~~python
-print(mobile_operator('79652468447'))
-~~~
-
-Response with HTTP Status 200 and `code.value` = 0 means successful operator determination. QIWI provider ID is the value of `message` field.
-
-Response with HTTP Status 200 and `code.value` = 2 means that operator determination is not possible.
-
-### Card transfer provider {#card_check}
-
-Gets QIWI provider ID for [money transfer to credit card](#cards).
-
-No authorization is required.
-
-<h3 class="request method">Request → POST</h3>
-
-~~~shell
-user@server:~$ curl -X POST "https://qiwi.com/card/detect.action" \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/x-www-form-urlencoded" \
-  -d "cardNumber=4256********1231"
-~~~
-
-~~~http
-POST /card/detect.action HTTP/1.1
-Host: qiwi.com
-Accept: application/json
-Content-Type: application/x-www-form-urlencoded
-Cache-Control: no-cache
-
-cardNumber=4256********1231
-~~~
-
-~~~python
-import requests
-
-def card_system(card_number):
-    s = requests.Session()
-    res = s.post('https://qiwi.com/card/detect.action', data = {'cardNumber': card_number })
-    return res.json()['message']
-~~~
-
-<ul class="nestedList url">
-    <li><h3>URL <span>https://qiwi.com/card/detect.action</span></h3></li>
-</ul>
-
-<ul class="nestedList header">
-    <li><h3>HEADERS</h3>
-        <ul>
-             <li>Accept: application/json</li>
-             <li>Content-type: application/x-www-form-urlencoded</li>
-        </ul>
-    </li>
-</ul>
-
-<ul class="nestedList params">
-    <li><h3>Parameters</h3>
-    </li>
-</ul>
-
-Send parameter in the request's body as `formdata`:
-
-Name | Type | Description
---------|----|----
-cardNumber | String | Full card number (no spaces). Required
-
-<h3 class="request">Response ←</h3>
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-  "code": {
-    "value": "0",
-    "_name": "NORMAL"
-  },
-  "data": null,
-  "message": "1963",
-  "messages": null
-}
-~~~
-
-~~~python
-print(card_system('4890xxxxxxxx1698'))
-~~~
-
-> Cannot get provider ID for credit card money transfer
-
-~~~http
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{
-    "code": {
-        "value": "2",
-        "_name": "ERROR"
-    },
-    "data": null,
-    "message": "Неверно введен номер банковской карты. Попробуйте ввести номер еще раз.",
-    "messages": {}
-}
-~~~
-
-Response with HTTP Status 200 and `code.value` = 0 means successful ID determination. QIWI provider ID is the value of `message` field.
-
-Response with HTTP Status 200 and `code.value` = 2 means that ID determination is not possible (wrong card number or payment system is not supported).
+items | Array of objects | List of providers
+items[].data.id | Number | Provider's ID in the array's element
 
 ## API data models
 

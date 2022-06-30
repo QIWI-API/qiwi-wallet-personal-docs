@@ -14,12 +14,12 @@ language_tabs:
   - php: PHP
   - python: Python
   - http: Request/Response
-  
+
 toc_footers:
  - <a href='/en/'>Main page</a>
  - <a href='mailto:api_help@qiwi.com'>Feedback</a>
  - <a href='/sandbox/index.html'>Interactive API</a>
- 
+
 includes:
  - qiwi-wallet-personal/profile_en
  - qiwi-wallet-personal/payment_history_en
@@ -39,7 +39,7 @@ includes:
 
 QIWI Wallet API makes it easy to automate getting info on your account's state in [QIWI Wallet service](https://qiwi.com) and making financial operations.
 
-API uses HTTPS requests and JSON-formatted responses. 
+API uses HTTPS requests and JSON-formatted responses.
 
 API methods are accessible after the user is registered in [QIWI Wallet service](https://qiwi.com).
 
@@ -54,7 +54,7 @@ Parameter|Description|Type
  ---------|--------|---
  token | [Token](#auth_data) to authorize API requests. Token is valid within one month after its [issuing](#auth_data). | String
 
-# API Access 
+# API Access
 
 Main URL address to call API methods (unless explicitly stated):
 
@@ -74,23 +74,23 @@ QIWI Wallet API implements OAuth 2.0 open authorization protocol specification. 
 
 **How to get a token**
 
-1. Open <https://qiwi.com/api> page in your browser. You will need to register or authenticate on QIWI Wallet service. Click on **Выпустить новый токен** (please note, interface is Russian only). 
-    
+1. Open <https://qiwi.com/api> page in your browser. You will need to register or authenticate on QIWI Wallet service. Click on **Выпустить новый токен** (please note, interface is Russian only).
+
     ![Token Issue](/images/apiwallet_get_token.jpg)
 2. Select token scopes in the pop-up window and click **Продолжить**:
     * Запрос информации о профиле кошелька - allows use of [person's profile requests](#profile), [identification API](#identification), [limits API](#limits)
     * Запрос баланса кошелька - allows [balance requests](#balance)
     * Просмотр истории платежей - allows [payments history requests](#payments)
-    * Проведение платежей без SMS - allows making [payment requests](#payments) with no SMS confirmation (regardless the settings <https://qiwi.com/settings/options/security.action>), using [invoicing's API](#pay_invoice) and [notification service](#webhook)
+    * Проведение платежей без SMS - allows making [payment requests](#payments) with no SMS confirmation (regardless [the security settings](https://qiwi.com/settings#security), using [invoicing's API](#pay_invoice) and [notification service](#webhook)
     ![Token Scopes](/images/apiwallet_token_scopes.jpg)
 3. Confirm a token issue and click **Продолжить**.
-     
+
     ![Token Scopes](/images/apiwallet_confirm.jpg)
 4. Enter confirmation code from SMS sent to the phone number of your wallet.
-     
+
      ![Token Accept](/images/apiwallet_token_sms.jpg)
 4. Copy token string and save it in secure place. [Use the token](#auth_ex) in all QIWI Wallet API requests which require authorization.
-     
+
      ![Token](/images/apiwallet_token_final.jpg)
 
 <aside class="success">Token is valid 180 days from this issuing. You can block the token before its lifetime ends using <a href="https://qiwi.com/settings/apps">this link</a>.</aside>
