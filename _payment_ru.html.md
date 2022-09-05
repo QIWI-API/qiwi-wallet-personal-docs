@@ -1740,7 +1740,7 @@ Content-Type: application/json
 <ul class="nestedList header">
     <li><h3>HEADERS</h3>
         <ul>
-             <li>Accept: application/json</li>
+             <li>Content-Type: application/json</li>
              <li>Authorization: Bearer XXX</li>
         </ul>
     </li>
