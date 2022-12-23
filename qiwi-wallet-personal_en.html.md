@@ -18,6 +18,7 @@ language_tabs:
 toc_footers:
  - <a href='/en/'>Main page</a>
  - <a href='mailto:api_help@qiwi.com'>Feedback</a>
+ - <a href='https://t.me/qiwi_api_help_bot'>P2P-operations support</a>
  - <a href='/sandbox/index.html'>Interactive API</a>
 
 includes:

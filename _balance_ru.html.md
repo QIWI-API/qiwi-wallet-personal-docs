@@ -1,4 +1,3 @@
-
 # Баланс QIWI Кошелька {#balance}
 
 ###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_ru.html.md)
@@ -118,7 +117,6 @@ Authorization: Bearer YUu2qw048gtdsvlk3iu
 Host: edge.qiwi.com
 ~~~
 
-
 Успешный ответ содержит JSON-массив счетов вашего QIWI Кошелька для фондирования платежей и текущие балансы счетов:
 
 Поле ответа|Тип|Описание
@@ -185,7 +183,6 @@ Host: edge.qiwi.com
     </li>
 </ul>
 
-
 Название|Тип|Описание
 --------|----|----
 alias|String| Псевдоним нового счета (см. [запрос доступных счетов](#funding_offer))
@@ -194,10 +191,9 @@ alias|String| Псевдоним нового счета (см. [запрос д
 
 ~~~http
 HTTP/1.1 201 Created
-Content-Type: application/json
 ~~~
 
-Успешный ответ содержит HTTP-код 201.
+Успешный ответ содержит HTTP-код `201`.
 
 ## Запрос доступных счетов {#funding_offer}
 
@@ -304,7 +300,6 @@ Host: edge.qiwi.com
     </li>
 </ul>
 
-
 Название|Тип|Описание
 --------|----|----
 defaultAccount|Boolean| Признак установки счета по умолчанию
@@ -313,7 +308,6 @@ defaultAccount|Boolean| Признак установки счета по умо
 
 ~~~http
 HTTP/1.1 204 Modified
-Content-Type: application/json
 ~~~
 
-Успешный ответ содержит HTTP-код 204.
+Успешный ответ содержит HTTP-код `204`.

@@ -1,4 +1,3 @@
-
 # Wallet Balances API {#balance}
 
 ###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_en.html.md)
@@ -184,7 +183,6 @@ Host: edge.qiwi.com
     </li>
 </ul>
 
-
 Name|Type|Description
 --------|----|----
 alias|String| Alias of the new account (taken from [Available accounts](#funding_offer))
@@ -193,10 +191,9 @@ alias|String| Alias of the new account (taken from [Available accounts](#funding
 
 ~~~http
 HTTP/1.1 201 Created
-Content-Type: application/json
 ~~~
 
-Successful response contains HTTP code 201.
+Successful response contains HTTP code `201`.
 
 ## Available accounts {#funding_offer}
 
@@ -303,7 +300,6 @@ Host: edge.qiwi.com
     </li>
 </ul>
 
-
 Name|Type|Description
 --------|----|----
 defaultAccount|Boolean| Flag of default account
@@ -312,7 +308,6 @@ defaultAccount|Boolean| Flag of default account
 
 ~~~http
 HTTP/1.1 204 Modified
-
 ~~~
 
-Successful response has HTTP code 204.
+Successful response has HTTP code `204`.

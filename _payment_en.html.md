@@ -189,14 +189,14 @@ You can also search for a required identifier [through API by keywords](#provide
 
 Parameters in URL query to fill the form fields:
 
-Name             | Type                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Form field                            | Required
------------------|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------|---------
-amountInteger    | Integer                | Integer part of the payment amount (in rubles). If absent, the "Amount" field on the form will be empty. **The number not greater than 99 999 (payment amount limit)**                                                                                                                                                                                                                                                                                                  | Amount                                | -
-amountFraction   | Integer                | Fractional part of the payment amount (kopeks). If absent, the "Amount" field on the form will be empty.                                                                                                                                                                                                                                                                                                                                                                | Amount                                | -
-currency         | Constant string, `643` | Payment currency code. **Required if you send the payment amount in the link**                                                                                                                                                                                                                                                                                                                                                                                          | -                                     | +
-extra['comment'] | URL-encoded string     | Payment comment. **Use it only for ID=99**                                                                                                                                                                                                                                                                                                                                                                                                                              | Comment to the transfer               | -
-extra['account'] | URL-encoded string     | Field format is the same as `fields.account` of the corresponding payment request: for provider `99` - recipient's wallet number; for mobile network operators - phone number for top-up (without international prefix); for card transfer - recipient's card number without spaces, for other providers - user's identifier. For provider `99999` use [nickname](#nickname) or number of the wallet and use appropriate value of `extra['accountType']` parameter.                  | Wallet number, phone number, user ID. | -
-blocked          | Array[String]          | Name of blocked (inactive) form field. User will not be able to change this field. Each parameter corresponds to respective form field and should be numbered starting from zero (`blocked[0]`, `blocked[1]`, and so on). If absent, user can change all form fields. Possible values:<br>`sum` - "Payment amount" field, <br>`account` - "Phone number/Account number" field,<br>`comment` - "Comment" field.<br> Example (for payment amount field): `blocked[0]=sum` | -                                     | -
+Name             | Type                   | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                             | Form field
+-----------------|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------
+amountInteger    | Integer                | Integer part of the payment amount (in rubles). If absent, the "Amount" field on the form will be empty. **The number not greater than 99 999 (payment amount limit)**                                                                                                                                                                                                                                                                                                  | Amount
+amountFraction   | Integer                | Fractional part of the payment amount (kopeks). If absent, the "Amount" field on the form will be empty.                                                                                                                                                                                                                                                                                                                                                                | Amount
+currency         | Constant string, `643` | Payment currency code. **Required if you send the payment amount in the link**                                                                                                                                                                                                                                                                                                                                                                                          | -
+extra['comment'] | URL-encoded string     | Payment comment. **Use it only for ID=99**                                                                                                                                                                                                                                                                                                                                                                                                                              | Comment to the transfer
+extra['account'] | URL-encoded string     | Field format is the same as `fields.account` of the corresponding payment request: for provider `99` - recipient's wallet number; for mobile network operators - phone number for top-up (without international prefix); for card transfer - recipient's card number without spaces, for other providers - user's identifier. For provider `99999` use [nickname](#nickname) or number of the wallet and use appropriate value of `extra['accountType']` parameter.     | Wallet number, phone number, user ID.
+blocked          | Array[String]          | Name of blocked (inactive) form field. User will not be able to change this field. Each parameter corresponds to respective form field and should be numbered starting from zero (`blocked[0]`, `blocked[1]`, and so on). If absent, user can change all form fields. Possible values:<br>`sum` - "Payment amount" field, <br>`account` - "Phone number/Account number" field,<br>`comment` - "Comment" field.<br> Example (for payment amount field): `blocked[0]=sum` | -
 extra['accountType'] | URL-encoded string | **Use only for ID=99999**. The value determines transfer to QIWI wallet by nickname or wallet number.<br>`phone` - for transfer to wallet number<br>`nickname` - for transfer to wallet nickname. If you don't want to show your wallet number on the form, use this value.
 
 ### How to retrieve your wallet nickname {#nickname}
@@ -340,9 +340,9 @@ def send_p2p(api_access_token, to_qw, comment, sum_p2p):
 
 Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
-Name|Type|Description|Required
---------|----|----|------
-fields.account| String|Wallet number of the recipient |+
+Name|Type|Description
+--------|----|----
+fields.account| String|**Required**. Wallet number of the recipient
 
 <h3 class="request">Response ←</h3>
 
@@ -482,9 +482,9 @@ def exchange(api_access_token, sum_exchange, currency, to_qw):
 
 Send JSON object [Payment](#payment_obj) in the request's body. Payment requisites in `fields` object:
 
-Name|Type|Description|Required
---------|----|----|------
-fields.account| String|Wallet number for the conversion|+
+Name|Type|Description
+--------|----|----
+fields.account| String|**Required**. Wallet number for the conversion
 
 <h3 class="request">Response ←</h3>
 
@@ -524,7 +524,6 @@ Returns current QIWI Bank currency rates and cross-rates.
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/sinap/crossRates" \
   --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
   --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
 ~~~
 
@@ -532,7 +531,6 @@ user@server:~$ curl "https://edge.qiwi.com/sinap/crossRates" \
 GET /sinap/crossRates HTTP/1.1
 Accept: application/json
 Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
-Content-type: application/json
 Host: edge.qiwi.com
 ~~~
 
@@ -568,7 +566,6 @@ def exchange(api_access_token, currency_to, currency_from):
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Content-type: application/json</li>
              <li>Authorization: Bearer *** </li>
         </ul>
     </li>
@@ -1550,12 +1547,14 @@ Performs search of QIWI provider's ID for [payment methods](#services) by keywor
 
 ~~~shell
 user@server:~$ curl -X GET "https://edge.qiwi.com/search/v1/search?query=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82" \
-  --header "Accept: application/json"
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer XXXXXXXXXXXXX"
 ~~~
 
 ~~~http
 GET /search/v1/search?query=%D0%91%D0%B8%D0%BB%D0%B0%D0%B9%D0%BD+%D0%B4%D0%BE%D0%BC%D0%B0%D1%88%D0%BD%D0%B8%D0%B9+%D0%B8%D0%BD%D1%82%D0%B5%D1%80%D0%BD%D0%B5%D1%82 HTTP/1.1
 Accept: application/json
+Authorization: Bearer XXXXXXXXXXXXX
 Host: edge.qiwi.com
 ~~~
 
@@ -1572,7 +1571,7 @@ def qiwi_com_search(search_phrase):
 <ul class="nestedList url">
     <li><h3>URL <span>https://edge.qiwi.com/search/v1/search?<a>query={value}</a></span></h3>
         <ul>
-             <li><strong>query</strong> - keywords for provider's searching separated by spaces.</li>
+             <li><strong>query</strong> — keywords for provider's searching separated by spaces.</li>
         </ul>
     </li>
 </ul>
@@ -1581,6 +1580,7 @@ def qiwi_com_search(search_phrase):
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
+             <li>Authorization: Bearer ***</li>
         </ul>
     </li>
 </ul>
@@ -1665,21 +1665,21 @@ items[].data.id | Number | Provider's ID in the array's element
 
 Object describes payment data for QIWI Wallet provider.
 
-Name|Type|Description|Required
---------|----|----|------
-id | String | Client transaction ID (max 20 digits). Must be unique for each transaction. Increment with each following transaction. To satisfy these requirements, set it to 1000*(Standard Unix time in seconds).|+
-sum|Object| Payment amount data
+Name|Type|Description
+--------|----|----------
+id | String | **Required**. Client transaction ID (max 20 digits). Must be unique for each transaction. Increment with each following transaction. To satisfy these requirements, set it to 1000*(Standard Unix time in seconds).|+
+sum|Object| **Required**. Payment amount data
 ---|--|--
-sum.amount|Number|Payment amount value (rubles and kopeks, separator `.`). Positive number rounded down to 2 decimals. If you specify more decimals, our system will round the number down to the same precision.|+
-sum.currency|String|Payment currency (only rubles, `643`)|+
+sum.amount|Number|Payment amount value (rubles and kopeks, separator `.`). Positive number rounded down to 2 decimals. If you specify more decimals, our system will round the number down to the same precision.
+sum.currency|String|Payment currency (only rubles, `643`)
 -----|-----|-----
-paymentMethod | Object| QIWI wallet account to fund the payment
+paymentMethod | Object| **Required**. QIWI wallet account to fund the payment
 -----|-----|-----
-paymentMethod.type|String |Constant, `Account`|+
-paymentMethod.accountId|String| Constant, `643`|+
+paymentMethod.type|String |Constant, `Account`
+paymentMethod.accountId|String| Constant, `643`
 -----|-----|-----
-fields|Object| Payment requisites. Object fields depend on provider ID.
-comment|String| Payment comment. Used for [QIWI wallet transfer](#p2p) or  [conversion](#CCY) only |-
+fields|Object| **Required**. Payment requisites. Object fields depend on provider ID.
+comment|String| Payment comment. Used for [QIWI wallet transfer](#p2p) or  [conversion](#CCY) only
 
 ### PaymentInfo class {#payment_info}
 
@@ -1724,7 +1724,7 @@ state.code | String| Current status of the transaction. Only `Accepted` is retur
 
 # Invoices {#invoices}
 
-Invoice is the universal request for payment or money transfer in QIWI Wallet system.
+Invoice is the universal request for payment or money transfer from user's QIWI wallet.
 
 API provides operations of [invoice creation](#invoice) (only P2P invoices for money transfer to another QIWI wallet), [payment](#paywallet_invoice), [rejection](#cancel_invoice), and also [method for requesting list of unpaid invoices](#list_invoice) issued to your QIWI wallet.
 
@@ -1736,7 +1736,10 @@ You can issue invoices to any QIWI wallet by using [P2P invoices API](/en/p2p-pa
 
 Authorize on [p2p.qiwi.com](https://p2p.qiwi.com), or use the given request. You may also specify [Invoice payment callbacks URL](/en/p2p-payments/#notification) in this request.
 
-The method returns P2P tokens for using with [Payment form](/en/p2p-payments/#http) and with P2P API in `PublicKey` and `SecretKey` fields of the response, respectively.
+The method returns P2P tokens in JSON format:
+
+* `PublicKey` response field — token for using with [Payment form](/en/p2p-payments/#http);
+* `SecretKey` response field — token for this P2P API.
 
 Use [QIWI Wallet API token](#auth_data) for authorization.
 
@@ -1769,7 +1772,7 @@ User-Agent: ****
     <li><h3>HEADERS</h3>
         <ul>
              <li>Content-Type: application/json</li>
-             <li>Authorization: Bearer XXX</li>
+             <li>Authorization: Bearer <a href="#auth_data">QIWI Wallet API token</a></li>
         </ul>
     </li>
 </ul>
@@ -1788,7 +1791,7 @@ serverNotificationsUrl|String | [Invoice payment callbacks URL](/en/p2p-payments
 
 ## List of invoices  {#list_invoice}
 
-Returns unpaid invoices issued to your wallet. Invoices are placed in the list in reverse chronological order.
+Returns only unpaid invoices issued to your wallet. Invoices are placed in the list in reverse chronological order.
 
 By default, the list is paginated on 50 elements on each page. You can specify the number of elements on each page.
 You may use filters: invoice creation period of dates and starting invoice ID.
@@ -1796,7 +1799,8 @@ You may use filters: invoice creation period of dates and starting invoice ID.
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET --header 'Accept: application/json' \
+$ curl -X GET \
+   --header 'Accept: application/json' \
    --header 'Authorization: Bearer ***' \
    'https://edge.qiwi.com/checkout-api/api/bill/search?statuses=READY_FOR_PAY&rows=50'
 ~~~
@@ -1817,7 +1821,7 @@ User-Agent: ****
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Authorization: Bearer XXX (<a href="#p2p-token">P2P API Token</a>)</li>
+             <li>Authorization: Bearer <a href="#p2p-token">SecretKey</a></li>
         </ul>
     </li>
 </ul>
@@ -1907,13 +1911,15 @@ Makes invoice payment immediately without SMS confirmation.
 <h3 class="request method">Request → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST --header 'Content-Type: application/json;charset=UTF-8' \
+$ curl -X POST \
+   --header 'Content-Type: application/json;charset=UTF-8' \
    --header 'Accept: application/json' \
    --header 'Authorization: Bearer 68ec21fd52e4244838946dd07ed225a1' \
    -d '{ \
          "invoice_uid": "1063702405", \
          "currency": "643" \
-        }' 'https://edge.qiwi.com/checkout-api/invoice/pay/wallet'
+        }' \
+   'https://edge.qiwi.com/checkout-api/invoice/pay/wallet'
 ~~~
 
 ~~~http
@@ -1939,7 +1945,7 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer XXX (<a href="#p2p-token">P2P API Token</a>)</li>
+             <li>Authorization: Bearer <a href="#p2p-token">SecretKey</a></li>
         </ul>
     </li>
 </ul>
@@ -1953,8 +1959,8 @@ Required parameters in JSON body:
 
 Name|Type|Description
 --------|----|----
-invoice_uid | String |QIWI invoice ID (take it from `bills[].id` field of [invoice data](#invoice_data)
-currency|String| Invoice currency (take it from `bills[].sum.currency` field of [invoice data](#invoice_data))
+invoice_uid | String |QIWI invoice ID, taken from `bills[].id` field of [invoice data](#invoice_data)
+currency|String| Invoice currency, taken from `bills[].sum.currency` field of [invoice data](#invoice_data))
 
 <h3 class="request">Response ←</h3>
 
@@ -1976,17 +1982,18 @@ Field|Type|Description
 invoice_status|String|Invoice payment status, `PAID_STATUS`. Any other status means unsuccessful transaction.
 is_sms_confirm|String|SMS confirmation flag
 
-## Unpaid invoice cancelling {#cancel_invoice}
+## Cancelling unpaid invoice {#cancel_invoice}
 
-Rejects an unpaid invoice. This makes the invoice unavailable for payment.
+Rejects an unpaid invoice, which makes the invoice unavailable for payment.
 
 <h3 class="request method">Request → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST --header 'Accept: application/json' \
-                            --header 'Authorization: Bearer ***' \
-                            'https://edge.qiwi.com/checkout-api/api/bill/reject' \
-                            -d '{ "id": 1034353453 }'
+$ curl -X POST \
+    --header 'Accept: application/json' \
+    --header 'Authorization: Bearer ***' \
+    -d '{ "id": 1034353453 }' \
+    'https://edge.qiwi.com/checkout-api/api/bill/reject'
 ~~~
 
 ~~~http
@@ -2011,7 +2018,7 @@ User-Agent: ****
         <ul>
              <li>Accept: application/json</li>
              <li>Content-type: application/json</li>
-             <li>Authorization: Bearer XXX (<a href="#p2p-token">P2P API Token</a>)</li>
+             <li>Authorization: Bearer <a href="#p2p-token">SecretKey</a></li>
         </ul>
     </li>
 </ul>
@@ -2025,13 +2032,12 @@ Required parameter in JSON body:
 
 Name|Type|Description
 --------|----|----
-id | Integer |Invoice ID to reject (take it from `bills[].id` field of [invoice data](#invoice_data)
+id | Integer |Invoice ID to reject, taken from `bills[].id` field of [invoice data](#invoice_data)
 
 <h3 class="request">Response ←</h3>
 
 ~~~http
 HTTP/1.1 200 OK
-Content-Type: application/json
 ~~~
 
-Successful response has HTTP code 200.
+Successful response has HTTP code `200`.

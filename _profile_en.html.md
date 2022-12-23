@@ -10,7 +10,6 @@ The API returns information about your profile - a set of user data and settings
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
   --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
   --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
 ~~~
 
@@ -18,7 +17,6 @@ user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?aut
 GET /person-profile/v1/profile/current HTTP/1.1
 Accept: application/json
 Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
-Content-type: application/json
 Host: edge.qiwi.com
 ~~~
 
@@ -58,7 +56,6 @@ profile['authInfo']['boundEmail']
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Content-type: application/json</li>
              <li>Authorization: Bearer *** </li>
         </ul>
     </li>
@@ -169,13 +166,11 @@ userInfo.operator|String|Name of the mobile operator of the user's number
 userInfo.phoneHash|String|Service info
 userInfo.promoEnabled|String|Service info
 
-
 # Identification API {#identification}
 
 Use methods of this API to identify and check identification status of your wallet in QIWI Wallet service. You need identification to get access to increased limits for balances and transactions.
 
 [Identification details (in Russian)](https://qiwi.com/settings/identification#ru)
-
 
 ## User identification {#ident}
 
@@ -263,7 +258,6 @@ def get_identification(api_access_token, my_login):
     </li>
 </ul>
 
-
 Name|Type|Description
 --------|----|----
 birthDate|String| Date of birth (in "YYYY-MM-DD" format)
@@ -326,7 +320,6 @@ passport|String| Series / Passport No. (only digits)
 inn|String| User's TIN. If the parameter is returned but not present in the original request, then the wallet identification is established
 snils|String| User's SNILS
 oms|String| User's medical insurance number (OMS)
-
 
 ## Identification data {#ident_data}
 
@@ -462,7 +455,6 @@ def limits(login, api_access_token):
     <li><h3>Parameters</h3><span>Send in the request path:</span>
     </li>
 </ul>
-
 
 Name|Type|Description
 --------|----|----

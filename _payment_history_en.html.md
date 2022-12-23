@@ -20,7 +20,6 @@ Provides a list of payments and top-ups of your wallet. You can use the filter b
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=10" \
   --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -29,7 +28,6 @@ user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/7911222334
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -38,7 +36,6 @@ user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/7911222334
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
 
@@ -102,7 +99,6 @@ def payment_history_last(my_login, api_access_token, rows_num, next_TxnId, next_
     <li><h3>Parameters</h3><span>These are transmitted in the query path:</span>
     </li>
 </ul>
-
 
 Name | Type | Description
 --------|----|----
@@ -196,7 +192,6 @@ Provides aggregate statistics on the amount of payments for a given period.
 
 [Interactive API](https://developer.qiwi.com/sandbox/index.html#!/payment-history-controller-v-2/getPaymentHistoryTotalByUserUsingGET_1)
 
-
 <aside class="notice">Maximum period for getting statistics is 90 days.</aside>
 
 <h3 class="request method">Request → GET</h3>
@@ -254,7 +249,6 @@ startDate|DateTime URL-encoded | Start date of the period, in any time zone `TZD
 endDate|DateTime URL-encoded| Final date of th period, in any time zone `TZD` (date format `YYYY-MM-DD'T'hh:mm:ssTZD`). Time zone must coincide with `startDate` time zone. Designation `TZD`: `+hh:mm` or -`hh:mm` (time shift from GMT). **Required**
 operation|String| Operations to take into account when accumulating statistics. Possible values:<br>`ALL` - all operations, <br>`IN` - only top-ups, <br>`OUT` - only payments, <br>`QIWI_CARD` - only payments from QIWI cards (QVC, QVP). <br>Default value is `ALL`.
 sources|Array[String]|Payment sources to filter data. Each source is enumerated starting from zero (`sources[0]`, `sources[1]` and so on). Possible values of each source: <br>`QW_RUB` - ruble QIWI Wallet account, <br>`QW_USD` - USD  QIWI Wallet account, <br>`QW_EUR` - euro  QIWI Wallet account, <br>`CARD` - credit cards, both linked to QIWI Wallet and others, <br>`MK` - mobile operator account. If not specified, all sources are collected.
-
 
 <h3 class="request">Response ←</h3>
 
@@ -562,7 +556,6 @@ def payment_history_cheque_send(transaction_id, transaction_type, email, api_acc
     </li>
 </ul>
 
-
 Name|Type|Description
 --------|----|----
 email|String| Email address
@@ -571,7 +564,6 @@ email|String| Email address
 
 ~~~http
 HTTP/1.1 201 Created
-Content-Type: application/json
 ~~~
 
 ~~~python

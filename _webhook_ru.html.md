@@ -3,6 +3,35 @@
 
 ###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_webhook_ru.html.md)
 
+Хуки или уведомления с данными о событии (платеже/пополнении) отправляются на ваш сервер. В настоящее время поддерживаются только вебхуки (webhook) - сообщения, адресованные веб-сервисам. Для приема вебхуков вам необходимо настроить свой сервер на прием и обработку POST-запросов ([Формат запросов](#hook_format)).
+
+**От вашего сервера успешный ответ 200 OK на входящий запрос должен поступить в течение 1-2 сек. Не дождавшись ответа, сервис КИВИ отправляет еще одно уведомление через 10 минут, потом еще одно через 1 час.**
+
+Пулы IP-адресов, с которых сервисы QIWI отправляют webhook:
+
+* 79.142.16.0/20
+* 195.189.100.0/22
+* 91.232.230.0/23
+* 91.213.51.0/24
+
+Если ваш сервер обработки вебхуков работает за брандмауэром, необходимо добавить эти IP-адреса в список разрешенных адресов входящих TCP-пакетов.
+
+## Быстрый старт {#quick_hook}
+
+0. Реализуйте веб-сервис обработки [запросов](#hook_format). Особое внимание обратите на реализацию проверки подписи.
+1. [Зарегистрируйте свой обработчик](#hook_reg). **Внимание! Длина оригинального (не URL-encoded) адреса сервиса обработчика не должна превышать 100 символов.**
+2. Запросите [ключ проверки подписи](#hook_key).
+3. Протестируйте прием запросов вашим обработчиком с помощью [тестового запроса](#hook_test). На зарегистрированный в п.2 сервис придет пустое уведомление.
+
+Чтобы сменить адрес сервера для обработки вебхуков:
+
+1. [Удалите обработчик вебхуков](#hook_remove).
+2. [Зарегистрируйте новый обработчик](#hook_reg). **Внимание! Длина оригинального (не URL-encoded) адреса сервиса обработчика не должна превышать 100 символов.**
+3. Запросите [ключ проверки подписи](#hook_key) для нового обработчика.
+4. Протестируйте прием запросов новым обработчиком с помощью [тестового запроса](#hook_test). На зарегистрированный в п.2 сервис придет пустое уведомление.
+
+## Обработка вебхука {#hook_format}
+
 > Исходящие платежи - платеж в проведении
 
 ~~~http
@@ -115,118 +144,7 @@ Host: example.com
  "version": "1.0.0"}
 ~~~
 
-Хуки или уведомления с данными о событии (платеже/пополнении) отправляются на ваш сервер. В настоящее время поддерживаются только вебхуки (webhook) - сообщения, адресованные веб-сервисам. Для приема вебхуков вам необходимо настроить свой сервер на прием и обработку POST-запросов ([Формат запросов](#hook_format)).
-
-**От вашего сервера успешный ответ 200 OK на входящий запрос должен поступить в течение 1-2 сек. Не дождавшись ответа, сервис КИВИ отправляет еще одно уведомление через 10 минут, потом еще одно через 1 час.**
-
-Пулы IP-адресов, с которых сервисы QIWI отправляют webhook:
-
-* 79.142.16.0/20
-* 195.189.100.0/22
-* 91.232.230.0/23
-* 91.213.51.0/24
-
-Если ваш сервер обработки вебхуков работает за брандмауэром, необходимо добавить эти IP-адреса в список разрешенных адресов входящих TCP-пакетов.
-
-## Быстрый старт {#quick_hook}
-
-0. Реализуйте веб-сервис обработки [запросов](#hook_format). Особое внимание обратите на реализацию проверки подписи.
-1. [Зарегистрируйте свой обработчик](#hook_reg). **Внимание! Длина оригинального (не URL-encoded) адреса сервиса обработчика не должна превышать 100 символов.**
-2. Запросите [ключ проверки подписи](#hook_key).
-3. Протестируйте прием запросов вашим обработчиком с помощью [тестового запроса](#hook_test). На зарегистрированный в п.2 сервис придет пустое уведомление.
-
-Чтобы сменить адрес сервера для обработки вебхуков:
-
-1. [Удалите обработчик вебхуков](#hook_remove).
-2. [Зарегистрируйте новый обработчик](#hook_reg). **Внимание! Длина оригинального (не URL-encoded) адреса сервиса обработчика не должна превышать 100 символов.**
-3. Запросите [ключ проверки подписи](#hook_key) для нового обработчика.
-4. Протестируйте прием запросов новым обработчиком с помощью [тестового запроса](#hook_test). На зарегистрированный в п.2 сервис придет пустое уведомление.
-
-## Обработка вебхука {#hook_format}
-
 Каждый вебхук посылает уведомления - входящие POST-запросы с JSON-объектом, содержащим данные об одном платеже. Схема объекта:
-
-~~~php
-<?php
-
-//Функция возвращает упорядоченную строку значений параметров webhook и хэш подписи webhook для проверки
-function getReqParams(){
-
-    //Make sure that it is a POST request.
-    if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
-        throw new Exception('Request method must be POST!');
-    }
-
-    //Receive the RAW post data.
-    $content = trim(file_get_contents("php://input"));
-
-    //Attempt to decode the incoming RAW post data from JSON.
-    $decoded = json_decode($content, true);
-
-    //If json_decode failed, the JSON is invalid.
-    if(!is_array($decoded)){
-        throw new Exception('Received content contained invalid JSON!');
-    }
-
-    //Check if test
-    if ($decoded['test'] == 'true') {
-      throw new Exception('Test!');
-    }
-
-    // Строка параметров
-    $reqparams = $decoded['payment']['sum']['currency'] . '|' . $decoded['payment']['sum']['amount'] . '|'. $decoded['payment']['type'] . '|' . $decoded['payment']['account'] . '|' . $decoded['payment']['txnId'];
-    // Подпись из запроса
-    foreach ($decoded as $name=>$value) {
-       if ($name == 'hash') {
-            $SIGN_REQ = $value;
-       }
-    }
-
-    return [$reqparams, $SIGN_REQ];
-}
-
-// Список параметров и подпись
-
-$Request = getReqParams();
-
-// Base64 encoded ключ для дешифровки вебхуков (метод /hook/{hookId}/key)
-
-$NOTIFY_PWD = "JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=";
-
-// Вычисляем хэш SHA-256 строки параметров и шифруем с ключом для веб-хуков
-
-$reqres = hash_hmac("sha256", $Request[0], base64_decode($NOTIFY_PWD));
-
-// Проверка подписи вебхука
-
-if (hash_equals($reqres, $Request[1])) {
-    $error = array('response' => 'OK');
-}
-else $error = array('response' => 'error');
-
-//Ответ
-
-header('Content-Type: application/json');
-$jsonres = json_encode($error);
-echo $jsonres;
-error_log('error code' . $jsonres);
-?>
-~~~
-
-~~~python
-import base64
-import hmac
-import hashlib
-
-# Base64 encoded ключ для расшифровки вебхука (/hook/{hookId}/key)
-webhook_key_base64 = 'JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc='
-
-# строка параметров
-data = '643|1|IN|+79161112233|13353941550'
-
-webhook_key = base64.b64decode(bytes(webhook_key_base64,'utf-8'))
-print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest())
-~~~
 
 Поле | Тип | Описание
 ----|------|-------
@@ -258,18 +176,85 @@ hash|String| Хэш цифровой подписи уведомления
 
 ### Как проверить подпись уведомления
 
- Реализуйте следующие шаги:
+~~~php
+<?php
+//Функция возвращает упорядоченную строку значений параметров webhook и хэш подписи webhook для проверки
+function getReqParams(){
+    //Make sure that it is a POST request.
+    if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
+        throw new Exception('Request method must be POST!');
+    }
+    //Receive the RAW post data.
+    $content = trim(file_get_contents("php://input"));
+    //Attempt to decode the incoming RAW post data from JSON.
+    $decoded = json_decode($content, true);
+    //If json_decode failed, the JSON is invalid.
+    if(!is_array($decoded)){
+        throw new Exception('Received content contained invalid JSON!');
+    }
+    //Check if test
+    if ($decoded['test'] == 'true') {
+      throw new Exception('Test!');
+    }
+    // Строка параметров
+    $reqparams = $decoded['payment']['sum']['currency'] . '|' . $decoded['payment']['sum']['amount'] . '|'. $decoded['payment']['type'] . '|' . $decoded['payment']['account'] . '|' . $decoded['payment']['txnId'];
+    // Подпись из запроса
+    foreach ($decoded as $name=>$value) {
+       if ($name == 'hash') {
+            $SIGN_REQ = $value;
+       }
+    }
+    return [$reqparams, $SIGN_REQ];
+}
 
- 1. Возьмите значения полей из списка в `payment.signFields` уведомления (**в том же порядке**) в формате String.
- 2. Объедините значения в строку с разделителями `|`.
- 3. Зашифруйте строку п.2 алгоритмом SHA-256 с [ключом проверки подписи](#hook_key).
- 4. Сравните полученное значение со значением поля `hash` уведомления.
+// Список параметров и подпись
+$Request = getReqParams();
+// Base64 encoded ключ для дешифровки вебхуков (метод /hook/{hookId}/key)
+$NOTIFY_PWD = "JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=";
+// Вычисляем хэш SHA-256 строки параметров и шифруем с ключом для веб-хуков
+$reqres = hash_hmac("sha256", $Request[0], base64_decode($NOTIFY_PWD));
+// Проверка подписи вебхука
+if (hash_equals($reqres, $Request[1])) {
+    $error = array('response' => 'OK');
+}
+else $error = array('response' => 'error');
+//Ответ
+header('Content-Type: application/json');
+$jsonres = json_encode($error);
+echo $jsonres;
+error_log('error code' . $jsonres);
+?>
+~~~
+
+~~~python
+import base64
+import hmac
+import hashlib
+import requests
+
+# Base64 encoded ключ для расшифровки вебхука (/hook/{hookId}/key)
+webhook_key_base64 = 'JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc='
+# строка параметров из запроса
+data = '643|1|IN|+79161112233|13353941550'
+# хэш подписи из запроса
+sign_hash = 'f05c4e7bdf00620205d47696d77f924bfd3ba4d02b0398ac8a626e737dc27243'
+webhook_key = base64.b64decode(bytes(webhook_key_base64,'utf-8'))
+print('Signature verified?')
+print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest() == sign_hash)
+~~~
+
+Реализуйте шаги проверки подписи:
+
+1. Возьмите значения полей из списка в `payment.signFields` уведомления (**в том же порядке**) в формате String.
+2. Объедините значения в строку с разделителями `|`.
+3. Зашифруйте строку п.2 алгоритмом SHA-256 с [ключом проверки подписи](#hook_key).
+4. Сравните полученное значение со значением поля `hash` уведомления.
 
 Пример расшифровки подписи (см. также функцию PHP на вкладке справа):
 
-1. По [запросу](#hook_key) пользователь получает ключ вебхука, закодированный в Base64: 
+1. По [запросу](#hook_key) пользователь получает ключ вебхука, закодированный в Base64:
     `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
-2. Приходит уведомление 
+2. Приходит уведомление
    `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22",
    "payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79161112233","comment":"","provider":7,
    "sum":{"amount":1,"currency":643},
@@ -279,8 +264,8 @@ hash|String| Хэш цифровой подписи уведомления
    "hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
 3. Склеиваются требуемые поля платежных данных (указаны в `payment.signFields` - `sum.currency,sum.amount,type,account,txnId`):
    `643|1|IN|+79161112233|13353941550`
-4. Поля шифруются методом SHA-256 с Base64-раскодированным ключом из п.1. Результат 
-   `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0`
+4. Поля шифруются методом SHA-256 с Base64-раскодированным ключом из п.1. Результат
+   `f05c4e7bdf00620205d47696d77f924bfd3ba4d02b0398ac8a626e737dc27243`
    совпадает с параметром `hash` из запроса.
 
 ## Регистрация обработчика вебхуков {#hook_reg}
@@ -309,7 +294,6 @@ User-Agent: ****
         <ul>
              <li>Authorization: Bearer ***</li>
              <li>Accept: application/json</li>
-
         </ul>
     </li>
 </ul>
@@ -379,11 +363,9 @@ User-Agent: ****
         <ul>
              <li>Authorization: Bearer ***</li>
              <li>Accept: application/json</li>
-
         </ul>
     </li>
 </ul>
-
 
 <h3 class="request">Ответ ←</h3>
 
@@ -408,7 +390,6 @@ response|String|Описание результата операции
 
 <h3 class="request method">Запрос → GET</h3>
 
-
 ~~~shell
 curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" \
    -H "accept: */*" \
@@ -422,7 +403,6 @@ Host: edge.qiwi.com
 Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
 User-Agent: ****
 ~~~
-
 
 <ul class="nestedList url">
     <li><h3>URL <span>/payment-notifier/v1/hooks/<a>hookId</a>/key</span></h3></li>
@@ -463,7 +443,6 @@ key|String|Base64-закодированный ключ
 
 <h3 class="request method">Запрос → POST</h3>
 
-
 ~~~shell
 curl -X POST "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" \
    -H "accept: */*" \
@@ -476,7 +455,6 @@ Host: edge.qiwi.com
 Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
 User-Agent: ****
 ~~~
-
 
 <ul class="nestedList url">
     <li><h3>URL <span>/payment-notifier/v1/hooks/<a>hookId</a>/newkey</span></h3></li>

@@ -10,7 +10,6 @@
 ~~~shell
 user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
   --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
   --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
 ~~~
 
@@ -18,7 +17,6 @@ user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?aut
 GET /person-profile/v1/profile/current HTTP/1.1
 Accept: application/json
 Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
-Content-type: application/json
 Host: edge.qiwi.com
 ~~~
 
@@ -60,8 +58,7 @@ profile['authInfo']['boundEmail']
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Content-type: application/json</li>
-             <li>Authorization: Bearer *** </li>
+             <li>Authorization: Bearer ***</li>
         </ul>
     </li>
 </ul>
@@ -170,8 +167,6 @@ userInfo.language|String|Служебная информация
 userInfo.operator|String|Название мобильного оператора номера пользователя
 userInfo.phoneHash|String|Служебная информация
 userInfo.promoEnabled|String|Служебная информация
-
-
 
 # Идентификация {#identification}
 
@@ -400,6 +395,209 @@ inn| String|  ИНН пользователя (первые и последни�
 snils |String | Номер СНИЛС пользователя (первые и последние 2 цифры)
 oms| String | Номер полиса ОМС пользователя (первые и последние 2 цифры)
 
+## Понижение уровня идентификации {#ident-downgrade}
+
+Вы можете понизить уровень идентификации вашего QIWI кошелька.
+На данный момент понижение доступно только с уровня "Профессиональный" до уровня "Основной".
+
+Для понижения уровня необходимо сделать 2 запроса:
+
+* Создание заявки на понижение уровня идентификации.
+* Подтверждение заявки на понижение уровня идентификации.
+
+### Создание заявки на понижение уровня идентификации {#create-downgrade}
+
+<h3 class="request method">Запрос → POST</h3>
+
+~~~shell
+user@server:~$ curl -X POST "https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations" \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9" \
+  -d '{
+  "identificationLevel": "VERIFIED"
+}'
+~~~
+
+~~~http
+POST /qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations HTTP/1.1
+Accept: application/json
+Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Content-type: application/json
+Host: edge.qiwi.com
+
+{
+  "identificationLevel": "VERIFIED"
+}
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>/qw-ident-downgrade-api/v1/persons/<a>wallet</a>/identification-downgrade/operations</span></h3>
+        <ul>
+             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
+        </ul>
+    </li>    
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList params">
+    <li><h3>Параметры</h3><span>Данные параметры передаются в JSON-теле запроса:</span>
+    </li>
+</ul>
+
+
+Название|Тип|Описание
+--------|----|----
+identificationLevel|String| Уровень, до которого требуется понизить идентификацию (на данный момент понижение возможно только до статуса "Основной" - `VERIFIED`)
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+  "downgradeOperationId": "1747ea28-1082-41bc-bde4-72994b3ffeb4"
+}
+~~~
+
+Успешный ответ в формате JSON содержит ID заявки на понижение уровня идентификации:
+
+Поле ответа | Тип    |Описание
+--------|--------|----
+downgradeOperationId| String |ID заявки на понижение уровня идентификации
+
+### Подтверждение заявки на понижение уровня идентификации {#confirm-downgrade}
+
+<h3 class="request method">Запрос → PUT</h3>
+
+~~~shell
+user@server:~$ curl -X PUT https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4/confirm \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9" \
+  -d '{}'
+~~~
+
+~~~http
+PUT /qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4/confirm HTTP/1.1
+Accept: application/json
+Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Content-type: application/json
+Host: edge.qiwi.com
+
+{}
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>/qw-ident-downgrade-api/v1/persons/<a>wallet</a>/identification-downgrade/operations/<a>downgradeOperationId</a>/confirm</span></h3>
+        <ul>
+             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
+             <li><strong>downgradeOperationId</strong> - ID вашей заявки на понижение уровня идентификации</li>
+        </ul>
+    </li>    
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Content-type: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "downgradeOperation": {
+    "downgradeOperationId": "1747ea28-1082-41bc-bde4-72994b3ffeb4",
+    "status": {
+      "type": "IN_PROGRESS"
+    }
+  }
+}
+~~~
+
+Успешный ответ в формате JSON содержит информацию о заявке на понижение уровня идентификации:
+
+Поле ответа | Тип    |Описание
+--------|--------|----
+downgradeOperation.downgradeOperationId| String |ID заявки на понижение уровня идентификации
+downgradeOperation.status.type| String |Статус заявки на понижение уровня идентификации. <br>`IN_PROGRESS` - Заявка на понижение уровня идентификации в обработке. Вы можете проверять текущий статус заявки отдельным запросом (см. ниже). <br> `SUCCESS` - Заявка на понижение уровня идентификации успешно обработана. <br>`FAIL` – Понижение уровня идентификации невозможно.
+
+### Запрос статуса заявки на понижение уровня идентификации {#status-downgrade}
+
+<h3 class="request method">Запрос → GET</h3>
+
+~~~shell
+user@server:~$ curl -X GET https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4 \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+~~~
+
+~~~http
+GET /qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4 HTTP/1.1
+Accept: application/json
+Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Host: edge.qiwi.com
+
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>/qw-ident-downgrade-api/v1/persons/<a>wallet</a>/identification-downgrade/operations/<a>downgradeOperationId</a></span></h3>
+        <ul>
+             <li><strong>wallet</strong> - номер вашего кошелька без знака "+"</li>
+             <li><strong>downgradeOperationId</strong> - ID вашей заявки на понижение уровня идентификации</li>
+        </ul>
+    </li>    
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+{
+  "downgradeOperation": {
+    "downgradeOperationId": "1747ea28-1082-41bc-bde4-72994b3ffeb4",
+    "status": {
+      "type": "SUCCESS"
+    }
+  }
+}
+~~~
+
+Успешный ответ в формате JSON содержит информацию о заявке на понижение уровня идентификации:
+
+Поле ответа | Тип    |Описание
+--------|--------|----
+downgradeOperation.downgradeOperationId| String |ID заявки на понижение уровня идентификации
+downgradeOperation.status.type| String |Статус заявки на понижение уровня идентификации. <br>`IN_PROGRESS` - Заявка на понижение уровня идентификации в обработке. <br> `SUCCESS` - Заявка на понижение уровня идентификации успешно обработана. <br>`FAIL` – Понижение уровня идентификации невозможно.
+
+
 
 # Лимиты QIWI Кошелька {#limits}
 
@@ -525,7 +723,7 @@ interval.dateFrom, interval.dateTill| String| Начало и конец пер�
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/persons/79115221133/status/restrictions \
+user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/persons/79115221133/status/restrictions" \
   --header "Accept: application/json" \
   --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
 ~~~
@@ -561,7 +759,6 @@ def get_restrictions(api_access_token, mylogin):
     <li><h3>HEADERS</h3>
         <ul>
              <li>Accept: application/json</li>
-             <li>Content-type: application/json</li>
              <li>Authorization: Bearer *** </li>
         </ul>
     </li>

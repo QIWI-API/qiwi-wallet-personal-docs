@@ -19,6 +19,7 @@ toc_footers:
  - <a href='/ru/qiwi-wallet-api-release-notes/index.html'>Список изменений</a>
  - <a href='/'>На главную</a>
  - <a href='mailto:api_help@qiwi.com'>Обратная связь</a>
+ - <a href='https://t.me/qiwi_api_help_bot'>Помощь по P2P-операциям</a>
  - <a href='/sandbox/index.html'>Попробовать API</a>
 
 includes:
@@ -39,7 +40,7 @@ includes:
 
 # Введение {#intro}
 
-###### Последнее обновление: 2022-04-05 | [Эта страница на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs)
+###### Последнее обновление: 2022-10-20 | [Эта страница на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs)
 
 API QIWI Кошелька позволяет автоматизировать получение информации о вашем счёте в [сервисе QIWI Кошелек](https://qiwi.com) и проводить операции с его помощью.
 

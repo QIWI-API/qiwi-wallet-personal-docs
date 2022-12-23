@@ -3,6 +3,35 @@
 
 ###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_webhook_en.html.md)
 
+Webhook allows you to receive real-time HTTP notifications of events (outgoing / incoming payments). You need to implement a web service to receive and processing of POST-requests according to the [requests format](#hook_format).
+
+**You need to respond the notification with HTTP 200 OK within 1-2 sec. If QIWI service has no response, it sends next notification in 10 min, then in 1 hour.**
+
+Pools of IP-addresses from which QIWI service sends notifications:
+
+* 79.142.16.0/20
+* 195.189.100.0/22
+* 91.232.230.0/23
+* 91.213.51.0/24
+
+If your web service works behinds the firewall, you need to add these IP-addresses to the list of allowed addresses for incoming TCP packets.
+
+## Quick start {#quick_hook}
+
+0. Implement web service for [webhook requests](#hook_format). Make sure to implement correctly the digital signature verification.
+1. [Register your service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
+2. Request for [signature key](#hook_key).
+3. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 2.
+
+To change webhook service URL:
+
+1. [Remove current webhook service](#hook_remove).
+2. [Register new webhook service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
+3. Request for new [signature key](#hook_key).
+4. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 2.
+
+## Processing notification {#hook_format}
+
 > Outgoing payments - notification of payment in process
 
 ~~~http
@@ -115,119 +144,7 @@ Host: example.com
  "version": "1.0.0"}
 ~~~
 
-Webhook allows you to receive real-time HTTP notifications of events (outgoing / incoming payments). You need to implement a web service to receive and processing of POST-requests according to the [requests format](#hook_format).
-
-**You need to respond the notification with HTTP 200 OK within 1-2 sec. If QIWI service has no response, it sends next notification in 10 min, then in 1 hour.**
-
-Pools of IP-addresses from which QIWI service sends notifications:
-
-* 79.142.16.0/20
-* 195.189.100.0/22
-* 91.232.230.0/23
-* 91.213.51.0/24
-
-If your web service works behinds the firewall, you need to add these IP-addresses to the list of allowed addresses for incoming TCP packets.
-
-## Quick start {#quick_hook}
-
-0. Implement web service for [webhook requests](#hook_format). Make sure to implement correctly the digital signature verification.
-1. [Register your service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
-2. Request for [signature key](#hook_key).
-3. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 2.
-
-To change webhook service URL:
-
-1. [Remove current webhook service](#hook_remove).
-2. [Register new webhook service](#hook_reg). **Please note that its URL original length (before URL-encoding) cannot be longer than 100 symbols**.
-3. Request for new [signature key](#hook_key).
-4. Test your service with [test request](#hook_test). Empty notification will be sent to your service registered at stage 2.
-
-## Processing notification {#hook_format}
-
 Each notification is an incoming POST-request with single payment data in JSON body. JSON scheme is as followed:
-
-~~~php
-<?php
-
-//Procedure returns string of sorted values from notification parameters and signature hash for verification
-function getReqParams(){
-
-    //Make sure that it is a POST request.
-    if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
-        throw new Exception('Request method must be POST!');
-    }
-
-    //Receive the RAW post data.
-    $content = trim(file_get_contents("php://input"));
-
-    //Attempt to decode the incoming RAW post data from JSON.
-    $decoded = json_decode($content, true);
-
-    //If json_decode failed, the JSON is invalid.
-    if(!is_array($decoded)){
-        throw new Exception('Received content contained invalid JSON!');
-    }
-
-    //Check if test
-    if ($decoded['test'] == 'true') {
-      throw new Exception('Test!');
-    }
-
-    // String of parameters
-    $reqparams = $decoded['payment']['sum']['currency'] . '|' . $decoded['payment']['sum']['amount'] . '|'. $decoded['payment']['type'] . '|' . $decoded['payment']['account'] . '|' . $decoded['payment']['txnId'];
-    // Signature
-    foreach ($decoded as $name=>$value) {
-       if ($name == 'hash') {
-            $SIGN_REQ = $value;
-       }
-    }
-
-    return [$reqparams, $SIGN_REQ];
-}
-
-// Resulted data
-
-$Request = getReqParams();
-
-// Base64 encoded key for decryption (method /hook/{hookId}/key)
-
-$NOTIFY_PWD = "JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=";
-
-// Get SHA-256 hash of the string and encrypt with your webhook key
-
-$reqres = hash_hmac("sha256", $Request[0], base64_decode($NOTIFY_PWD));
-
-// Verify signature
-
-if (hash_equals($reqres, $Request[1])) {
-    $error = array('response' => 'OK');
-}
-else $error = array('response' => 'error');
-
-//Response
-
-header('Content-Type: application/json');
-$jsonres = json_encode($error);
-echo $jsonres;
-error_log('error code' . $jsonres);
-?>
-~~~
-
-~~~python
-import base64
-import hmac
-import hashlib
-
-# Base64 encoded key (get it with /hook/{hookId}/key request)
-webhook_key_base64 = 'JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc='
-
-# notification parameters
-data = '643|1|IN|+79161112233|13353941550'
-
-webhook_key = base64.b64decode(bytes(webhook_key_base64,'utf-8'))
-print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest())
-~~~
-
 
 Field | Type | Description
 ----|------|-------
@@ -263,25 +180,87 @@ test|Boolean|Flag indicating test notification
 version|String|Webhook API version
 hash|String| Hash of the notification's digital signature
 
-### Notification signature verification 
+### Notification signature verification {#webhook-signature-verification}
+
+~~~php
+<?php
+//Procedure returns string of sorted values from notification parameters and signature hash for verification
+function getReqParams(){
+    //Make sure that it is a POST request.
+    if(strcasecmp($_SERVER['REQUEST_METHOD'], 'POST') != 0){
+        throw new Exception('Request method must be POST!');
+    }
+    //Receive the RAW post data.
+    $content = trim(file_get_contents("php://input"));
+    //Attempt to decode the incoming RAW post data from JSON.
+    $decoded = json_decode($content, true);
+    //If json_decode failed, the JSON is invalid.
+    if(!is_array($decoded)){
+        throw new Exception('Received content contained invalid JSON!');
+    }
+    //Check if test
+    if ($decoded['test'] == 'true') {
+      throw new Exception('Test!');
+    }
+    // String of parameters
+    $reqparams = $decoded['payment']['sum']['currency'] . '|' . $decoded['payment']['sum']['amount'] . '|'. $decoded['payment']['type'] . '|' . $decoded['payment']['account'] . '|' . $decoded['payment']['txnId'];
+    // Signature
+    foreach ($decoded as $name=>$value) {
+       if ($name == 'hash') {
+            $SIGN_REQ = $value;
+       }
+    }
+    return [$reqparams, $SIGN_REQ];
+}
+// Resulted data
+$Request = getReqParams();
+// Base64 encoded key for decryption (method /hook/{hookId}/key)
+$NOTIFY_PWD = "JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=";
+// Get SHA-256 hash of the string and encrypt with your webhook key
+$reqres = hash_hmac("sha256", $Request[0], base64_decode($NOTIFY_PWD));
+// Verify signature
+if (hash_equals($reqres, $Request[1])) {
+    $error = array('response' => 'OK');
+}
+else $error = array('response' => 'error');
+//Response
+header('Content-Type: application/json');
+$jsonres = json_encode($error);
+echo $jsonres;
+error_log('error code' . $jsonres);
+?>
+~~~
+
+~~~python
+import base64
+import hmac
+import hashlib
+
+# Base64 encoded key (get it with /hook/{hookId}/key request)
+webhook_key_base64 = 'JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc='
+# notification parameters
+data = '643|1|IN|+79161112233|13353941550'
+webhook_key = base64.b64decode(bytes(webhook_key_base64,'utf-8'))
+print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest())
+~~~
 
 To verify signature of a notification, proceed with the following:
   
 1. Take values of fields specified in  `payment.signFields` field of the notification JSON (**in the same order**) as Strings.
 2. Join them with `|` separator.
-3. Encode the resulted string with SHA-256 and [signature key](#hook_key). 
+3. Encode the resulted string with SHA-256 and [signature key](#hook_key).
 4. Compare obtained value with `hash` field of the notification.
 
 Example of signature verification (see also PHP procedure on the right tab):
 
-1. You get [signature key](#hook_key), encoded in Base64: 
+1. You get [signature key](#hook_key), encoded in Base64:
     `JcyVhjHCvHQwufz+IHXolyqHgEc5MoayBfParl6Guoc=`
 2. You get notification:
     `{"messageId":"7814c49d-2d29-4b14-b2dc-36b377c76156","hookId":"5e2027d1-f5f3-4ad1-b409-058b8b8a8c22","payment":{"txnId":"13353941550","date":"2018-06-27T13:39:00+03:00","type":"IN","status":"SUCCESS","errorCode":"0","personId":78000008000,"account":"+79161112233","comment":"","provider":7,"sum":{"amount":1,"currency":643},"commission":{"amount":0,"currency":643},"total":{"amount":1,"currency":643},"signFields":"sum.currency,sum.amount,type,account,txnId"},"hash":"76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0","version":"1.0.0","test":false}`
 3. Join values of the fields specified in `signFields` field (`sum.currency,sum.amount,type,account,txnId`):  
     `643|1|IN|+79161112233|13353941550`
 4. The obtained string is encoded with SHA-256 and the Base64-decoded key from step 1:
-    `76687ffe5c516c793faa46fafba0994e7ca7a6d735966e0e0c0b65eaa43bdca0`
+    `f05c4e7bdf00620205d47696d77f924bfd3ba4d02b0398ac8a626e737dc27243`
     Result coincides with `hash` field from the notification. The verification is successful.
 
 ## Webhook service registration {#hook_reg}
@@ -310,7 +289,6 @@ User-Agent: ****
         <ul>
              <li>Authorization: Bearer ***</li>
              <li>Accept: application/json</li>
-
         </ul>
     </li>
 </ul>
@@ -381,7 +359,6 @@ User-Agent: ****
         <ul>
              <li>Authorization: Bearer ***</li>
              <li>Accept: application/json</li>
-
         </ul>
     </li>
 </ul>
@@ -408,7 +385,6 @@ response|String| Operation result
 Each notification contains digital signature encoded by secret key. Use this request to get the key.
 
 <h3 class="request method">Request → GET</h3>
-
 
 ~~~shell
 curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" \
@@ -455,14 +431,13 @@ Response in JSON.
 
 Field|Type|Description
 -----|------|------
-key|String| Base64-encoded key 
+key|String| Base64-encoded key
 
 ## Secret key change {#hook_secret}
 
 Changes the secret key for notifications signature.
 
 <h3 class="request method">Request → POST</h3>
-
 
 ~~~shell
 curl -X POST "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" \
@@ -476,7 +451,6 @@ Host: edge.qiwi.com
 Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
 User-Agent: ****
 ~~~
-
 
 <ul class="nestedList url">
     <li><h3>URL <span>/payment-notifier/v1/hooks/<a>hookId</a>/newkey</span></h3></li>
@@ -575,7 +549,6 @@ txnType|String|Transactions type for notifications (`IN` - incoming (wallet topu
 Use this request to test your webhook service. As a result of the request, empty test notification is sent to the URL of the [active webhook service](#hook_active).
 
 <h3 class="request method">Request → GET</h3>
-
 
 ~~~shell
 curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
