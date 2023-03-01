@@ -18,51 +18,51 @@ Provides a list of payments and top-ups of your wallet. You can use the filter b
 >Example 1. Last 10 payments
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=10" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments?rows=10" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 > Example 2. Payments for 10.05.2017
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 > Example 3. Continuing payments list (parameters nextTxnId=9103121 and nextTxnDate=2017-05-11T12:35:23+03:00 returned in the previous history request)
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 > Example 4. Last 10 payments from the ruble account and from the linked card
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments?rows=10&operation=OUT&sources%5B0%5D=QW_RUB&sources%5B1%5D=CARD HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments?rows=10&operation=OUT&sources%5B0%5D=QW_RUB&sources%5B1%5D=CARD HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
 > Example 5. Payments for 10.05.2017 from the ruble account
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments?rows=50&sources%5B0%5D=QW_RUB&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments?rows=50&sources%5B0%5D=QW_RUB&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
 > Example 6. Continuing payments list for 10.05.2017 (see Example 2, parameters nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00 returned)
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
@@ -197,15 +197,15 @@ Provides aggregate statistics on the amount of payments for a given period.
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00 HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
@@ -303,9 +303,9 @@ Returns details on a specific transaction from your payments history.
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344" \
+curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
@@ -435,9 +435,9 @@ Returns electronic receipt for a certain transaction in PDF/JPEG format, either 
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF" \
+curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
@@ -501,10 +501,11 @@ Successful JSON-response contains binary file.
 <h3 class="request method">Request → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN" \
+curl -X POST \
+  "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  --header "Authorization: Bearer <API token>" \
   -d '{"email": "my@example.com"}'
 ~~~
 

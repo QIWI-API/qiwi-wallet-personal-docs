@@ -99,7 +99,7 @@ QIWI Wallet API implements OAuth 2.0 open authorization protocol specification. 
 ## Authorization example {#auth_ex}
 
 ~~~shell
-user@server:~$ curl "server address"
+curl "server address" \
   --header "Authorization: Bearer jMyN22DQxMjM6NDUzRmRnZDQ0Mw11212e"
 ~~~
 

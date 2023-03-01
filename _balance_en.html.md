@@ -13,15 +13,15 @@ Provides current balances of your QIWI Wallet.
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts" \
+curl "https://edge.qiwi.com/funding-sources/v2/persons/<wallet>/accounts" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
-GET /funding-sources/v2/persons/79115221133/accounts HTTP/1.1
+GET /funding-sources/v2/persons/<wallet>/accounts HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
@@ -143,17 +143,18 @@ Creates a new account and its balance in your QIWI wallet. List of account types
 <h3 class="request method">Request → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts" \
+curl -X POST \
+  "https://edge.qiwi.com/funding-sources/v2/persons/<wallet/accounts" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  --header "Authorization: Bearer <API token>" \
   -d '{  "alias": "qw_wallet_eur"}'
 ~~~
 
 ~~~http
-POST /funding-sources/v2/persons/79115221133/accounts HTTP/1.1
+POST /funding-sources/v2/persons/<wallet>/accounts HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Content-type: application/json
 Host: edge.qiwi.com
 
@@ -204,15 +205,16 @@ Provides all possible account aliases for your QIWI wallet.
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/offer" \
+curl -X GET \
+  "https://edge.qiwi.com/funding-sources/v2/persons/<wallet>/accounts/offer" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
-GET /funding-sources/v2/persons/79115221133/accounts/offer HTTP/1.1
+GET /funding-sources/v2/persons/<wallet>/accounts/offer HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
@@ -259,17 +261,18 @@ Sets up default account in your QIWI wallet for funding all payments. The accoun
 <h3 class="request method">Request → PATCH</h3>
 
 ~~~shell
-user@server:~$ curl -X PATCH "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd" \
+curl -X PATCH \
+  "https://edge.qiwi.com/funding-sources/v2/persons/<wallet>/accounts/qw_wallet_usd" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  --header "Authorization: Bearer <API token>" \
   -d '{ "defaultAccount": true }'
 ~~~
 
 ~~~http
-PATCH /funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd HTTP/1.1
+PATCH /funding-sources/v2/persons/<wallet>/accounts/qw_wallet_usd HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Content-type: application/json
 Host: edge.qiwi.com
 

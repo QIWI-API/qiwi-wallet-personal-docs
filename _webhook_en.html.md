@@ -268,15 +268,16 @@ Example of signature verification (see also PHP procedure on the right tab):
 <h3 class="request method">Request → PUT</h3>
 
 ~~~shell
-curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fexample.com%2Fcallbacks%2F&txnType=2" \
-     -H "accept: */*" \
-     -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X PUT \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fexample.com%2Fcallbacks%2F&txnType=2" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 PUT /payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fexample.com%2Fcallbacks%2F&txnType=2 HTTP/1.1
 Host: edge.qiwi.com
-Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+Authorization: Bearer <API token>
 User-Agent: ****
 ~~~
 
@@ -335,15 +336,16 @@ txnType|String|Transactions type for notifications (`IN` - incoming, `OUT` - out
 <h3 class="request method">Request → DELETE</h3>
 
 ~~~shell
-curl -X DELETE "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X DELETE \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/<hook-id>" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 DELETE /payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc HTTP/1.1
 Host: edge.qiwi.com
-Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+Authorization: Bearer <API token>
 User-Agent: ****
 ~~~
 
@@ -387,23 +389,24 @@ Each notification contains digital signature encoded by secret key. Use this req
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" \
-   -H "accept: */*" \
-    -H "accept: */*" \
-    -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/<hook-id>/key" \
+  -H "accept: */*" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 GET /payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key HTTP/1.1
 Host: edge.qiwi.com
-Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+Authorization: Bearer <API token>
 User-Agent: ****
 ~~~
 
 <ul class="nestedList url">
     <li><h3>URL <span>/payment-notifier/v1/hooks/<a>hookId</a>/key</span></h3></li>
     <ul>
-    <li><strong>hookId</strong> -webhook UUID</li>
+    <li><strong>hookId</strong> — webhook UUID</li>
     </ul>
 </ul>
 
@@ -440,15 +443,16 @@ Changes the secret key for notifications signature.
 <h3 class="request method">Request → POST</h3>
 
 ~~~shell
-curl -X POST "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X POST \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/<hook-id>/newkey" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 POST /payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey HTTP/1.1
 Host: edge.qiwi.com
-Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+Authorization: Bearer <API token>
 User-Agent: ****
 ~~~
 
@@ -492,16 +496,17 @@ Gets the active webhook service linked to your wallet.
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/active" \
-   -H "accept: */*" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/active" \
+  -H "accept: */*" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 GET /payment-notifier/v1/hooks/active HTTP/1.1
 Host: edge.qiwi.com
-Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+Authorization: Bearer <API token>
 User-Agent: ****
 ~~~
 
@@ -551,15 +556,16 @@ Use this request to test your webhook service. As a result of the request, empty
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 GET /payment-notifier/v1/hooks/test HTTP/1.1
 Host: edge.qiwi.com
-Authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f
+Authorization: Bearer <API token>
 User-Agent: ****
 ~~~
 

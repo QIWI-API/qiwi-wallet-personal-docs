@@ -273,9 +273,10 @@ print(hmac.new(webhook_key, data.encode('utf-8'), hashlib.sha256).hexdigest() ==
 <h3 class="request method">Запрос → PUT</h3>
 
 ~~~shell
-curl -X PUT "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fexample.com%2Fcallbacks%2F&txnType=2" \
-     -H "accept: */*" \
-     -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X PUT \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks?hookType=1&param=http%3A%2F%2Fexample.com%2Fcallbacks%2F&txnType=2" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
@@ -339,9 +340,10 @@ txnType|String|Тип транзакций, по которым отсылают
 <h3 class="request method">Запрос → DELETE</h3>
 
 ~~~shell
-curl -X DELETE "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X DELETE \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
@@ -391,10 +393,11 @@ response|String|Описание результата операции
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" \
-   -H "accept: */*" \
-    -H "accept: */*" \
-    -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/key" \
+  -H "accept: */*" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
@@ -444,9 +447,10 @@ key|String|Base64-закодированный ключ
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-curl -X POST "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X POST \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/d63a8729-f5c8-486f-907d-9fb8758afcfc/newkey" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
@@ -498,10 +502,11 @@ key|String|Base64-закодированный новый ключ
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/active" \
-   -H "accept: */*" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/active" \
+  -H "accept: */*" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
@@ -556,9 +561,10 @@ txnType|String|Тип транзакций, по которым отсылают
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-curl -X GET "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
-   -H "accept: */*" \
-   -H "authorization: Bearer 3b7beb2044c4dd4a8f4588d4a6b6c93f"
+curl -X GET \
+  "https://edge.qiwi.com/payment-notifier/v1/hooks/test" \
+  -H "accept: */*" \
+  -H "authorization: Bearer <токен API>"
 ~~~
 
 ~~~http

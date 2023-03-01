@@ -8,15 +8,15 @@ The API returns information about your profile - a set of user data and settings
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
+curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 GET /person-profile/v1/profile/current HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
@@ -190,26 +190,27 @@ To identify your wallet, you must send your name, series/passport number and dat
 <h3 class="request method">Request → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
+curl -X POST \
+  "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9" \
-  -d '{ \
-  "birthDate": "1998-02-11", \
-  "firstName": "Иван", \
-  "inn": "", \
-  "lastName": "Иванов", \
-  "middleName": "Иванович", \
-  "oms": "", \
-  "passport": "4400111222", \
-  "snils": "" \
+  --header "Authorization: Bearer <API token>" \
+  -d '{
+  "birthDate": "1998-02-11",
+  "firstName": "Иван",
+  "inn": "",
+  "lastName": "Иванов",
+  "middleName": "Иванович",
+  "oms": "",
+  "passport": "4400111222",
+  "snils": ""
 }'
 ~~~
 
 ~~~http
 POST /identification/v1/persons/79111234567/identification HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <API token>
 Content-type: application/json
 Host: edge.qiwi.com
 
@@ -328,15 +329,16 @@ Gets masked private data and identification status of your QIWI Wallet.
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
+curl -X GET \
+  "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 GET /identification/v1/persons/79111234567/identification HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
@@ -401,20 +403,22 @@ oms|String| User's medical insurance number (OMS) (first and last two digits)
 
 # QIWI Wallet Limits API {#limits}
 
+## Limit levels {#limit-levels}
+
 By using this API, you can get current limits for operations in your QIWI wallet. Limits apply on accessible amount of the operations.
 
 <h3 class="request method">Request → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/qw-limits/v1/persons/79115221133/actual-limits?types%5B0%5D=TURNOVER" \
+curl "https://edge.qiwi.com/qw-limits/v1/persons/79115221133/actual-limits?types%5B0%5D=TURNOVER" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <API token>"
 ~~~
 
 ~~~http
 GET /qw-limits/v1/persons/79115221133/actual-limits?types%5B0%5D=TURNOVER HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <API token>
 Host: edge.qiwi.com
 ~~~
 
@@ -512,3 +516,80 @@ spent|String| Amount already spent in the operations
 rest|Boolean| The rest of the limit which can be used in the given period (see `interval` field)
 interval|Object| Details of the limit's period
 interval.dateFrom, interval.dateTill| String| Period's start and end, as `YYYY-MM-DDTHH:MM:SStmz` string
+
+## Person-to-person transaction limit {#p2p-limit}
+
+The API returns the value of the person-to-person transaction number for the current month.
+
+<h3 class="request method">Request → GET</h3>
+
+~~~shell
+curl "https://edge.qiwi.com/qw-limits/v1/persons/79999999999/p2p-payment-count-limit" \
+  --header "Accept: application/json" \
+  --header "Authorization:  Bearer <API token>"
+~~~
+
+~~~http
+GET /qw-limits/v1/persons/79999999999/p2p-payment-count-limit HTTP/1.1
+Accept: application/json
+Authorization: Bearer <API token>
+Host: edge.qiwi.com
+~~~
+
+~~~python
+import requests
+
+# Number of person-to-person transactions
+def get_p2p_payment_count(login, api_access_token):
+    s = requests.Session()
+    s.headers['Accept']= 'application/json'
+    s.headers['Content-Type']= 'application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    b = s.get('https://edge.qiwi.com/qw-limits/v1/persons/' + login + '/p2p-payment-count-limit')
+    return b.json()
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>/qw-limits/v1/persons/<a>personId</a>/p2p-payment-count-limit</span></h3>
+        <ul>
+             <li><strong>personId</strong> - your QIWI wallet number without "+"</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Response ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "p2pPaymentCountLimit": 1
+}
+~~~
+
+~~~python
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# P2p payment count for the current month
+print(get_p2p_payment_count(api_access_token, mylogin))
+
+{'p2pPaymentCountLimit': 1}
+
+~~~
+
+Successful JSON response contains an information of your person-to-person transactions:
+
+Response field|Type|Description
+--------|--------|----
+p2pPaymentCountLimit| Number |Person-to-person transaction count per month

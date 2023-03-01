@@ -38,33 +38,34 @@ API дает доступ к управлению пакетом услуг [QIW
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST 'https://edge.qiwi.com/sinap/api/v2/terms/28004/payments' \
+curl -X POST \
+  'https://edge.qiwi.com/sinap/api/v2/terms/28004/payments' \
   --header "Content-Type: application/json" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
-  -d '{ \
-        "id":"1600884280003", \
-        "sum": { \
-          "amount":2999, \
-          "currency":"643" \
-        }, \
-        "paymentMethod": { \
-          "type":"Account", \
-          "accountId":"643" \
+  --header "Authorization: Bearer <токен API>" \
+  -d '{
+        "id":"1600884280003",
+        "sum": {
+          "amount":2999,
+          "currency":"643"
         },
-        "comment":"Оплата", \
-        "fields": { \
-          "account":"79121112233", \
-          "vas_alias":"qvc-master" \
-        } \
-      }'
+        "paymentMethod": {
+          "type":"Account",
+          "accountId":"643"
+        },
+        "comment":"Оплата",
+        "fields": {
+          "account":"79121112233",
+          "vas_alias":"qvc-master"
+        }
+    }'
 ~~~
 
 ~~~http
 POST /sinap/api/v2/terms/28004/payments HTTP/1.1
 Content-Type: application/json
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 
 {

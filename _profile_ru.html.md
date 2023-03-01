@@ -8,15 +8,15 @@
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
+curl "https://edge.qiwi.com/person-profile/v1/profile/current?authInfoEnabled=false" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
 GET /person-profile/v1/profile/current HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -190,10 +190,11 @@ userInfo.promoEnabled|String|Служебная информация
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
+curl -X POST \
+  "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9" \
+  --header "Authorization: Bearer <токен API>" \
   -d '{
   "birthDate": "1998-02-11",
   "firstName": "Иван",
@@ -209,7 +210,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/identification/v1/persons/791
 ~~~http
 POST /identification/v1/persons/79111234567/identification HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <токен API>
 Content-type: application/json
 Host: edge.qiwi.com
 
@@ -323,7 +324,6 @@ inn| String|  ИНН пользователя. Если в запросе пар
 snils |String | Номер СНИЛС пользователя
 oms| String | Номер полиса ОМС пользователя
 
-
 ## Данные идентификации {#ident_data}
 
 Запрос позволяет выгрузить маскированные данные и статус идентификации своего QIWI кошелька.
@@ -331,15 +331,16 @@ oms| String | Номер полиса ОМС пользователя
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
+curl -X GET \
+  "https://edge.qiwi.com/identification/v1/persons/79111234567/identification" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
 GET /identification/v1/persons/79111234567/identification HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -410,10 +411,11 @@ oms| String | Номер полиса ОМС пользователя (перв�
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations" \
+curl -X POST \
+  "https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9" \
+  --header "Authorization: Bearer <токен API>" \
   -d '{
   "identificationLevel": "VERIFIED"
 }'
@@ -422,7 +424,7 @@ user@server:~$ curl -X POST "https://edge.qiwi.com/qw-ident-downgrade-api/v1/per
 ~~~http
 POST /qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <токен API>
 Content-type: application/json
 Host: edge.qiwi.com
 
@@ -481,17 +483,18 @@ downgradeOperationId| String |ID заявки на понижение уровн
 <h3 class="request method">Запрос → PUT</h3>
 
 ~~~shell
-user@server:~$ curl -X PUT https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4/confirm \
+curl -X PUT \
+  https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4/confirm \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9" \
+  --header "Authorization: Bearer <токен API>" \
   -d '{}'
 ~~~
 
 ~~~http
 PUT /qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4/confirm HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <токен API>
 Content-type: application/json
 Host: edge.qiwi.com
 
@@ -544,17 +547,17 @@ downgradeOperation.status.type| String |Статус заявки на пони�
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4 \
+curl -X GET \
+  https://edge.qiwi.com/qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4 \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
 GET /qw-ident-downgrade-api/v1/persons/79111234567/identification-downgrade/operations/1747ea28-1082-41bc-bde4-72994b3ffeb4 HTTP/1.1
 Accept: application/json
-Authorization: Bearer 5c4b25xx93aa435d9cb8cd17480356f9
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
-
 ~~~
 
 <ul class="nestedList url">
@@ -597,25 +600,24 @@ Content-Type: application/json
 downgradeOperation.downgradeOperationId| String |ID заявки на понижение уровня идентификации
 downgradeOperation.status.type| String |Статус заявки на понижение уровня идентификации. <br>`IN_PROGRESS` - Заявка на понижение уровня идентификации в обработке. <br> `SUCCESS` - Заявка на понижение уровня идентификации успешно обработана. <br>`FAIL` – Понижение уровня идентификации невозможно.
 
-
-
 # Лимиты QIWI Кошелька {#limits}
 
-Запрос возвращает текущие уровни лимитов по операциям в вашем QIWI кошельке. Лимиты действуют как ограничения на сумму определенных операций.
+## Уровни лимитов {#limit-levels}
 
+Запрос возвращает текущие уровни лимитов по операциям в вашем QIWI кошельке. Лимиты действуют как ограничения на сумму определенных операций.
 
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/qw-limits/v1/persons/79115221133/actual-limits?types%5B0%5D=TURNOVER" \
+curl "https://edge.qiwi.com/qw-limits/v1/persons/79115221133/actual-limits?types%5B0%5D=TURNOVER" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
 GET /qw-limits/v1/persons/79115221133/actual-limits?types%5B0%5D=TURNOVER HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -716,6 +718,82 @@ rest|Boolean|Остаток лимита, который можно потрат
 interval|Object|Сведения о периоде действия лимита
 interval.dateFrom, interval.dateTill| String| Начало и конец периода, формат даты `ГГГГ-ММ-ДДТЧЧ:ММ:ССtmz`
 
+## Лимит по операциям с физлицами {#p2p-limit}
+
+Запрос возвращает значение количества операций с физлицами за текущий месяц в вашем QIWI кошельке.
+
+<h3 class="request method">Запрос → GET</h3>
+
+~~~shell
+curl "https://edge.qiwi.com/qw-limits/v1/persons/79999999999/p2p-payment-count-limit" \
+  --header "Accept: application/json" \
+  --header "Authorization: Bearer <токен API>"
+~~~
+
+~~~http
+GET /qw-limits/v1/persons/79999999999/p2p-payment-count-limit HTTP/1.1
+Accept: application/json
+Authorization: Bearer <токен API>
+Host: edge.qiwi.com
+~~~
+
+~~~python
+import requests
+
+# Количество операций с физлицами
+def get_p2p_payment_count(login, api_access_token):
+    s = requests.Session()
+    s.headers['Accept']= 'application/json'
+    s.headers['Content-Type']= 'application/json'
+    s.headers['authorization'] = 'Bearer ' + api_access_token
+    b = s.get('https://edge.qiwi.com/qw-limits/v1/persons/' + login + '/p2p-payment-count-limit')
+    return b.json()
+~~~
+
+<ul class="nestedList url">
+    <li><h3>URL <span>/qw-limits/v1/persons/<a>personId</a>/p2p-payment-count-limit</span></h3>
+        <ul>
+             <li><strong>personId</strong> - номер вашего кошелька без знака "+"</li>
+        </ul>
+    </li>
+</ul>
+
+<ul class="nestedList header">
+    <li><h3>HEADERS</h3>
+        <ul>
+             <li>Accept: application/json</li>
+             <li>Authorization: Bearer *** </li>
+        </ul>
+    </li>
+</ul>
+
+<h3 class="request">Ответ ←</h3>
+
+~~~http
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{
+    "p2pPaymentCountLimit": 1
+}
+~~~
+
+~~~python
+mylogin = '79999999999'
+api_access_token = '975efd8e8376xxxb95fa7cb213xxx04'
+
+# Количество операций с физлицами за текущий месяц
+print(get_p2p_payment_count(api_access_token, mylogin))
+
+{'p2pPaymentCountLimit': 1}
+
+~~~
+Успешный ответ в формате JSON содержит информацию по операциям вашего QIWI Кошелька:
+
+Поле ответа | Тип    |Описание
+--------|--------|----
+p2pPaymentCountLimit| Number |Kоличество операций с физлицами в месяце
+
 # Проверка ограничений исходящих платежей с QIWI Кошелька {#restrictions}
 
 Следующий запрос проверяет, есть ли ограничение на исходящие платежи с QIWI Кошелька.
@@ -723,15 +801,15 @@ interval.dateFrom, interval.dateTill| String| Начало и конец пер�
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/person-profile/v1/persons/79115221133/status/restrictions" \
+curl "https://edge.qiwi.com/person-profile/v1/persons/79115221133/status/restrictions" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
 GET /person-profile/v1/persons/79115221133/status/restrictions HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 

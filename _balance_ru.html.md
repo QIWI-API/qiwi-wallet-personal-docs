@@ -13,15 +13,15 @@
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts" \
+curl "https://edge.qiwi.com/funding-sources/v2/persons/<кошелек>/accounts" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
-GET /funding-sources/v2/persons/79115221133/accounts HTTP/1.1
+GET /funding-sources/v2/persons/<кошелек>/accounts HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -143,17 +143,18 @@ balance.currency | Number(3)| Код валюты баланса (ISO-4217)
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts" \
+curl -X POST \
+  "https://edge.qiwi.com/funding-sources/v2/persons/<кошелек>/accounts" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  --header "Authorization: Bearer <токен API>" \
   -d '{  "alias": "qw_wallet_eur"}'
 ~~~
 
 ~~~http
-POST /funding-sources/v2/persons/79115221133/accounts HTTP/1.1
+POST /funding-sources/v2/persons/<кошелек>/accounts HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Content-type: application/json
 Host: edge.qiwi.com
 
@@ -204,15 +205,16 @@ HTTP/1.1 201 Created
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl -X GET "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/offer" \
+curl -X GET \
+  "https://edge.qiwi.com/funding-sources/v2/persons/<кошелек>/accounts/offer" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
-GET /funding-sources/v2/persons/79115221133/accounts/offer HTTP/1.1
+GET /funding-sources/v2/persons/<кошелек>/accounts/offer HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -259,17 +261,18 @@ Object.currency|Number(3)|Код валюты счета (ISO-4217)
 <h3 class="request method">Запрос → PATCH</h3>
 
 ~~~shell
-user@server:~$ curl -X PATCH "https://edge.qiwi.com/funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd" \
+curl -X PATCH \
+  "https://edge.qiwi.com/funding-sources/v2/persons/<кошелек>/accounts/qw_wallet_usd" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  --header "Authorization: Bearer <токен API>" \
   -d '{ "defaultAccount": true }'
 ~~~
 
 ~~~http
-PATCH /funding-sources/v2/persons/79115221133/accounts/qw_wallet_usd HTTP/1.1
+PATCH /funding-sources/v2/persons/<кошелек>/accounts/qw_wallet_usd HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Content-type: application/json
 Host: edge.qiwi.com
 

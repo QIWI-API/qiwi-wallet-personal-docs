@@ -105,10 +105,10 @@ API QIWI Кошелька использует открытый протокол
 ## Пример вызова API {#auth_ex}
 
 ~~~shell
-user@server:~$ curl "адрес сервера" \
+curl "адрес сервера" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer jMyN22DQxMjM6NDUzRmRnZDQ0Mw11212e"
+  --header "Authorization: Bearer <токен API QIWI Кошелька>"
 ~~~
 
 Полученный токен следует передавать в заголовке `Authorization` при каждом вызове API, указывая тип токена `Bearer` перед его значением. Пример получения такого заголовка:

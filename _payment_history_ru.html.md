@@ -16,51 +16,51 @@
 >Пример 1. Последние 10 платежей
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=10" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments?rows=10" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 > Пример 2. Платежи за 10.05.2017
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments?rows=50&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 > Пример 3. Продолжение списка платежей (в предыдущем запросе истории возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 > Пример 4. Последние 10 платежей с рублевого баланса и с привязанной карты
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments?rows=10&operation=OUT&sources%5B0%5D=QW_RUB&sources%5B1%5D=CARD HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments?rows=10&operation=OUT&sources%5B0%5D=QW_RUB&sources%5B1%5D=CARD HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
 > Пример 5. Платежи за 10.05.2017 с рублевого счета
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments?rows=50&sources%5B0%5D=QW_RUB&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments?rows=50&sources%5B0%5D=QW_RUB&startDate=2017-05-10T00%3A00%3A00%2B03%3A00&endDate=2017-05-10T23%3A59%3A59%2B03%3A00 HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
 > Пример 6. Продолжение списка платежей за 10.05.2017 (в Примере 2  возвращены параметры nextTxnId=9103121 и nextTxnDate=2017-05-11T12:35:23+03:00)
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments?rows=50&nextTxnId=9103121&nextTxnDate=2017-05-11T12%3A35%3A23%2B03%3A00 HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -197,15 +197,15 @@ nextTxnDate|DateTime|Дата/время следующей транзакции
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00" \
+curl "https://edge.qiwi.com/payment-history/v2/persons/<wallet>/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
-GET /payment-history/v2/persons/79112223344/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00 HTTP/1.1
+GET /payment-history/v2/persons/<wallet>/payments/total?startDate=2017-03-01T00%3A00%3A00%2B03%3A00&endDate=2017-03-31T11%3A44%3A15%2B03%3A00 HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -304,15 +304,15 @@ outgoingTotal[].currency|Number(3)|Код валюты платежей (ISO-421
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344" \
+curl "https://edge.qiwi.com/payment-history/v2/transactions/9112223344" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
 GET /payment-history/v2/transactions/9112223344 HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -436,15 +436,15 @@ transactionInfo = payment_history_transaction(api_access_token, str(last_txn_id)
 <h3 class="request method">Запрос → GET</h3>
 
 ~~~shell
-user@server:~$ curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF" \
+curl "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF" \
   --header "Accept: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu"
+  --header "Authorization: Bearer <токен API>"
 ~~~
 
 ~~~http
 GET /payment-history/v1/transactions/9112223344/cheque/file?type=IN&format=PDF HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Host: edge.qiwi.com
 ~~~
 
@@ -502,17 +502,18 @@ Content-Type: application/json
 <h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
-user@server:~$ curl -X POST "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN" \
+curl -X POST \
+  "https://edge.qiwi.com/payment-history/v1/transactions/9112223344/cheque/send?type=IN" \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
-  --header "Authorization: Bearer YUu2qw048gtdsvlk3iu" \
+  --header "Authorization: Bearer <токен API>" \
   -d '{"email": "my@example.com"}'
 ~~~
 
 ~~~http
 POST /payment-history/v1/transactions/9112223344/cheque/send?type=IN HTTP/1.1
 Accept: application/json
-Authorization: Bearer YUu2qw048gtdsvlk3iu
+Authorization: Bearer <токен API>
 Content-type: application/json
 Host: edge.qiwi.com
 
