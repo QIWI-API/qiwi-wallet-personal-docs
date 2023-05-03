@@ -36,7 +36,7 @@ includes:
 
 # Introduction
 
-###### Last update: 2020-07-28 | [Propose corrections on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/)
+###### Last update: 2023-03-02 | [Propose corrections on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/)
 
 QIWI Wallet API makes it easy to automate getting info on your account's state in [QIWI Wallet service](https://qiwi.com) and making financial operations.
 
@@ -55,7 +55,9 @@ Parameter|Description|Type
  ---------|--------|---
  token | [Token](#auth_data) to authorize API requests. Token is valid within one month after its [issuing](#auth_data). | String
 
-# API Access
+# API Access {#api-access}
+
+<span style="font-weight:bold;color:red;">We have stopped issuing QIWI OAuth-tokens.</span>
 
 Main URL address to call API methods (unless explicitly stated):
 

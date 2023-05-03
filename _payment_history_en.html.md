@@ -115,7 +115,9 @@ nextTxnId | Long | The transaction number to start the report (should be equal t
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
+~~~
 
+~~~json
 {"data":
   [{
     "txnId":9309,
@@ -145,14 +147,7 @@ Content-Type: application/json
     },
     "source": {},
     "comment":"",
-    "currencyRate":1,
-    "extras":null,
-    "chequeReady":true,
-    "bankDocumentAvailable":false,
-    "bankDocumentReady":false,
-    "repeatPaymentEnabled":false,
-    "favoritePaymentEnabled": true,
-    "regularPaymentEnabled": true
+    "currencyRate":1
   }],
   "nextTxnId":9001,
   "nextTxnDate":"2017-01-31T15:24:10+03:00"
@@ -182,7 +177,7 @@ Successful JSON-response contains a list of payments corresponding to the reques
 
 Field|Type|Description
 --------|----|----
-data|Array[Object]| A list of [Transaction objects](#txnid).<br>Number of items in the list less or equals to `rows` value from the request
+data|Array[Object]| A list of [PaymentHistoryItem objects](#payment-history-item).<br>Number of objects in the list is less than or equals to `rows` value from the request
 nextTxnId|Number(Integer)| Next transaction ID, in the complete list of your transactions
 nextTxnDate|DateTime| Next transaction date/time, in the complete list of your transactions, Moscow time (in `YYYY-MM-DD'T'hh:mm:ss+03:00`)
 
@@ -255,18 +250,22 @@ sources|Array[String]|Payment sources to filter data. Each source is enumerated 
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
+~~~
 
+~~~json
 {
  "incomingTotal":[
   {
-  "amount":3500,
-  "currency":643
-  }],
+    "amount":3500,
+    "currency":643
+  }
+ ],
  "outgoingTotal":[
   {
-  "amount":3497.5,
-  "currency":643
-  }]
+   "amount":3497.5,
+   "currency":643
+  }
+ ]
 }
 ~~~
 
@@ -350,7 +349,9 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
+~~~
 
+~~~json
 {
     "txnId": 11233344692,
     "personId": 79161122331,
@@ -396,13 +397,17 @@ Content-Type: application/json
     },
     "comment": "",
     "currencyRate": 1,
-    "extras": [],
-    "chequeReady": false,
-    "bankDocumentAvailable": false,
-    "bankDocumentReady": false,
-    "repeatPaymentEnabled": false,
-    "favoritePaymentEnabled": false,
-    "regularPaymentEnabled": false
+    "paymentExtras": [],
+    "serviceExtras": {},
+    "view": {},
+    "features": {
+      "chequeReady": false,
+      "bankDocumentAvailable": false,
+      "bankDocumentReady": false,
+      "repeatPaymentEnabled": false,
+      "favoritePaymentEnabled": false,
+      "regularPaymentEnabled": false
+    }
 }
 ~~~
 
@@ -584,6 +589,50 @@ Successful JSON-response contains HTTP result code of file sending operation.
 
 ## API data models
 
+### PaymentHistoryItem class {#payment-history-item}
+
+Object contains information about existing QIWI Wallet payment.
+
+Name| Type | Description
+--------|----|-------
+txnId | Integer | Transaction ID in QIWI Wallet processing
+personId|Integer| Wallet number
+date|DateTime| For payments history reports - Payment date/time, in the request time zone (see `startDate` parameter). Date format `YYYY-MM-DD'T'hh:mm:ss+03:00`<br>For transaction details - Payment date/time, in Moscow time zone (date format: `YYYY-MM-DD'T'hh:mm:ss+03:00`)
+errorCode|Number(Integer)|[Payment error code](#errorCode)
+error| String| Error description
+type | String| Payment type. Possible values:<br>`IN` - top-up, <br>`OUT` - payment, <br>`QIWI_CARD` - payment from QIWI card (QVC, QVP).
+status|String| Payment status. Possible values:<br>`WAITING` - payment is processing, <br>`SUCCESS` - successful payment, <br>`ERROR` - payment error.
+statusText|String | Text description of the status
+trmTxnId|String| Transaction's client ID (assigned on the client device)
+account| String| For payments, recipient's identifier (masked card number, phone number, account number etc.). For top-ups, sender's or terminal's identifier, or top-up agent name
+sum|Object| Payment's amount data.
+-----|-----|-----
+sum.amount|Number(Decimal)|amount,
+sum.currency|Number(3)| currency (ISO-4217)
+-----|-----|-----
+commission|Object| Payment's commission data
+-----|-----|-----
+commission.amount|Number(Decimal)|amount,
+commission.currency|Number(3)| currency (ISO-4217)
+-----|-----|-----
+total|Object| Total amount of transaction.
+-----|-----|-----
+total.amount|Number(Decimal)|amount, it is `sum.amount` plus `commission.amount`,
+total.currency|Number(3)| currency  (ISO-4217)
+-----|-----|-----
+provider|Object| Provider's data
+-----|-----|-----
+provider.id|Integer| Provider ID in QIWI Wallet system,
+provider.shortName|String| Provider's short name,
+provider.longName|String | Provider's extended name,
+provider.logoUrl|String | Provider's logo URL,
+provider.description|String | Provider's description (in HTML),
+provider.keys|String | Provider's keywords list,
+provider.siteUrl|String | Provider's site
+-----|-----|-----
+comment|String | Comment to the payment
+currencyRate|Number(Decimal) | Currency exchange rate (if applied to transaction)
+
 ### Transaction class {#txnid}
 
 Object contains information about existing QIWI Wallet transaction.
@@ -627,10 +676,17 @@ provider.siteUrl|String | Provider's site
 -----|-----|-----
 comment|String | Comment to the payment
 currencyRate|Number(Decimal) | Currency exchange rate (if applied to transaction)
-extras|Object | Service information
-chequeReady| Boolean | Service information
-bankDocumentAvailable|Boolean | Service information
-bankDocumentReady|Boolean | Service information
-repeatPaymentEnabled|Boolean | Service information
-favoritePaymentEnabled|Boolean | Service information
-regularPaymentEnabled|Boolean | Service information
+paymentExtras|Array of Object | Service information
+features|Object|Set of special fields
+-----|-----|-----
+features.chequeReady| Boolean|Special field
+features.bankDocumentReady|Boolean|Special field
+features.bankDocumentAvailable|Boolean|Special field
+features.repeatPaymentEnabled|Boolean|Special field
+features.favoritePaymentEnabled|Boolean|Special field
+features.regularPaymentEnabled|Boolean|Special field
+features.chatAvailable|Boolean|Special field
+features.greetingCardAttached|Boolean|Special field
+-----|-----|-----
+serviceExtras|Object|Служебная информация
+view|Object|Служебная информация

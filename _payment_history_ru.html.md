@@ -113,7 +113,9 @@ nextTxnId | Long | Номер транзакции для начала отче�
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
+~~~
 
+~~~json
 {"data":
   [
    {
@@ -144,15 +146,7 @@ Content-Type: application/json
     },
     "source": {},
     "comment":"",
-    "currencyRate":1,
-    "extras":null,
-    "chequeReady":true,
-    "bankDocumentAvailable":false,
-    "bankDocumentReady":false,
-    "repeatPaymentEnabled":false,
-    "favoritePaymentEnabled": true,
-    "regularPaymentEnabled": true
-   }
+    "currencyRate":1
   ],
   "nextTxnId":9001,
   "nextTxnDate":"2017-01-31T15:24:10+03:00"
@@ -182,9 +176,9 @@ orderedPayments = payment_history_last(mylogin, api_access_token, '5', nextTxnId
 
 Поле ответа|Тип|Описание
 --------|----|----
-data|Array[Object]|Список [объектов Transaction](#txnid). <br>Число транзакций в списке меньше или равно параметру `rows` из запроса
-nextTxnId|Number(Integer)|ID следующей транзакции в полном списке
-nextTxnDate|DateTime|Дата/время следующей транзакции в полном списке, время московское (в формате `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`)
+data|Array[Object]|Список [объектов PaymentHistoryItem](#payment-history-item).<br>Число объектов в списке меньше или равно параметру `rows` из запроса
+nextTxnId|Number(Integer)|ID следующего платежа в полном списке
+nextTxnDate|DateTime|Дата/время следующего платежа в полном списке, время московское (в формате `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`)
 
 ## Статистика платежей {#stat}
 
@@ -255,18 +249,22 @@ sources|Array[String]|Источники платежа, по которым в�
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
+~~~
 
+~~~json
 {
  "incomingTotal":[
-  {
-  "amount":3500,
-  "currency":643
-  }],
+   {
+    "amount":3500,
+    "currency":643
+   }
+ ],
  "outgoingTotal":[
-  {
-  "amount":3497.5,
-  "currency":643
-  }]
+   {
+    "amount":3497.5,
+    "currency":643
+   }
+ ]
 }
 ~~~
 
@@ -351,7 +349,9 @@ def payment_history_transaction(api_access_token, transaction_id, transaction_ty
 ~~~http
 HTTP/1.1 200 OK
 Content-Type: application/json
+~~~
 
+~~~json
 {
     "txnId": 11233344692,
     "personId": 79161122331,
@@ -398,12 +398,14 @@ Content-Type: application/json
     "comment": "",
     "currencyRate": 1,
     "extras": [],
-    "chequeReady": false,
-    "bankDocumentAvailable": false,
-    "bankDocumentReady": false,
-    "repeatPaymentEnabled": false,
-    "favoritePaymentEnabled": false,
-    "regularPaymentEnabled": false
+    "features": {
+      "chequeReady": false,
+      "bankDocumentAvailable": false,
+      "bankDocumentReady": false,
+      "repeatPaymentEnabled": false,
+      "favoritePaymentEnabled": false,
+      "regularPaymentEnabled": false
+    }
 }
 ~~~
 
@@ -583,7 +585,101 @@ payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', ap
 
 Успешный JSON-ответ содержит HTTP-код результата операции отправки файла.
 
-## Модели данных API {#history_model}
+## Модели данных API {#history-model}
+
+### Класс PaymentHistoryItem {#payment-history-item}
+
+~~~json
+{
+    "txnId": 11233344692,
+    "personId": 79161122331,
+    "date": "2017-08-30T14:38:09+03:00",
+    "errorCode": 0,
+    "error": null,
+    "status": "WAITING",
+    "type": "OUT",
+    "statusText": "Запрос обрабатывается",
+    "trmTxnId": "11233344691",
+    "account": "15040930424823121081",
+    "sum": {
+        "amount": 1,
+        "currency": 643
+    },
+    "commission": {
+        "amount": 0,
+        "currency": 643
+    },
+    "total": {
+        "amount": 1,
+        "currency": 643
+    },
+    "provider": {
+        "id": 1,
+        "shortName": "MTS",
+        "longName": "MTS",
+        "logoUrl": "",
+        "description": "",
+        "keys": "",
+        "siteUrl": "",
+        "extras": []
+    },
+    "source": {
+        "id": 7,
+        "shortName": "QIWI Wallet",
+        "longName": "QIWI Wallet",
+        "logoUrl": "",
+        "description": "",
+        "keys": "мобильный кошелек, кошелек, перевести деньги, личный кабинет, отправить деньги, перевод между пользователями",
+        "siteUrl": "",
+        "extras": []
+    },
+    "comment": "",
+    "currencyRate": 1
+}
+~~~
+
+Объект, описывающий существующую транзакцию в сервисе QIWI Кошелек.
+
+Элемент|Тип|Описание
+--------|----|----
+txnId | Integer |ID транзакции в сервисе QIWI Кошелек
+personId|Integer|Номер кошелька
+date|DateTime|Для запросов истории платежей - Дата/время платежа, во временной зоне запроса (см. параметр `startDate`). Формат даты `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`<br>Для запросов данных о транзакции - Дата/время платежа, время московское (в формате `ГГГГ-ММ-ДД'T'чч:мм:сс+03:00`)
+errorCode|Number(Integer)|[Код ошибки платежа](#errorCode)
+error| String| Описание ошибки
+type | String| Тип платежа. Возможные значения:<br>`IN` - пополнение, <br>`OUT` - платеж, <br>`QIWI_CARD` - платеж с карты QIWI (QVC, QVP).
+status|String|Статус платежа. Возможные значения:<br>`WAITING` - платеж проводится, <br>`SUCCESS` - успешный платеж, <br>`ERROR` - ошибка платежа.
+statusText|String |Текстовое описание статуса платежа
+trmTxnId|String|Клиентский ID транзакции
+account| String|Для платежей — идентификатор получателя (номер счета, телефона, маскированный номер карты и т.д.). Для пополнений — идентификатор отправителя, терминала или название агента пополнения кошелька
+sum|Object| Данные о сумме платежа или пополнения.
+-----|-----|-----
+sum.amount|Number(Decimal)|сумма платежа
+sum.currency|Number(3)|валюта платежа (код по ISO-4217)
+-----|-----|-----
+commission|Object| Данные о комиссии платежа
+-----|-----|-----
+commission.amount|Number(Decimal)|сумма
+commission.currency|Number(3)|валюта (код по ISO-4217)
+-----|-----|-----
+total|Object| Данные о фактической сумме платежа или пополнения.
+-----|-----|-----
+total.amount|Number(Decimal)|сумма (равна сумме платежа `sum.amount` и комиссии `commission.amount`)
+total.currency|Number(3)|валюта (код по ISO-4217)
+-----|-----|-----
+provider|Object| Данные о провайдере.
+-----|-----|-----
+provider.id|Integer|ID провайдера в QIWI Wallet
+provider.shortName|String|краткое наименование провайдера
+provider.longName|String|развернутое наименование провайдера
+provider.logoUrl|String|ссылка на логотип провайдера
+provider.description|String|описание провайдера (HTML)
+provider.keys|String|список ключевых слов
+provider.siteUrl|String|сайт провайдера
+-----|-----|-----
+source|Object|Служебная информация
+comment|String|Комментарий к платежу
+currencyRate|Number(Decimal)|Курс конвертации (если применяется в транзакции)
 
 ### Класс Transaction {#txnid}
 
@@ -633,13 +729,22 @@ payment_history_cheque_send(str(last_txn_id), last_txn_type, 'mmd@yandex.ru', ap
     },
     "comment": "",
     "currencyRate": 1,
-    "extras": [],
-    "chequeReady": false,
-    "bankDocumentAvailable": false,
-    "bankDocumentReady": false,
-    "repeatPaymentEnabled": false,
-    "favoritePaymentEnabled": false,
-    "regularPaymentEnabled": false
+    "paymentExtras": [],
+    "features": {
+      "chequeReady": false,
+      "bankDocumentAvailable": false,
+      "bankDocumentReady": false,
+      "repeatPaymentEnabled": false,
+      "favoritePaymentEnabled": false,
+      "regularPaymentEnabled": false,
+      "chatAvailable": true,
+      "greetingCardAttached": true
+    },
+    "serviceExtras": {},
+    "view": {
+      "title": "",
+      "account": ""
+    }
 }
 ~~~
 
@@ -656,7 +761,7 @@ type | String| Тип платежа. Возможные значения:<br>`I
 status|String|Статус платежа. Возможные значения:<br>`WAITING` - платеж проводится, <br>`SUCCESS` - успешный платеж, <br>`ERROR` - ошибка платежа.
 statusText|String |Текстовое описание статуса платежа
 trmTxnId|String|Клиентский ID транзакции
-account| String|Для платежей - идентификатор получателя (номер счета, телефона, маскированный номер карты и т.д.). Для пополнений - идентификатор отправителя, терминала или название агента пополнения кошелька
+account| String|Для платежей — идентификатор получателя (номер счета, телефона, маскированный номер карты и т.д.). Для пополнений — идентификатор отправителя, терминала или название агента пополнения кошелька
 sum|Object| Данные о сумме платежа или пополнения.
 -----|-----|-----
 sum.amount|Number(Decimal)|сумма платежа
@@ -685,9 +790,17 @@ provider.siteUrl|String|сайт провайдера
 source|Object|Служебная информация
 comment|String|Комментарий к платежу
 currencyRate|Number(Decimal)|Курс конвертации (если применяется в транзакции)
-extras|Object|Служебная информация
-chequeReady| Boolean|Специальное поле
-bankDocumentAvailable|Boolean|Специальное поле
-repeatPaymentEnabled|Boolean|Специальное поле
-favoritePaymentEnabled|Boolean|Специальное поле
-regularPaymentEnabled|Boolean|Специальное поле
+paymentExtras|Array of Objects|Служебная информация
+features|Object|Набор специальных полей
+-----|-----|-----
+features.chequeReady| Boolean|Специальное поле
+features.bankDocumentReady|Boolean|Специальное поле
+features.bankDocumentAvailable|Boolean|Специальное поле
+features.repeatPaymentEnabled|Boolean|Специальное поле
+features.favoritePaymentEnabled|Boolean|Специальное поле
+features.regularPaymentEnabled|Boolean|Специальное поле
+features.chatAvailable|Boolean|Специальное поле
+features.greetingCardAttached|Boolean|Специальное поле
+-----|-----|-----
+serviceExtras|Object|Служебная информация
+view|Object|Служебная информация
