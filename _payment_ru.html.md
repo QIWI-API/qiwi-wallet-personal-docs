@@ -12,7 +12,7 @@ API предоставляет доступ к платежам в пользу 
 
  Чтобы узнать комиссию за платеж до его совершения по заданному набору платежных реквизитов, используйте этот запрос. Возвращается полная комиссия QIWI Кошелька за платеж в пользу указанного провайдера с учетом всех тарифов.
 
-<h3 class="request method">Запрос → POST</h3>
+**<h3 class="request method">Запрос → POST</h3>
 
 ~~~shell
 curl -X POST \
@@ -21,7 +21,7 @@ curl -X POST \
   --header "Content-Type: application/json" \
   --header "Authorization: Bearer <токен API>" \
   -d '{
-        "account":"380995238345",
+        "account":"79060766516",
         "paymentMethod":{
           "type":"Account",
           "accountId":"643"
@@ -33,7 +33,7 @@ curl -X POST \
           }
         }
     }'
-~~~
+~~~**
 
 ~~~http
 POST /sinap/providers/99/onlineCommission HTTP/1.1
