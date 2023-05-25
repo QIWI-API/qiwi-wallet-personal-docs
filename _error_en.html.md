@@ -1,4 +1,3 @@
-
 # Error Codes {#errors}
 
 API returns the following HTTP codes in case of errors.

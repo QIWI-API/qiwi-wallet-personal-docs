@@ -1,7 +1,6 @@
-
 # История платежей {#payments_history}
 
-###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_history_ru.html.md)
+###### [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_history_ru.html.md)
 
 ## Список платежей {#payments_list}
 

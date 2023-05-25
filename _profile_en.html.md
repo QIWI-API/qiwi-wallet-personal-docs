@@ -1,7 +1,6 @@
-
 # User's Profile API {#profile}
 
-###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_profile_en.html.md)
+###### [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_profile_en.html.md)
 
 The API returns information about your profile - a set of user data and settings of your QIWI Wallet.
 

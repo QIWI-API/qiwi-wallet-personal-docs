@@ -1,7 +1,6 @@
-
 # Callbacks {#webhook}
 
-###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_webhook_en.html.md)
+###### [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_webhook_en.html.md)
 
 Webhook allows you to receive real-time HTTP notifications of events (outgoing / incoming payments). You need to implement a web service to receive and processing of POST-requests according to the [requests format](#hook_format).
 

@@ -1,6 +1,6 @@
 # Баланс QIWI Кошелька {#balance}
 
-###### Последнее обновление: 2020-07-06 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_ru.html.md)
+###### [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_ru.html.md)
 
 Методы данного API предназначены для управления балансами вашего QIWI кошелька.
 

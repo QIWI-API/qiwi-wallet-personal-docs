@@ -1,6 +1,6 @@
 # API QIWI Мастер {#qiwi-master}
 
-###### Последнее обновление: 2021-10-28 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_master_ru.html.md)
+###### [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_master_ru.html.md)
 
 API дает доступ к управлению пакетом услуг [QIWI Мастер](https://qiwi.com/qvc-master). Пакет услуг позволяет выпускать до пяти бесплатных виртуальных карт QIWI и перевыпускать карты неограниченное число раз. Выпуск карт сверх указанного количества оплачивается по [тарифу](https://static.qiwi.com/qcms/files/1582791401478_5_JJ5vJe1L0szXzKb.pdf).
 

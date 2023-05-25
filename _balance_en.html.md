@@ -1,6 +1,6 @@
 # Wallet Balances API {#balance}
 
-###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_en.html.md)
+###### [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_balance_en.html.md)
 
 API provides methods to control balances of your QIWI wallet.
 

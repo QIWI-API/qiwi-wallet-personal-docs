@@ -1,7 +1,6 @@
-
 # Payments History API {#payments_history}
 
-###### Last update: 2020-07-28 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_history_en.html.md)
+###### [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_history_en.html.md)
 
 The API gives access to the history of transactions in your QIWI wallet.
 

@@ -1,6 +1,6 @@
 # Payments API {#payments}
 
-###### Last update: 2022-06-30 | [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_en.html.md)
+###### [Edit on GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_en.html.md)
 
 ## Commission rates {#rates}
 

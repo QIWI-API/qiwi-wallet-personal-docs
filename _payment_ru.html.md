@@ -1,6 +1,6 @@
 # Платежное API {#payments}
 
-###### Последнее обновление: 2022-10-20 | [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_ru.html.md)
+###### [Предложить правки на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_payment_ru.html.md)
 
 API предоставляет доступ к платежам в пользу провайдеров услуг, зарегистрированных в сервисах QIWI Кошелька.
 

@@ -1,7 +1,6 @@
-
 # Коды ошибок {#errors}
 
-###### Последнее обновление: 2022-01-21 | [Этот раздел на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_error_ru.html.md)
+###### [Этот раздел на GitHub](https://github.com/QIWI-API/qiwi-wallet-personal-docs/blob/master/_error_ru.html.md)
 
 В случае ошибки API возвращается HTTP-код ошибки.
 
