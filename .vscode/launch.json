@@ -1,0 +1,35 @@
+{
+    // Используйте IntelliSense, чтобы узнать о возможных атрибутах.
+    // Наведите указатель мыши, чтобы просмотреть описания существующих атрибутов.
+    // Для получения дополнительной информации посетите: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "type": "msedge",
+            "request": "launch",
+            "name": "Launch Edge against localhost",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}"
+        }
+    ]
+}~~~shell
+curl -X POST \
+  'https://edge.qiwi.com/sinap/providers/99/onlineCommission' \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --header "Authorization: Bearer <токен API>" \
+  -d '{
+        "account":"79060766516",
+        "paymentMethod":{
+          "type":"Account",
+          "accountId":"643"
+        },
+        "purchaseTotals":{
+          "total":{
+            "amount":10,
+            "currency":"643"
+          }
+        }
+    }'
+~~~
